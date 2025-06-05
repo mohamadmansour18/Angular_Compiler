@@ -6,7 +6,7 @@ import Visitor.AST_Visitor;
 public class Statements extends Node {
     private String export;
     private String att;
-private Statment statment;
+    private Statment statment;
 
     public Statment getStatment() {
         return statment;
@@ -34,12 +34,5 @@ private Statment statment;
 
     public void accept(AST_Visitor astVisitor){
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("Statement Node");
-        System.out.println("Child Count" + this.getChildeCount());
-if(statment!=null)
-    statment.accept(astVisitor);
-        System.out.println("**********************************************");
-
     }
 }

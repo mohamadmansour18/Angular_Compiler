@@ -161,57 +161,5 @@ public class Statment extends Node {
     @Override
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        if (services != null) {
-            services.accept(astVisitor);
-        }
-        if (component != null) {
-            component.accept(astVisitor);
-        }
-        if (print != null) {
-            print.accept(astVisitor);
-        }
-        if (varDeclare != null) {
-            varDeclare.accept(astVisitor);
-        }
-        if (function != null) {
-            function.accept(astVisitor);
-        }
-        if (cullFunction != null) {
-            cullFunction.accept(astVisitor);
-        }
-        if (access != null) {
-            access.accept(astVisitor);
-        }
-        if (typeDeclare != null) {
-            typeDeclare.accept(astVisitor);
-        }
-        if (anEnum != null) {
-            anEnum.accept(astVisitor);
-        }
-        if (anInterface != null) {
-            anInterface.accept(astVisitor);
-        }
-        if (aClass != null) {
-            aClass.accept(astVisitor);
-        }
-        if (operations != null) {
-            operations.accept(astVisitor);
-        }
-        if (importRule != null) {
-            importRule.accept(astVisitor);
-        }
-        if (templet != null) {
-            templet.accept(astVisitor);
-        }
-        if (ifStatment != null) {
-            ifStatment.accept(astVisitor);
-        }
-        if (loopStatments != null) {
-            loopStatments.accept(astVisitor);
-        }
-        if (prefix != null) {
-            prefix.accept(astVisitor);
-        }
-
     }
 }

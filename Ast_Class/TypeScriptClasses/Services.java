@@ -25,16 +25,5 @@ public class Services extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("services Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (injectable != null) {
-            System.out.println("using services");
-        }
-        if (objects != null) {
-            System.out.println("services content");
-            objects.accept(astVisitor);
-        }
-        System.out.println("**********************************************");
     }
 }

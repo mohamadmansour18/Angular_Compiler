@@ -13,35 +13,6 @@ public class PrimaryExpression extends Node {
     private Pip pip;
     private Prop prop;
 
-    @Override
-    public void accept(AST_Visitor ast_Visitor) {
-        ast_Visitor.visit(this);
-        if (literal!=null)
-            literal.accept(ast_Visitor);
-        if(Id !=null)
-            System.out.println(Id);
-        if(expression!=null)
-            expression.accept(ast_Visitor);
-        if(functionCall!=null)
-            functionCall.accept(ast_Visitor);
-        if(arrayLitiral!=null)
-            arrayLitiral.accept(ast_Visitor);
-        if(objectLitiral!=null)
-            objectLitiral.accept(ast_Visitor);
-        if(pip!=null)
-            pip.accept(ast_Visitor);
-        if(prop!=null)
-            prop.accept(ast_Visitor);
-    }
-
-    @Override
-    public String getValue() {
-
-            if (getId()!=null)
-                return getId();
-            return " ";
-    }
-
     public Litiral getLiteral() {
         return literal;
     }
@@ -104,5 +75,18 @@ public class PrimaryExpression extends Node {
 
     public void setProp(Prop prop) {
         this.prop = prop;
+    }
+
+    @Override
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
+    }
+
+    @Override
+    public String getValue() {
+        if (getId() != null) {
+            return getId();
+        }
+        return " ";
     }
 }

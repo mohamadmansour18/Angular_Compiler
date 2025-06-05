@@ -102,7 +102,12 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(QutAngular angular) {
-
+        System.out.println("**********************************************");
+        System.out.println("[QutAngular Node]");
+        System.out.println("Child Count : " + angular.getChildeCount());
+        if (angular.getTemplet() != null) {
+            angular.getTemplet().accept(this);
+        }
     }
 
     @Override
@@ -403,7 +408,16 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(RootProgram rootProgram) {
-
+        System.out.println("**********************************************");
+        System.out.println("[RootProgram Node]");
+        System.out.println("Child Count : " + rootProgram.getChildeCount());
+        if(rootProgram.getPrograms() != null)
+        {
+            for (Program p : rootProgram.getPrograms())
+            {
+                p.accept(this);
+            }
+        }
     }
 
     @Override
@@ -452,7 +466,15 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(Prefix prefix) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Prefix Node]");
+        System.out.println("Child Count : " + prefix.getChildeCount());
+        if (prefix.getIdentifier() != null) {
+            System.out.println(prefix.getIdentifier());
+        }
+        if(prefix.getMinusOfplus()!=null){
+            System.out.println(prefix.getMinusOfplus());
+        }
     }
 
     @Override
@@ -707,22 +729,121 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(PrimaryExpression primaryExpression) {
-
+        System.out.println("**********************************************");
+        System.out.println("[PrimaryExpression Node]");
+        System.out.println("Child Count : " + primaryExpression.getChildeCount());
+        if (primaryExpression.getLiteral()!=null) {
+            primaryExpression.getLiteral().accept(this);
+        }
+        if(primaryExpression.getId() !=null) {
+            System.out.println(primaryExpression.getId());
+        }
+        if(primaryExpression.getExpression()!=null) {
+            primaryExpression.getExpression().accept(this);
+        }
+        if(primaryExpression.getFunctionCall()!=null) {
+            primaryExpression.getFunctionCall().accept(this);
+        }
+        if(primaryExpression.getArrayLitiral()!=null) {
+            primaryExpression.getArrayLitiral().accept(this);
+        }
+        if(primaryExpression.getObjectLitiral()!=null) {
+            primaryExpression.getObjectLitiral().accept(this);
+        }
+        if(primaryExpression.getPip()!=null) {
+            primaryExpression.getPip().accept(this);
+        }
+        if(primaryExpression.getProp()!=null) {
+            primaryExpression.getProp().accept(this);
+        }
     }
 
     @Override
     public void visit(Prop prop) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Prop Node]");
+        System.out.println("Child Count : " + prop.getChildeCount());
+        if (prop.getBaseExpression() != null) {
+            for (BaseExpression b : prop.getBaseExpression()) {
+                b.accept(this);
+            }
+        }
+        if (prop.getExpressions() != null) {
+            for (Expression e : prop.getExpressions()) {
+                e.accept(this);
+            }
+        }
     }
 
     @Override
     public void visit(Relation relation) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Relation Node]");
+        System.out.println("Child Count : " + relation.getChildeCount());
+        if(relation.getAdds()!=null)
+        {
+            for(Add a : relation.getAdds()) {
+                a.accept(this);
+            }
+        }
     }
 
     @Override
     public void visit(Statment statment) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Statment Node]");
+        System.out.println("Child Count : " + statment.getChildeCount());
+        if (statment.getServicesStatement() != null) {
+            statment.getServicesStatement().accept(this);
+        }
+        if (statment.getComponentStatement() != null) {
+            statment.getComponentStatement().accept(this);
+        }
+        if (statment.getPrintStatement() != null) {
+            statment.getPrintStatement().accept(this);
+        }
+        if (statment.getVarDeclareStatement() != null) {
+            statment.getVarDeclareStatement().accept(this);
+        }
+        if (statment.getFunctionStatement() != null) {
+            statment.getFunctionStatement().accept(this);
+        }
+        if (statment.getCallFunctionStatement() != null) {
+            statment.getCallFunctionStatement().accept(this);
+        }
+        if (statment.getAccessStatement() != null) {
+            statment.getAccessStatement().accept(this);
+        }
+        if (statment.getTypeDeclareStatement() != null) {
+            statment.getTypeDeclareStatement().accept(this);
+        }
+        if (statment.getEnumStatement() != null) {
+            statment.getEnumStatement().accept(this);
+        }
+        if (statment.getInterfaceStatement() != null) {
+            statment.getInterfaceStatement().accept(this);
+        }
+        if (statment.getClassStatement() != null) {
+            statment.getClassStatement().accept(this);
+        }
+        if (statment.getOperationsStatement() != null) {
+            statment.getOperationsStatement().accept(this);
+        }
+        if (statment.getImportStatement() != null) {
+            statment.getImportStatement().accept(this);
+        }
+        if (statment.getTemplateStatement() != null) {
+            statment.getTemplateStatement().accept(this);
+        }
+        if (statment.getIfStatement() != null) {
+            statment.getIfStatement().accept(this);
+        }
+        if (statment.getLoopStatement() != null) {
+            statment.getLoopStatement().accept(this);
+        }
+        if (statment.getPrefixStatement() != null) {
+            statment.getPrefixStatement().accept(this);
+        }
     }
 
     @Override
@@ -1207,27 +1328,64 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(Print print) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Print Node]");
+        System.out.println("Child Count : " + print.getChildeCount());
+        if(print.getString()!=null)
+        {
+            System.out.println("printed value: " + print.getString());
+        }
+        if(print.getArguments()!=null) {
+            print.getArguments().accept(this);
+        }
     }
 
     @Override
     public void visit(Program program) {
-
+        System.out.println("**********************************************");
+        System.out.println("[program Node]");
+        System.out.println("Child Count : " + program.getChildeCount());
+        if(program.getStatements()!=null)
+        {
+            for (Statements s : program.getStatements()) {
+                s.accept(this);
+            }
+        }
     }
 
     @Override
     public void visit(Return aReturn) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Return Node]");
+        System.out.println("Child Count : " + aReturn.getChildeCount());
+        if (aReturn.getBaseData() != null) {
+            System.out.println("date return: ");
+            aReturn.getBaseData().accept(this);
+        }
     }
 
     @Override
     public void visit(Services services) {
-
+        System.out.println("**********************************************");
+        System.out.println("[services Node]");
+        System.out.println("Child Count : " + services.getChildeCount());
+        if (services.getInjectable() != null) {
+            System.out.println("using services : (injectable)");
+        }
+        if (services.getObjects() != null) {
+            System.out.println("services content : ");
+            services.getObjects().accept(this);
+        }
     }
 
     @Override
     public void visit(Statements statements) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Statements Node]");
+        System.out.println("Child Count : " + statements.getChildeCount());
+        if(statements.getStatment()!=null) {
+            statements.getStatment().accept(this);
+        }
     }
 
     @Override

@@ -5,7 +5,8 @@ import Visitor.AST_Visitor;
 
 public class Print extends Node {
     private String string;
-private Arguments arguments;
+    private Arguments arguments;
+
     public String getString() {
         return string;
     }
@@ -24,16 +25,5 @@ private Arguments arguments;
 
     public void accept(AST_Visitor astVisitor){
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("Print Node");
-        System.out.println("Child Count"+this.getChildeCount());
-if(string!=null)
-{
-    System.out.println("printed value: "+string);
-}
-if(arguments!=null)
-    arguments.accept(astVisitor);
-        System.out.println("**********************************************");
-
     }
 }

@@ -26,9 +26,5 @@ private String minusOfplus;
     @Override
     public void accept(AST_Visitor ast_Visitor) {
         ast_Visitor.visit(this);
-        if (identifier!=null)
-            System.out.println(identifier);
-        if(minusOfplus!=null)
-            System.out.println(minusOfplus);
     }
 }

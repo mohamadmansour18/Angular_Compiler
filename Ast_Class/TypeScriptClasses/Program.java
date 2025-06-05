@@ -19,15 +19,6 @@ public class Program extends Node {
 
     public void accept(AST_Visitor astVisitor){
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("program Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if(statements!=null)
-        {
-            for (int i = 0; i < statements.size(); i++) {
-                statements.get(i).accept(astVisitor);
-            }
-        }
     }
 }
 

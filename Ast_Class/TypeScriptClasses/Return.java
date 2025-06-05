@@ -25,14 +25,5 @@ public class Return extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("Return Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (baseData != null) {
-            System.out.println("date return");
-            baseData.accept(astVisitor);
-        }
-        System.out.println("**********************************************");
-
     }
 }

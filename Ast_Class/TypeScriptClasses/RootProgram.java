@@ -6,7 +6,7 @@ import Visitor.AST_Visitor;
 import java.util.ArrayList;
 
 public class RootProgram extends Node {
-    public ArrayList<Program> programs=new ArrayList<>();
+    public ArrayList<Program> programs = new ArrayList<>();
 
     public ArrayList<Program> getPrograms() {
         return programs;
@@ -19,12 +19,5 @@ public class RootProgram extends Node {
     @Override
     public void accept(AST_Visitor ast_Visitor) {
         ast_Visitor.visit(this);
-        if(programs!=null)
-        {
-            for (Program p : programs)
-            {
-                p.accept(ast_Visitor);
-            }
-        }
     }
 }

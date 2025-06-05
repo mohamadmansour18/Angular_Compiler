@@ -9,18 +9,6 @@ public class Prop extends Node {
     private ArrayList<BaseExpression> baseExpression = new ArrayList<>();
     private ArrayList<Expression> expressions = new ArrayList<>();
 
-    @Override
-    public void accept(AST_Visitor ast_Visitor) {
-        ast_Visitor.visit(this);
-        if (baseExpression != null)
-            for (BaseExpression b : baseExpression)
-                b.accept(ast_Visitor);
-        if (expressions != null) {
-            for (Expression e : expressions)
-                e.accept(ast_Visitor);
-        }
-    }
-
     public ArrayList<BaseExpression> getBaseExpression() {
         return baseExpression;
     }
@@ -35,5 +23,10 @@ public class Prop extends Node {
 
     public void setExpressions(ArrayList<Expression> expressions) {
         this.expressions = expressions;
+    }
+
+    @Override
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
     }
 }
