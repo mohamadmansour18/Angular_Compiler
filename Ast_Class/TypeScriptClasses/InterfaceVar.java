@@ -25,16 +25,5 @@ public class InterfaceVar extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("Interface variable Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (name != null) {
-            System.out.println("interface variable name: " + name);
-        }
-        if (type != null) {
-            System.out.println("interface variable type: " + type);
-        }
-        System.out.println("**********************************************");
-
     }
 }

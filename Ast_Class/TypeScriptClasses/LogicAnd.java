@@ -8,14 +8,17 @@ import java.util.ArrayList;
 public class LogicAnd extends Node {
     private ArrayList<Equalty> equalties = new ArrayList<>();
 
+    public ArrayList<Equalty> getEqualties() {
+        return equalties;
+    }
+
+    public void setEqualties(ArrayList<Equalty> equalties) {
+        this.equalties = equalties;
+    }
+
     @Override
     public void accept(AST_Visitor ast_Visitor) {
         ast_Visitor.visit(this);
-        if (equalties != null) {
-            for (Equalty e : equalties) {
-                e.accept(ast_Visitor);
-            }
-        }
     }
 
     @Override
@@ -27,11 +30,5 @@ public class LogicAnd extends Node {
 
    return " "; }
 
-    public ArrayList<Equalty> getEqualties() {
-        return equalties;
-    }
 
-    public void setEqualties(ArrayList<Equalty> equalties) {
-        this.equalties = equalties;
-    }
 }

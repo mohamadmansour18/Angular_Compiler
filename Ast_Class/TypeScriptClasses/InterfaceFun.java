@@ -34,20 +34,5 @@ public class InterfaceFun extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("Interface function body Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (name != null) {
-            System.out.println("interface function name: " + name);
-        }
-        if (prameters != null) {
-            System.out.println("interface function parameter:");
-            prameters.accept(astVisitor);
-        }
-        if (type != null) {
-            System.out.println("interface function type: " + type);
-        }
-        System.out.println("**********************************************");
-
     }
 }

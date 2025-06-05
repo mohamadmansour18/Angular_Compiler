@@ -3,6 +3,8 @@ package Ast_Class.TypeScriptClasses;
 import Visitor.AST_Visitor;
 
 public class OperationsStatement extends Statment{
+    private Operations operations;
+
     public Operations getOperations() {
         return operations;
     }
@@ -21,6 +23,6 @@ public class OperationsStatement extends Statment{
         }
     }
 
-    private Operations operations;
+
 
 }

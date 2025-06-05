@@ -25,16 +25,5 @@ public class Operations extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("Operations Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (access != null) {
-            access.accept(astVisitor);
-        }
-        if (equal != null) {
-            equal.accept(astVisitor);
-        }
-        System.out.println("**********************************************");
-
     }
 }

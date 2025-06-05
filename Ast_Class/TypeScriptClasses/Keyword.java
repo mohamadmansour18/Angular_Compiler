@@ -6,13 +6,6 @@ import Visitor.AST_Visitor;
 public class Keyword extends Node {
     private String s;
 
-    @Override
-    public void accept(AST_Visitor ast_Visitor) {
-        ast_Visitor.visit(this);
-        if (s!=null)
-            System.out.println(s);
-    }
-
     public String getS() {
         return s;
     }
@@ -20,4 +13,11 @@ public class Keyword extends Node {
     public void setS(String s) {
         this.s = s;
     }
+
+    @Override
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
+    }
+
+
 }

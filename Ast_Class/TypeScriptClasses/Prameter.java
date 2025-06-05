@@ -43,25 +43,5 @@ public class Prameter extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("Parameter Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (name != null) {
-            System.out.println("parameter name: " + name);
-        }
-        if (type != null) {
-            System.out.println("paratmeter type: ");
-            type.accept(astVisitor);
-        }
-        if (equal != null) {
-            System.out.println("parameter default value: ");
-            equal.accept(astVisitor);
-        }
-        if (objects != null) {
-            System.out.println("parameter object type: ");
-            objects.accept(astVisitor);
-        }
-        System.out.println("**********************************************");
-
     }
 }

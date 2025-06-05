@@ -25,18 +25,5 @@ public class InterfaceBody extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("InterfaceBody Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (interfaceFun != null) {
-            System.out.println("interface function:");
-            interfaceFun.accept(astVisitor);
-        }
-        if (interfaceVar != null) {
-            System.out.println("interface variable: ");
-            interfaceVar.accept(astVisitor);
-        }
-        System.out.println("**********************************************");
-
     }
 }

@@ -18,16 +18,6 @@ public class ObjectsType extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("ObjectType Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (objectTypes != null) {
-            for (ObjectType objectType : objectTypes) {
-                objectType.accept(astVisitor);
-            }
-        }
-        System.out.println("**********************************************");
-
     }
 
     StringBuilder stringBuilder = new StringBuilder();
@@ -35,8 +25,9 @@ public class ObjectsType extends Node {
     @Override
     public String getValue() {
         if (objectTypes != null) {
-            for (ObjectType o : objectTypes)
+            for (ObjectType o : objectTypes) {
                 stringBuilder.append(o.getValue());
+            }
         }
         return stringBuilder.toString();
     }

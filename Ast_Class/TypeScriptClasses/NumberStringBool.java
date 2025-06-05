@@ -34,24 +34,10 @@ public class NumberStringBool extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("Number_String_bool Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (number != null) {
-            System.out.println("value is number: " + number);
-        }
-        if (string != null) {
-            System.out.println("value is string: " + string);
-        }
-        if (bool != null) {
-            System.out.println("value is boolean: " + bool);
-        }
-        System.out.println("**********************************************");
-
     }
 
     StringBuilder s = new StringBuilder();
-String st="";
+    String st="";
     @Override
     public String getValue() {
         if (number != null) {

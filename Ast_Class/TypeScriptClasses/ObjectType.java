@@ -25,17 +25,6 @@ public class ObjectType extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("ObjectType Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (name != null) {
-            System.out.println("object type type : " + name);
-        }
-        if (type != null) {
-            System.out.println("object type: " + type);
-        }
-        System.out.println("**********************************************");
-
     }
 
     StringBuilder s = new StringBuilder();

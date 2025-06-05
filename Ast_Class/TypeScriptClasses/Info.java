@@ -10,6 +10,7 @@ public class Info extends Node {
     private AccessLable accessLable;
     private AngularTemplet templetLable;
     private QutAngular qutAngular;
+    private ArratLable arratLable;
 
     public ArratLable getArratLable() {
         return arratLable;
@@ -17,29 +18,6 @@ public class Info extends Node {
 
     public void setArratLable(ArratLable arratLable) {
         this.arratLable = arratLable;
-    }
-
-    private ArratLable arratLable;
-
-    @Override
-    public void accept(AST_Visitor ast_Visitor) {
-        ast_Visitor.visit(this);
-        if (variable!=null)
-        {
-            variable.accept(ast_Visitor);
-        }
-        if(objectsLable!=null)
-            objectsLable.accept(ast_Visitor);
-        if(callFunctionLable!=null)
-            callFunctionLable.accept(ast_Visitor);
-        if(accessLable!=null)
-            accessLable.accept(ast_Visitor);
-        if(templetLable!=null)
-            templetLable.accept(ast_Visitor);
-        if(qutAngular!=null)
-            qutAngular.accept(ast_Visitor);
-        if (arratLable!=null)
-            arratLable.accept(ast_Visitor);
     }
 
     public Variable getVariable() {
@@ -88,5 +66,10 @@ public class Info extends Node {
 
     public void setQutAngular(QutAngular qutAngular) {
         this.qutAngular = qutAngular;
+    }
+
+    @Override
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
     }
 }

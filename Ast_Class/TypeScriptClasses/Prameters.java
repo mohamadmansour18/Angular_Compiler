@@ -18,15 +18,5 @@ public class Prameters extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("Parameters Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (prameters != null) {
-            for (Prameter p : prameters) {
-                p.accept(astVisitor);
-            }
-        }
-        System.out.println("**********************************************");
-
     }
 }
