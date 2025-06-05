@@ -1,0 +1,54 @@
+package Ast_Class.TypeScriptClasses;
+
+import Ast_Class.Node.Node;
+import Visitor.AST_Visitor;
+
+public class Header extends Node {
+    private Prameters prameters;
+    private Type type;
+
+    public Prameters getPrameters() {
+        return prameters;
+    }
+
+    public void setPrameters(Prameters prameters) {
+        this.prameters = prameters;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public void accept(AST_Visitor astVisitor) {
+        astVisitor.visit(this);
+        System.out.println("**********************************************");
+        System.out.println("Header Node");
+        System.out.println("Child Count" + this.getChildeCount());
+        if (prameters != null) {
+            System.out.println("header parameters:");
+            prameters.accept(astVisitor);
+        }
+        if (type != null) {
+            System.out.println("type: ");
+            type.accept(astVisitor);
+        }
+        System.out.println("**********************************************");
+
+    }
+
+    StringBuilder s = new StringBuilder();
+String st="";
+    @Override
+    public String getValue() {
+        if (type != null) {
+            st=type.getValue();
+        } else {
+            st="any";
+        }
+        return st;
+    }
+}

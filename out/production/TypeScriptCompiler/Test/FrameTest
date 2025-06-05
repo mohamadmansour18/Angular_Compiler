@@ -1,0 +1,6 @@
+
+function sayHello() {
+
+  console.log({{"let x = 3"}});
+}
+<button (click)="sayHello()"></button>
