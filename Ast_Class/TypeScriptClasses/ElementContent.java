@@ -8,11 +8,6 @@ import java.util.ArrayList;
 public class ElementContent extends Node {
     private ArrayList<Content> contents = new ArrayList<>();
 
-    @Override
-    public void accept(AST_Visitor ast_Visitor) {
-        ast_Visitor.visit(this);
-    }
-
     public ArrayList<Content> getContents() {
         return contents;
     }
@@ -20,11 +15,17 @@ public class ElementContent extends Node {
     public void setContents(ArrayList<Content> contents) {
         this.contents = contents;
     }
-StringBuilder s=new StringBuilder();
+
+    @Override
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
+    }
+
+    StringBuilder s=new StringBuilder();
 
     @Override
     public String getValue() {
-    s.append("");
+        s.append("");
         if (contents != null)
         {
             for (Content c:contents){

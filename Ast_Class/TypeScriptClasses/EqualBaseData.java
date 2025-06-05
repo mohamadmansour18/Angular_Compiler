@@ -4,6 +4,8 @@ import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
 public  class EqualBaseData extends Node {
+    private BaseData baseData;
+
     public BaseData getBaseData() {
         return baseData;
     }
@@ -12,18 +14,8 @@ public  class EqualBaseData extends Node {
         this.baseData = baseData;
     }
 
-    private BaseData baseData;
+
     public void accept(AST_Visitor astVisitor){
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("EqualBaseData Node");
-        System.out.println("Child Count"+this.getChildeCount());
-if(baseData!=null)
-{
-    System.out.println("Equal Value:");
-    baseData.accept(astVisitor);
-}
-        System.out.println("**********************************************");
-
     }
 }

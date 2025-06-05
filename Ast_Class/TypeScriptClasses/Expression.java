@@ -6,13 +6,17 @@ import Visitor.AST_Visitor;
 public class Expression extends Node {
     private Logic logic;
 
+    public Logic getLogic() {
+        return logic;
+    }
+
+    public void setLogic(Logic logic) {
+        this.logic = logic;
+    }
+
     @Override
     public void accept(AST_Visitor ast_Visitor) {
         ast_Visitor.visit(this);
-        if (logic!=null)
-        {
-            logic.accept(ast_Visitor);
-        }
     }
 
     @Override
@@ -21,11 +25,5 @@ public class Expression extends Node {
             return logic.getValue();
     return " ";}
 
-    public Logic getLogic() {
-        return logic;
-    }
 
-    public void setLogic(Logic logic) {
-        this.logic = logic;
-    }
 }

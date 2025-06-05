@@ -10,19 +10,6 @@ public class HtmlElement extends Node {
     private ElementContent elementContent;
     private TagOpenEmpty tagOpenEmpty;
 
-    @Override
-    public void accept(AST_Visitor ast_Visitor) {
-        ast_Visitor.visit(this);
-        if(tagClose!=null)
-            tagClose.accept(ast_Visitor);
-        if(tagOpen!=null)
-            tagOpen.accept(ast_Visitor);
-        if(elementContent!=null)
-            elementContent.accept(ast_Visitor);
-        if(tagOpenEmpty!=null)
-            tagOpenEmpty.accept(ast_Visitor);
-    }
-
     public TagOpen getTagOpen() {
         return tagOpen;
     }
@@ -53,5 +40,10 @@ public class HtmlElement extends Node {
 
     public void setTagOpenEmpty(TagOpenEmpty tagOpenEmpty) {
         this.tagOpenEmpty = tagOpenEmpty;
+    }
+
+    @Override
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
     }
 }

@@ -8,6 +8,7 @@ public class Content extends Node {
     private Html html;
     private AngularComponent component;
     private Dirictive dirictive;
+    private Charcter charcter;
 
     public TextLable getTextLable() {
         return textLable;
@@ -41,12 +42,6 @@ public class Content extends Node {
         this.dirictive = dirictive;
     }
 
-
-    @Override
-    public void accept(AST_Visitor ast_Visitor) {
-        ast_Visitor.visit(this);
-    }
-
     public Charcter getCharcter() {
         return charcter;
     }
@@ -55,13 +50,18 @@ public class Content extends Node {
         this.charcter = charcter;
     }
 
-    private Charcter charcter;
+    @Override
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
+    }
+
 
     @Override
     public String getValue() {
-        if(dirictive!=null)
+        if(dirictive!=null) {
             return dirictive.getValue();
-    return "";
+        }
+        return "";
     }
 
 }

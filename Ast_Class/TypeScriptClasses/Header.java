@@ -25,23 +25,10 @@ public class Header extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("Header Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (prameters != null) {
-            System.out.println("header parameters:");
-            prameters.accept(astVisitor);
-        }
-        if (type != null) {
-            System.out.println("type: ");
-            type.accept(astVisitor);
-        }
-        System.out.println("**********************************************");
-
     }
 
     StringBuilder s = new StringBuilder();
-String st="";
+    String st="";
     @Override
     public String getValue() {
         if (type != null) {

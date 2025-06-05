@@ -6,23 +6,9 @@ import Visitor.AST_Visitor;
 import java.util.ArrayList;
 
 public class FunctionCall extends Node {
-private String id;
-private BaseExpression baseExpression;
-private ArrayList<Expression> expressions;
-
-    @Override
-    public void accept(AST_Visitor ast_Visitor) {
-        ast_Visitor.visit(this);
-        if(id!=null)
-            System.out.println(id);
-        if (baseExpression!=null)
-            baseExpression.accept(ast_Visitor);
-        if(expressions!=null)
-        {
-            for (Expression e:expressions)
-                e.accept(ast_Visitor);
-        }
-    }
+    private String id;
+    private BaseExpression baseExpression;
+    private ArrayList<Expression> expressions;
 
     public ArrayList<Expression> getExpressions() {
         return expressions;
@@ -47,4 +33,11 @@ private ArrayList<Expression> expressions;
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
+    }
+
+
 }

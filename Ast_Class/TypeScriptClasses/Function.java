@@ -25,14 +25,5 @@ public class Function extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("Function declare Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (classFunction != null) {
-            System.out.println("node for function details:");
-            classFunction.accept(astVisitor);
-        }
-        System.out.println("**********************************************");
-
     }
 }

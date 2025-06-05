@@ -8,17 +8,6 @@ public class DirictiveElement extends Node {
     private AttributeLable attribute;
     private Towway towway;
 
-    @Override
-    public void accept(AST_Visitor ast_Visitor) {
-        ast_Visitor.visit(this);
-    }
-
-    @Override
-    public String getValue() {
-        if (attribute!=null)
-            return attribute.getValue();
-  return "";  }
-
     public Structural getStructural() {
         return structural;
     }
@@ -41,5 +30,18 @@ public class DirictiveElement extends Node {
 
     public void setTowway(Towway towway) {
         this.towway = towway;
+    }
+
+    @Override
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
+    }
+
+    @Override
+    public String getValue() {
+        if (attribute!=null) {
+            return attribute.getValue();
+        }
+        return "";
     }
 }

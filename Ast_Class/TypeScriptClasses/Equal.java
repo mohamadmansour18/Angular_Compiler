@@ -25,18 +25,6 @@ public class Equal extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("Equal Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (data != null) {
-            System.out.println("the value data");
-            data.accept(astVisitor);
-        }
-        if (name != null) {
-            System.out.println("change type to another: " + name);
-        }
-        System.out.println("**********************************************");
-
     }
 
     StringBuilder s = new StringBuilder();

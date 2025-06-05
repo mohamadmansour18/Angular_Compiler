@@ -13,6 +13,7 @@ public class BaseAstVisitor implements AST_Visitor {
     public void visit(Angular angular) {
         System.out.println("**********************************************");
         System.out.println("[Angular Node]");
+        System.out.println("Child Count : " + angular.getChildeCount());
 
         if(angular.getString()!=null) {
             System.out.println(angular.getString());
@@ -26,7 +27,21 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(HtmlElement htmlElement) {
-
+        System.out.println("**********************************************");
+        System.out.println("[HtmlElement Node]");
+        System.out.println("Child Count : " + htmlElement.getChildeCount());
+        if(htmlElement.getTagClose()!=null) {
+            htmlElement.getTagClose().accept(this);
+        }
+        if(htmlElement.getTagOpen()!=null) {
+            htmlElement.getTagOpen().accept(this);
+        }
+        if(htmlElement.getElementContent()!=null) {
+            htmlElement.getElementContent().accept(this);
+        }
+        if(htmlElement.getTagOpenEmpty()!=null) {
+            htmlElement.getTagOpenEmpty().accept(this);
+        }
     }
 
     @Override
@@ -233,17 +248,32 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(FunctionStatement functionStatement) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Html Node]");
+        System.out.println("Child Count : " + functionStatement.getChildeCount());
+        if(functionStatement.getFunction()!=null) {
+            functionStatement.getFunction().accept(this);
+        }
     }
 
     @Override
     public void visit(Html html) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Html Node]");
+        System.out.println("Child Count : " + html.getChildeCount());
+        if(html.getHtmlElement()!=null) {
+            html.getHtmlElement().accept(this);
+        }
     }
 
     @Override
     public void visit(IfStatement ifStatement) {
-
+        System.out.println("**********************************************");
+        System.out.println("[IfStatement Node]");
+        System.out.println("Child Count : " + ifStatement.getChildeCount());
+        if(ifStatement.getIfStatment()!=null) {
+            ifStatement.getIfStatment().accept(this);
+        }
     }
 
     @Override
@@ -328,7 +358,19 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(If_statment ifStatment) {
+        System.out.println("**********************************************");
+        System.out.println("[If_statment Node]");
+        System.out.println("Child Count : " + ifStatment.getChildeCount());
 
+        if(ifStatment.getExpression()!=null) {
+            ifStatment.getExpression().accept(this);
+        }
+        if (ifStatment.getStatements()!=null)
+        {
+            for (Statements s : ifStatment.getStatements()) {
+                s.accept(this);
+            }
+        }
     }
 
     @Override
@@ -410,22 +452,77 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(Equalty equalty) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Equalty Node]");
+        System.out.println("Child Count : " + equalty.getChildeCount());
+        if(equalty.getRelations()!=null)
+        {
+            for (Relation r : equalty.getRelations()) {
+                r.accept(this);
+            }
+        }
     }
 
     @Override
     public void visit(Expression expression) {
+        System.out.println("**********************************************");
+        System.out.println("[Expression Node]");
+        System.out.println("Child Count : " + expression.getChildeCount());
+        if (expression.getLogic()!=null)
+        {
+            expression.getLogic().accept(this);
+        }
 
     }
 
     @Override
     public void visit(For aFor) {
+        System.out.println("**********************************************");
+        System.out.println("[For Node]");
+        System.out.println("Child Count : " + aFor.getChildeCount());
+        if (aFor.getAfor()!=null)
+        {
+            System.out.println(aFor.getAfor());
+        }
 
+        if(aFor.getLoopInit()!=null)
+        {
+            aFor.getLoopInit().accept(this);
+        }
+
+        if(aFor.getExpression()!=null)
+        {
+            aFor.getExpression().accept(this);
+        }
+        if(aFor.getLoopStep()!=null)
+        {
+            aFor.getLoopStep().accept(this);
+        }
+        if(aFor.getStatements()!=null)
+        {
+            for (Statements s : aFor.getStatements()) {
+                s.accept(this);
+            }
+        }
     }
 
     @Override
     public void visit(FunctionCall functionCall) {
-
+        System.out.println("**********************************************");
+        System.out.println("[FunctionCall Node]");
+        System.out.println("Child Count : " + functionCall.getChildeCount());
+        if(functionCall.getId()!=null) {
+            System.out.println(functionCall.getId());
+        }
+        if (functionCall.getBaseExpression()!=null) {
+            functionCall.getBaseExpression().accept(this);
+        }
+        if(functionCall.getExpressions()!=null)
+        {
+            for (Expression e : functionCall.getExpressions()){
+                e.accept(this);
+            }
+        }
     }
 
     @Override
@@ -728,27 +825,81 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(Equal equal) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Equal Node]");
+        System.out.println("Child Count : " + equal.getChildeCount());
+        if (equal.getData() != null) {
+            System.out.println("the value data");
+            equal.getData().accept(this);
+        }
+        if (equal.getName() != null) {
+            System.out.println("change type to another: " + equal.getName());
+        }
     }
 
     @Override
     public void visit(EqualBaseData equalBaseData) {
-
+        System.out.println("**********************************************");
+        System.out.println("[EqualBaseData Node]");
+        System.out.println("Child Count : " + equalBaseData.getChildeCount());
+        if(equalBaseData.getBaseData()!=null)
+        {
+            System.out.println("Equal Value:");
+            equalBaseData.getBaseData().accept(this);
+        }
     }
 
     @Override
     public void visit(Function function) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Function Node]");
+        System.out.println("Child Count : " + function.getChildeCount());
+        if (function.getClassFunction() != null) {
+            System.out.println("node for function details:");
+            function.getClassFunction().accept(this);
+        }
+        if(function.getFunction() != null)
+        {
+            System.out.println("function is : " + function.getFunction());
+        }
     }
 
     @Override
     public void visit(Header header) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Header Node]");
+        System.out.println("Child Count : " + header.getChildeCount());
+        if (header.getPrameters() != null) {
+            System.out.println("header parameters :");
+            header.getPrameters().accept(this);
+        }
+        if (header.getType() != null) {
+            System.out.println("type : ");
+            header.getType().accept(this);
+        }
     }
 
     @Override
     public void visit(ImportRule importRule) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Import rule Node]");
+        System.out.println("Child Count : " + importRule.getChildeCount());
+        if(importRule.getStrings()!=null)
+        {
+            for (String s : importRule.getStrings()) {
+                System.out.println(s);
+            }
+        }
+        if(importRule.getIds()!=null)
+        {
+            for (String s : importRule.getIds()) {
+                System.out.println(s);
+            }
+        }
+        if(importRule.getUrl()!=null)
+        {
+            System.out.println("url for import : " + importRule.getUrl());
+        }
     }
 
     @Override

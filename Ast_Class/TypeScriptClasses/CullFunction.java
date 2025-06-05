@@ -27,7 +27,7 @@ public class CullFunction extends Node {
         astVisitor.visit(this);
     }
 
-    StringBuilder s =new StringBuilder();
+    StringBuilder s = new StringBuilder();
     String st="";
     String st1="";
     @Override

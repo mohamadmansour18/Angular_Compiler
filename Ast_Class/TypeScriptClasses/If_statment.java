@@ -28,12 +28,5 @@ public class If_statment extends Node {
     @Override
     public void accept(AST_Visitor ast_Visitor) {
         ast_Visitor.visit(this);
-        if(expression!=null)
-            expression.accept(ast_Visitor);
-        if (statements!=null)
-        {
-            for (Statements s:statements)
-                s.accept(ast_Visitor);
-        }
     }
 }
