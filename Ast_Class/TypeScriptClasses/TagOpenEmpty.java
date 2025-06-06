@@ -10,20 +10,6 @@ public class TagOpenEmpty extends Node {
     private ElementContent elementContent;
     private ArrayList<Attribute> attributes=new ArrayList<>();
 
-    @Override
-    public void accept(AST_Visitor ast_Visitor) {
-        ast_Visitor.visit(this);
-        if(id!=null)
-            System.out.println(id);
-        if(elementContent!=null)
-            elementContent.accept(ast_Visitor);
-        if(attributes!=null)
-        {
-            for (Attribute a:attributes)
-                a.accept(ast_Visitor);
-        }
-    }
-
     public String getId() {
         return id;
     }
@@ -46,5 +32,10 @@ public class TagOpenEmpty extends Node {
 
     public void setAttributes(ArrayList<Attribute> attributes) {
         this.attributes = attributes;
+    }
+
+    @Override
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
     }
 }

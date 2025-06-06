@@ -18,24 +18,16 @@ public class Type extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("Type Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (types != null) {
-            for (Types t : types) {
-                t.accept(astVisitor);
-            }
-        }
-        System.out.println("**********************************************");
-
     }
-StringBuilder s=new StringBuilder();
+
+    StringBuilder s=new StringBuilder();
     @Override
     public String getValue() {
         if(types!=null)
         {
-            for (Types t:types)
+            for (Types t:types) {
                 s.append(t.getValue());
+            }
         }
         return s.toString();
     }

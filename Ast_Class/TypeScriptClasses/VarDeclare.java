@@ -25,17 +25,5 @@ public class VarDeclare extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("VarDeclare Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (key != null) {
-           key.accept(astVisitor);
-        }
-        if (prameter != null) {
-            System.out.println("var name");
-            prameter.accept(astVisitor);
-        }
-        System.out.println("**********************************************");
-
     }
 }

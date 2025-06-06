@@ -7,15 +7,6 @@ public class StructuralDirective extends Node {
     private String string;
     private Expression expression;
 
-    @Override
-    public void accept(AST_Visitor ast_Visitor) {
-        ast_Visitor.visit(this);
-        if(string!=null)
-            System.out.println(string);
-        if(expression!=null)
-            expression.accept(ast_Visitor);
-    }
-
     public String getString() {
         return string;
     }
@@ -30,5 +21,10 @@ public class StructuralDirective extends Node {
 
     public void setExpression(Expression expression) {
         this.expression = expression;
+    }
+
+    @Override
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
     }
 }

@@ -34,25 +34,11 @@ public class Var extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("Variable Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (name != null) {
-            System.out.println("var name: " + name);
-        }
-        if (type != null) {
-            System.out.println("var type: ");
-            type.accept(astVisitor);
-        }
-        if (equal != null) {
-            System.out.println("var value: ");
-            equal.accept(astVisitor);
-        }
-        System.out.println("**********************************************");
-
     }
-StringBuilder stringBuilder = new StringBuilder();
-    StringBuilder stringtype=new StringBuilder();
+
+    StringBuilder stringBuilder = new StringBuilder();
+    StringBuilder stringtype = new StringBuilder();
+
     @Override
     public String getValue() {
         if(equal!=null)
@@ -61,6 +47,7 @@ StringBuilder stringBuilder = new StringBuilder();
         }
         return stringBuilder.toString();
     }
+
     public String getTypes(){
         if(type!=null)
         {

@@ -56,27 +56,76 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(TowwayDirective towwayDirective) {
-
+        System.out.println("**********************************************");
+        System.out.println("[TowwayDirective Node]");
+        System.out.println("Child Count : " + towwayDirective.getChildeCount());
+        if (towwayDirective.getExpressions()!=null) {
+            for (Expression e : towwayDirective.getExpressions()) {
+                e.accept(this);
+            }
+        }
     }
 
     @Override
     public void visit(StructuralDirective structuralDirective) {
-
+        System.out.println("**********************************************");
+        System.out.println("[StructuralDirective Node]");
+        System.out.println("Child Count : " + structuralDirective.getChildeCount());
+        if(structuralDirective.getString()!=null) {
+            System.out.println(structuralDirective.getString());
+        }
+        if(structuralDirective.getExpression()!=null) {
+            structuralDirective.getExpression().accept(this);
+        }
     }
 
     @Override
     public void visit(TagOpen tagOpen) {
-
+        System.out.println("**********************************************");
+        System.out.println("[TagOpen Node]");
+        System.out.println("Child Count : " + tagOpen.getChildeCount());
+        if(tagOpen.getId() != null) {
+            System.out.println(tagOpen.getId());
+        }
+        if(tagOpen.getElementContent()!=null) {
+            tagOpen.getElementContent().accept(this);
+        }
+        if(tagOpen.getAttributes()!=null)
+        {
+            for (Attribute a : tagOpen.getAttributes()) {
+                a.accept(this);
+            }
+        }
     }
 
     @Override
     public void visit(TagClose tagClose) {
-
+        System.out.println("**********************************************");
+        System.out.println("[TagClose Node]");
+        System.out.println("Child Count : " + tagClose.getChildeCount());
+        if(tagClose.getString() != null)
+        {
+            System.out.println(tagClose.getString());
+        }
     }
 
     @Override
     public void visit(TagOpenEmpty tagOpenEmpty) {
-
+        System.out.println("**********************************************");
+        System.out.println("[TagOpenEmpty Node]");
+        System.out.println("Child Count : " + tagOpenEmpty.getChildeCount());
+        if(tagOpenEmpty.getId() != null) {
+            System.out.println(tagOpenEmpty.getId());
+        }
+        if(tagOpenEmpty.getElementContent() != null) {
+            tagOpenEmpty.getElementContent().accept(this);
+        }
+        if(tagOpenEmpty.getAttributes() != null)
+        {
+            for (Attribute a : tagOpenEmpty.getAttributes()) {
+                a.accept(this);
+            }
+        }
     }
 
     @Override
@@ -85,7 +134,7 @@ public class BaseAstVisitor implements AST_Visitor {
         System.out.println("[AngularComponent Node]");
         System.out.println("Child Count : " + angularComponent.getChildeCount());
 
-        if (angularComponent.getAngular()!=null) {
+        if (angularComponent.getAngular() != null) {
             angularComponent.getAngular().accept(this);
         }
     }
@@ -422,7 +471,19 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(Templet templet) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Templet Node]");
+        System.out.println("Child Count : " + templet.getChildeCount());
+        if (templet.getElements() != null)
+        {
+            for (Element e : templet.getElements())
+                e.accept(this);
+        }
+        if (templet.getTexts() != null)
+        {
+            for (Text t : templet.getTexts())
+                t.accept(this);
+        }
     }
 
     @Override
@@ -479,7 +540,19 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(Text text) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Text Node]");
+        System.out.println("Child Count : " + text.getChildeCount());
+        if (text.getStrings() != null) {
+            for (String s : text.getStrings() ){
+                System.out.println(s);
+            }
+        }
+        if(text.getInters() != null) {
+            for (Inter i : text.getInters()) {
+                i.accept(this);
+            }
+        }
     }
 
     @Override
@@ -848,12 +921,30 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(Unary unary) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Unary Node]");
+        System.out.println("Child Count : " + unary.getChildeCount());
+        if (unary.getUnary()!=null) {
+            unary.getUnary().accept(this);
+        }
+        if(unary.getPrimaryExpression()!=null) {
+            unary.getPrimaryExpression().accept(this);
+        }
     }
 
     @Override
     public void visit(While aWhile) {
-
+        System.out.println("**********************************************");
+        System.out.println("[While Node]");
+        System.out.println("Child Count : " + aWhile.getChildeCount());
+        if(aWhile.getAwhile()!=null)
+        {
+            System.out.println(aWhile.getAwhile());
+        }
+        if (aWhile.getExpression()!=null)
+        {
+            aWhile.getExpression().accept(this);
+        }
     }
 
     @Override
@@ -1390,42 +1481,133 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(Type type) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Type Node]");
+        System.out.println("Child Count : " + type.getChildeCount());
+        if (type.getTypes() != null) {
+            for (Types t : type.getTypes()) {
+                t.accept(this);
+            }
+        }
     }
 
     @Override
     public void visit(TypeCurle typeCurle) {
-
+        System.out.println("**********************************************");
+        System.out.println("[TypeCurle Node]");
+        System.out.println("Child Count : " + typeCurle.getChildeCount());
+        if (typeCurle.getName() != null) {
+            System.out.println("name : " + typeCurle.getName());
+        }
+        if (typeCurle.getType() != null) {
+            System.out.println("type : " + typeCurle.getType());
+        }
+        if (typeCurle.getData() != null) {
+            System.out.println("date :");
+            typeCurle.getData().accept(this);
+        }
     }
 
     @Override
     public void visit(TypeCurles typeCurles) {
-
+        System.out.println("**********************************************");
+        System.out.println("[TypeCurles Node]");
+        System.out.println("Child Count : " + typeCurles.getChildeCount());
+        if (typeCurles.getTypeCurles() != null)
+        {
+            for (TypeCurle t : typeCurles.getTypeCurles())
+            {
+                t.accept(this);
+            }
+        }
     }
 
     @Override
     public void visit(TypeDeclare typeDeclare) {
-
+        System.out.println("**********************************************");
+        System.out.println("[TypeDeclare Node]");
+        System.out.println("Child Count : " + typeDeclare.getChildeCount());
+        if (typeDeclare.getNmae() != null) {
+            System.out.println("typeDeclare : " + typeDeclare.getNmae());
+        }
+        if (typeDeclare.getTypeEqual() != null) {
+            typeDeclare.getTypeEqual().accept(this);
+        }
     }
 
     @Override
     public void visit(TypeEqual typeEqual) {
-
+        System.out.println("**********************************************");
+        System.out.println("[TypeEqual Node]");
+        System.out.println("Child Count : " + typeEqual.getChildeCount());
+        if (typeEqual.getNumberStringBool() != null) {
+            typeEqual.getNumberStringBool().accept(this);
+        }
+        if (typeEqual.getCullFunction() != null) {
+            typeEqual.getCullFunction().accept(this);
+        }
+        if (typeEqual.getAccess() != null) {
+            typeEqual.getAccess().accept(this);
+        }
+        if (typeEqual.getTypeCurles() != null) {
+            typeEqual.getTypeCurles().accept(this);
+        }
     }
 
     @Override
     public void visit(Types types) {
-
+        System.out.println("**********************************************");
+        System.out.println("[Types Node]");
+        System.out.println("Child Count : " + types.getChildeCount());
+        if (types.getTypee() != null) {
+            System.out.println("type is : " + types.getTypee());
+        }
+        if (types.getName() != null) {
+            System.out.println("type is: " + types.getName());
+        }
+        if (types.getVoidd() != null) {
+            System.out.println("type is: " + types.getVoidd());
+        }
+        if (types.getNever() != null) {
+            System.out.println("type is: " + types.getNever());
+        }
+        if (types.getType() != null) {
+            System.out.println("type is: object type");
+            types.getType().accept(this);
+        }
     }
 
     @Override
     public void visit(Var var) {
+        System.out.println("**********************************************");
+        System.out.println("[Var Node]");
+        System.out.println("Child Count : " + var.getChildeCount());
+        if (var.getName() != null) {
+            System.out.println("var name: " + var.getName());
+        }
+        if (var.getType() != null) {
+            System.out.println("var type: ");
+            var.getType().accept(this);
+        }
+        if (var.getEqual() != null) {
+            System.out.println("var value: ");
+            var.getEqual().accept(this);
+        }
 
     }
 
     @Override
     public void visit(VarDeclare varDeclare) {
-
+        System.out.println("**********************************************");
+        System.out.println("[VarDeclare Node]");
+        System.out.println("Child Count : " + varDeclare.getChildeCount());
+        if (varDeclare.getKey() != null) {
+            varDeclare.getKey().accept(this);
+        }
+        if (varDeclare.getPrameter() != null) {
+            System.out.println("var name");
+            varDeclare.getPrameter().accept(this);
+        }
     }
 
     @Override

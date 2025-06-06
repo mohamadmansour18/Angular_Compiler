@@ -7,23 +7,6 @@ public class Unary extends Node {
     private Unary unary;
     private PrimaryExpression primaryExpression;
 
-    @Override
-    public void accept(AST_Visitor ast_Visitor) {
-        ast_Visitor.visit(this);
-        if (unary!=null)
-            unary.accept(ast_Visitor);
-        if(primaryExpression!=null)
-            primaryExpression.accept(ast_Visitor);
-    }
-
-    @Override
-    public String getValue() {
-
-            if (primaryExpression!=null)
-               return primaryExpression.getValue();
-            return " ";
-    }
-
     public Unary getUnary() {
         return unary;
     }
@@ -38,5 +21,18 @@ public class Unary extends Node {
 
     public void setPrimaryExpression(PrimaryExpression primaryExpression) {
         this.primaryExpression = primaryExpression;
+    }
+
+    @Override
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
+    }
+
+    @Override
+    public String getValue() {
+        if (primaryExpression!=null) {
+            return primaryExpression.getValue();
+        }
+        return " ";
     }
 }

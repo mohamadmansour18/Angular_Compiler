@@ -33,20 +33,6 @@ public class TypeCurle extends Node {
     }
 
     public void accept(AST_Visitor astVisitor) {
-        System.out.println("**********************************************");
-        System.out.println("TypeCurle Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (name != null) {
-            System.out.println("type name : " + name);
-        }
-        if (type != null) {
-            System.out.println("type: " + type);
-        }
-        if (data != null) {
-            System.out.println("type date :");
-            data.accept(astVisitor);
-        }
-        System.out.println("**********************************************");
-
+        astVisitor.visit(this);
     }
 }

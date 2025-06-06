@@ -8,21 +8,7 @@ import java.util.ArrayList;
 public class TagOpen extends Node {
     private String id;
     private ElementContent elementContent;
-    private ArrayList<Attribute> attributes=new ArrayList<>();
-
-    @Override
-    public void accept(AST_Visitor ast_Visitor) {
-        ast_Visitor.visit(this);
-        if(id!=null)
-            System.out.println(id);
-        if(elementContent!=null)
-            elementContent.accept(ast_Visitor);
-        if(attributes!=null)
-        {
-            for (Attribute a:attributes)
-                a.accept(ast_Visitor);
-        }
-    }
+    private ArrayList<Attribute> attributes = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -46,5 +32,10 @@ public class TagOpen extends Node {
 
     public void setAttributes(ArrayList<Attribute> attributes) {
         this.attributes = attributes;
+    }
+
+    @Override
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
     }
 }

@@ -28,15 +28,5 @@ public class Templet extends Node {
     @Override
     public void accept(AST_Visitor ast_Visitor) {
         ast_Visitor.visit(this);
-        if (elements!=null)
-        {
-            for (Element e :elements)
-                e.accept(ast_Visitor);
-        }
-        if (texts!=null)
-        {
-            for (Text t:texts)
-                t.accept(ast_Visitor);
-        }
     }
 }

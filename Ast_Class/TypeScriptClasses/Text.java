@@ -9,17 +9,6 @@ public class Text extends Node {
     private ArrayList<String> strings=new ArrayList<>();
     private ArrayList<Inter> inters=new ArrayList<>();
 
-    @Override
-    public void accept(AST_Visitor ast_Visitor) {
-        ast_Visitor.visit(this);
-        if (strings!=null)
-            for (String s:strings)
-                System.out.println(s);
-        if(inters!=null)
-            for (Inter i:inters)
-                i.accept(ast_Visitor);
-    }
-
     public ArrayList<String> getStrings() {
         return strings;
     }
@@ -34,5 +23,10 @@ public class Text extends Node {
 
     public void setInters(ArrayList<Inter> inters) {
         this.inters = inters;
+    }
+
+    @Override
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
     }
 }

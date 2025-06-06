@@ -54,27 +54,6 @@ public class Types extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("Types Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (typee != null) {
-            System.out.println("type is : " + typee);
-        }
-        if (name != null) {
-            System.out.println("type is: " + name);
-        }
-        if (voidd != null) {
-            System.out.println("type is: " + voidd);
-        }
-        if (never != null) {
-            System.out.println("type is: " + never);
-        }
-        if (type != null) {
-            System.out.println("type is: object type");
-            type.accept(astVisitor);
-        }
-        System.out.println("**********************************************");
-
     }
 
     StringBuilder s=new StringBuilder();

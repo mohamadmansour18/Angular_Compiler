@@ -43,23 +43,5 @@ public class TypeEqual extends Node {
 
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        System.out.println("**********************************************");
-        System.out.println("TypeEqual Node");
-        System.out.println("Child Count" + this.getChildeCount());
-        if (numberStringBool != null) {
-            numberStringBool.accept(astVisitor);
-        }
-        if (cullFunction != null) {
-            cullFunction.accept(astVisitor);
-        }
-        if (access != null) {
-            access.accept(astVisitor);
-        }
-        if (typeCurles != null) {
-            typeCurles.accept(astVisitor);
-        }
-
-        System.out.println("**********************************************");
-
     }
 }

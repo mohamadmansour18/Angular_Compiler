@@ -7,17 +7,6 @@ public class While extends Node {
     private String awhile;
     private Expression expression;
 
-    @Override
-    public void accept(AST_Visitor ast_Visitor) {
-        ast_Visitor.visit(this);
-        if(awhile!=null)
-            System.out.println(awhile);
-        if (expression!=null)
-        {
-            expression.accept(ast_Visitor);
-        }
-    }
-
     public String getAwhile() {
         return awhile;
     }
@@ -32,5 +21,10 @@ public class While extends Node {
 
     public void setExpression(Expression expression) {
         this.expression = expression;
+    }
+
+    @Override
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
     }
 }
