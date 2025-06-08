@@ -1,6 +1,5 @@
 package Visitor;
 
-
 import Ast_Class.Node.Node;
 import Ast_Class.TypeScriptClasses.RootProgram;
 import Ast_Class.TypeScriptClasses.*;
@@ -12,28 +11,61 @@ import Main.Main;
 import SemanticErros.*;
 import SymbolTable.Symbol;
 import gen.FrameParserBaseVisitor;
-
 import java.lang.Object;
-import java.util.Set;
-
 
 public class TypeScriptVisitor extends FrameParserBaseVisitor {
     public ErrorCollector errorCollector = new ErrorCollector();
 
     @Override
     public RootProgram visitRootprogram(FrameParser.RootprogramContext ctx) {
+
         RootProgram rootProgram = new RootProgram();
 
-        rootProgram.createScope("Global");
-        rootProgram.setScopeID(rootProgram.getCurrentScope().getId());
-        rootProgram.setChildeCount(ctx.getChildCount());
+        rootProgram.initializeNode(ctx, true, "Global");
 
         if (ctx.program() != null) {
             for (int i = 0; i < ctx.program().size(); i++) {
                 rootProgram.getPrograms().add(visitProgram(ctx.program(i)));
             }
         }
+
+        Node.removeScope();
         return rootProgram;
+    }
+
+    @Override
+    public Program visitProgram (FrameParser.ProgramContext ctx){
+
+        Program program = new Program();
+
+        program.initializeNode(ctx , false , "");
+
+        if (ctx.statements() != null) {
+            for (int i = 0; i < ctx.statements().size(); i++) {
+                program.getStatements().add(visitStatements(ctx.statements(i)));
+            }
+        }
+
+        return program;
+    }
+
+    @Override
+    public Statements visitStatements (FrameParser.StatementsContext ctx){
+        Statements statements = new Statements();
+
+        statements.initializeNode(ctx , false , "");
+
+        if (ctx.Export() != null) {
+            statements.setExport(ctx.Export().getText());
+        }
+        if (ctx.Await() != null) {
+            statements.setAtt(ctx.Await().getText());
+        }
+        if (ctx.stetment() != null) {
+            statements.setStatment((Statment) visit(ctx.stetment()));
+        }
+
+        return statements;
     }
 
     @Override
@@ -725,39 +757,6 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
                 loopStep.getExpressions().add(visitExpression(ctx.expression(i)));
             }
         return loopStep;
-    }
-
-    @Override
-    public Program visitProgram (FrameParser.ProgramContext ctx){
-        Program program = new Program();
-
-
-        if (ctx.statements() != null) {
-            for (int i = 0; i < ctx.statements().size(); i++) {
-                program.getStatements().add(visitStatements(ctx.statements(i)));
-            }
-        }
-        //  Node.removeScope();
-        return program;
-    }
-
-    @Override
-    public Statements visitStatements (FrameParser.StatementsContext ctx){
-        Statements statements = new Statements();
-        //statements.setScopeID(statements.getCurrentScope().getId());
-        statements.setChildeCount(ctx.getChildCount());
-
-        if (ctx.Export() != null) {
-            statements.setExport(ctx.Export().getText());
-        }
-        if (ctx.Await() != null) {
-            statements.setAtt(ctx.Await().getText());
-        }
-        if (ctx.stetment() != null) {
-            statements.setStatment((Statment) visit(ctx.stetment()));
-        }
-
-        return statements;
     }
 
     @Override

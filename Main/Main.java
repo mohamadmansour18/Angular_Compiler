@@ -25,7 +25,7 @@ public class Main {
         try {
             System.out.println();
 
-            String source = "C:\\Users\\ASUS\\Desktop\\TypeScriptCompiler\\Test\\FrameTest";
+            String source = "C:\\Users\\LEGION\\Desktop\\angular_compiler-master\\Test\\FrameTest";
             CharStream cs = fromFileName(source);
             FrameLexer lexer = new FrameLexer(cs);
             CommonTokenStream token = new CommonTokenStream(lexer);
@@ -39,13 +39,13 @@ public class Main {
 
             }
             else{
-                System.out.println("******************Type Script Ast************************");
+                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
                 TypeScriptVisitor visitor = new TypeScriptVisitor();
                 RootProgram startProgram = (RootProgram) visitor.visit(tree);
                 startProgram.accept(new BaseAstVisitor());
 
                 System.out.println();
-                System.out.println("******************************Symbol Table**********************************");
+                System.out.println("<<<<<<<<---------[ Symbol Table ]--------->>>>>>>>");
                 System.out.println("Number of Scopes in the program : " + Scope.getContID());
                 for (int i = 0; i < symbolTable.getScopes().size(); i++) {
                     for (Symbol symbol : symbolTable.getScopes().get(i).getSymbolList()) {
