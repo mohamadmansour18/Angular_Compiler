@@ -2,15 +2,26 @@ package Ast_Class.TypeScriptClasses;
 
 import Visitor.AST_Visitor;
 
-public class QutAngular extends Info {
-    private Templet templet;
+import java.util.ArrayList;
 
-    public Templet getTemplet() {
-        return templet;
+public class QutAngular extends Info {
+    private ArrayList<Element> elements=new ArrayList<>();
+    private ArrayList<Text>texts=new ArrayList<>();
+
+    public ArrayList<Element> getElements() {
+        return elements;
     }
 
-    public void setTemplet(Templet templet) {
-        this.templet = templet;
+    public void setElements(ArrayList<Element> elements) {
+        this.elements = elements;
+    }
+
+    public ArrayList<Text> getTexts() {
+        return texts;
+    }
+
+    public void setTexts(ArrayList<Text> texts) {
+        this.texts = texts;
     }
 
     @Override

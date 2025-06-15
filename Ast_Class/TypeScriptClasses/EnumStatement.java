@@ -23,6 +23,7 @@ public class EnumStatement extends Node implements Stetment {
         this.enumAssignable = enumAssignable;
     }
 
+    @Override
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
     }

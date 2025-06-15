@@ -25,7 +25,7 @@ public class Main {
         try {
             System.out.println();
 
-            String source = "C:\\Users\\LEGION\\Desktop\\angular_compiler-master\\Test\\FrameTest";
+            String source = "Test/FrameTest";
             CharStream cs = fromFileName(source);
             FrameLexer lexer = new FrameLexer(cs);
             CommonTokenStream token = new CommonTokenStream(lexer);

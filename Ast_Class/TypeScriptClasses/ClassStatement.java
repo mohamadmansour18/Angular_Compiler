@@ -52,6 +52,7 @@
             this.classBodies = classBodies;
         }
 
+        @Override
         public void accept(AST_Visitor astVisitor) {
             astVisitor.visit(this);
         }

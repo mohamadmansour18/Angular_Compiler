@@ -23,6 +23,7 @@ public class OperationsStatement extends Node implements Stetment {
         this.equal = equal;
     }
 
+    @Override
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
     }

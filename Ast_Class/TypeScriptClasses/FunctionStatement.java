@@ -25,6 +25,7 @@ public class FunctionStatement extends Node implements Stetment {
         this.classFunction = classFunction;
     }
 
+    @Override
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
     }

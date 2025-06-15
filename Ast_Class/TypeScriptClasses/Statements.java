@@ -5,15 +5,15 @@ import Visitor.AST_Visitor;
 
 public class Statements extends Node {
     private String export;
-    private String att;
-    private Statment statment;
+    private String Await;
+    private Stetment stetment;
 
-    public Statment getStatment() {
-        return statment;
+    public Stetment getStetment() {
+        return stetment;
     }
 
-    public void setStatment(Statment statment) {
-        this.statment = statment;
+    public void setStetment(Stetment stetment) {
+        this.stetment = stetment;
     }
 
     public String getExport() {
@@ -24,12 +24,12 @@ public class Statements extends Node {
         this.export = export;
     }
 
-    public String getAtt() {
-        return att;
+    public String getAwait() {
+        return Await;
     }
 
-    public void setAtt(String att) {
-        this.att = att;
+    public void setAwait(String att) {
+        this.Await = att;
     }
 
     public void accept(AST_Visitor astVisitor){

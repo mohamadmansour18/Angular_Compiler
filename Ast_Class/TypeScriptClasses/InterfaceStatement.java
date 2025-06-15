@@ -25,6 +25,7 @@ public class InterfaceStatement extends Node implements Stetment{
         this.interfaceBodies = interfaceBodies;
     }
 
+    @Override
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
     }

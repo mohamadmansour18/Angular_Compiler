@@ -141,9 +141,19 @@ public class BaseAstVisitor implements AST_Visitor {
         System.out.println("**********************************************");
         System.out.println("[AngularTemplet Node]");
         System.out.println("Child Count : " + angularTemplet.getChildeCount());
-        if (angularTemplet.getTemplet()!=null){
-            angularTemplet.getTemplet().accept(this);
+        if (angularTemplet.getElements()!=null){
+            for(Element a : angularTemplet.getElements())
+            {
+                a.accept(this);
+            }
         }
+        if (angularTemplet.getTexts()!=null){
+            for(Text a : angularTemplet.getTexts())
+            {
+                a.accept(this);
+            }
+        }
+
     }
 
     @Override
@@ -151,8 +161,17 @@ public class BaseAstVisitor implements AST_Visitor {
         System.out.println("**********************************************");
         System.out.println("[QutAngular Node]");
         System.out.println("Child Count : " + angular.getChildeCount());
-        if (angular.getTemplet() != null) {
-            angular.getTemplet().accept(this);
+        if (angular.getElements()!=null){
+            for(Element a : angular.getElements())
+            {
+                a.accept(this);
+            }
+        }
+        if (angular.getTexts()!=null){
+            for(Text a : angular.getTexts())
+            {
+                a.accept(this);
+            }
         }
     }
 
@@ -381,58 +400,6 @@ public class BaseAstVisitor implements AST_Visitor {
             {
                 p.accept(this);
             }
-        }
-    }
-
-    @Override
-    public void visit(Templet templet) {
-        System.out.println("**********************************************");
-        System.out.println("[Templet Node]");
-        System.out.println("Child Count : " + templet.getChildeCount());
-        if (templet.getElements() != null)
-        {
-            for (Element e : templet.getElements())
-                e.accept(this);
-        }
-        if (templet.getTexts() != null)
-        {
-            for (Text t : templet.getTexts())
-                t.accept(this);
-        }
-    }
-
-    @Override
-    public void visit(LoopStatments loopStatments) {
-        System.out.println("**********************************************");
-        System.out.println("[LoopStatments Node]");
-        System.out.println("Child Count : " + loopStatments.getChildeCount());
-
-        if (loopStatments.getAnwhile() != null)
-        {
-            loopStatments.getAnwhile().accept(this);
-        }
-        if (loopStatments.getAfor() != null)
-        {
-            loopStatments.getAfor().accept(this);
-        }
-        if (loopStatments.getStatements() !=null)
-        {
-            for (Statements s : loopStatments.getStatements()) {
-                s.accept(this);
-            }
-        }
-    }
-
-    @Override
-    public void visit(Prefix prefix) {
-        System.out.println("**********************************************");
-        System.out.println("[Prefix Node]");
-        System.out.println("Child Count : " + prefix.getChildeCount());
-        if (prefix.getIdentifier() != null) {
-            System.out.println(prefix.getIdentifier());
-        }
-        if(prefix.getMinusOfplus()!=null){
-            System.out.println(prefix.getMinusOfplus());
         }
     }
 
@@ -852,25 +819,6 @@ public class BaseAstVisitor implements AST_Visitor {
     }
 
     @Override
-    public void visit(Class aClass) {
-        System.out.println("**********************************************");
-        System.out.println("[Class Node]");
-        System.out.println("Child Count : " + aClass.getChildeCount());
-
-        if(aClass.getName()!=null)
-        {
-            System.out.println("class name : " + aClass.getName());
-        }
-        if (aClass.getClassBodies()!=null)
-        {
-            for (ClassBody c : aClass.getClassBodies())
-            {
-                c.accept(this);
-            }
-        }
-    }
-
-    @Override
     public void visit(ClassFunction classFunction) {
         System.out.println("**********************************************");
         System.out.println("[function details Node]");
@@ -955,21 +903,6 @@ public class BaseAstVisitor implements AST_Visitor {
         }
         if (data.getBaseData() != null) {
             data.getBaseData().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(Enum anEnum) {
-        System.out.println("**********************************************");
-        System.out.println("[Enum Node]");
-        System.out.println("Child Count : " + anEnum.getChildeCount());
-
-        if (anEnum.getName() != null) {
-            System.out.println("enum name : " + anEnum.getName());
-        }
-        if (anEnum.getEnumAssignable() != null) {
-            System.out.println("enum body");
-            anEnum.getEnumAssignable().accept(this);
         }
     }
 
@@ -1204,8 +1137,17 @@ public class BaseAstVisitor implements AST_Visitor {
         System.out.println("**********************************************");
         System.out.println("[Statements Node]");
         System.out.println("Child Count : " + statements.getChildeCount());
-        if(statements.getStatment()!=null) {
-            statements.getStatment().accept(this);
+        if(statements.getExport() != null)
+        {
+            System.out.println("Stetment's type : " + statements.getExport());
+        }
+        if(statements.getAwait() != null)
+        {
+            System.out.println("Stetment's type : " + statements.getAwait());
+        }
+        if(statements.getStetment() != null)
+        {
+            statements.getStetment().accept(this);
         }
     }
 
@@ -1263,8 +1205,8 @@ public class BaseAstVisitor implements AST_Visitor {
         if (typeEqual.getCullFunction() != null) {
             typeEqual.getCullFunction().accept(this);
         }
-        if (typeEqual.getAccess() != null) {
-            typeEqual.getAccess().accept(this);
+        if (typeEqual.getAccessStatement() != null) {
+            typeEqual.getAccessStatement().accept(this);
         }
         if (typeEqual.getTypeCurles() != null) {
             typeEqual.getTypeCurles().accept(this);

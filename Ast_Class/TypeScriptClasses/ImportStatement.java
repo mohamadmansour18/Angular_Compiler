@@ -34,6 +34,7 @@ public class ImportStatement extends Node implements Stetment {
         Ids = ids;
     }
 
+    @Override
     public void accept(AST_Visitor astVisitor){
         astVisitor.visit(this);
     }

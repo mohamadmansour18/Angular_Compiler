@@ -23,6 +23,7 @@ public class TypeDeclareStatement extends Node implements Stetment {
         this.typeEqual = typeEqual;
     }
 
+    @Override
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
     }

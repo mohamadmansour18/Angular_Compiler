@@ -6,7 +6,7 @@ import Visitor.AST_Visitor;
 public class TypeEqual extends Node {
     private NumberStringBool numberStringBool;
     private CullFunction cullFunction;
-    private Access access;
+    private AccessStatement accessStatement;
     private TypeCurles typeCurles;
 
     public NumberStringBool getNumberStringBool() {
@@ -25,12 +25,12 @@ public class TypeEqual extends Node {
         this.cullFunction = cullFunction;
     }
 
-    public Access getAccess() {
-        return access;
+    public AccessStatement getAccessStatement() {
+        return accessStatement;
     }
 
-    public void setAccess(Access access) {
-        this.access = access;
+    public void setAccessStatement(AccessStatement accessStatement) {
+        this.accessStatement = accessStatement;
     }
 
     public TypeCurles getTypeCurles() {

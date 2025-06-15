@@ -8,13 +8,20 @@ import Ast_Class.TypeScriptClasses.Object;
 public interface AST_Visitor {
 
     void visit(Angular angular);
-void visit(HtmlElement htmlElement);
-void visit(Keyword keyword);
-void visit(TowwayDirective towwayDirective);
-void visit(StructuralDirective  structuralDirective);
-void visit(TagOpen tagOpen);
-void visit(TagClose tagClose);
-void visit(TagOpenEmpty tagOpenEmpty);
+
+    void visit(HtmlElement htmlElement);
+
+    void visit(Keyword keyword);
+
+    void visit(TowwayDirective towwayDirective);
+
+    void visit(StructuralDirective  structuralDirective);
+
+    void visit(TagOpen tagOpen);
+
+    void visit(TagClose tagClose);
+
+    void visit(TagOpenEmpty tagOpenEmpty);
 
     void visit(AngularComponent angularComponent);
 
@@ -106,8 +113,6 @@ void visit(TagOpenEmpty tagOpenEmpty);
 
     void visit(BodyWithOutCurly bodyWithOutCurly);
 
-    void visit(Class aClass);
-
     void visit(ClassFunction classFunction);
 
     void visit(Constructor constructor);
@@ -117,8 +122,6 @@ void visit(TagOpenEmpty tagOpenEmpty);
     void visit(Culls culls);
 
     void visit(Data data);
-
-    void visit(Enum anEnum);
 
     void visit(EnumAssignable enumAssignable);
 

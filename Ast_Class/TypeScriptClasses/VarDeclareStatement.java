@@ -23,6 +23,7 @@ public class VarDeclareStatement extends Node implements Stetment {
         this.prameter = prameter;
     }
 
+    @Override
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
     }

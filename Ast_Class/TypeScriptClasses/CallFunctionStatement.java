@@ -23,6 +23,7 @@ public class CallFunctionStatement extends Node implements Stetment {
         this.arguments = arguments;
     }
 
+    @Override
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
     }
