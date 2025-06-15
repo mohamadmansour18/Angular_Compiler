@@ -39,7 +39,7 @@ public class Main {
             if(Syntex_Error.hasError){
                 System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
                 System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
-
+                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
                 System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
 
             }
