@@ -34,6 +34,7 @@ public class Main {
             parser.addErrorListener(new Syntex_Error());
             ParseTree tree = parser.rootprogram();
 
+            System.out.println();
 
             if(Syntex_Error.hasError){
 
