@@ -1,6 +1,3 @@
-
-function sayHello() {
-
-  console.log({{"let x = 3"}});
+class Ah {
+    x = 5;
 }
-<button (click)="sayHello()"></button>
