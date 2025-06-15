@@ -1,12 +1,35 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
-public class Dirictive extends Content {
-    private DirictiveElement dirictiveElement;
+public class Dirictive extends Node implements Content {
+    private Structural structural;
+    private AttributeLable attribute;
+    private Towway towway;
 
-    public DirictiveElement getDirictiveElement() {
-        return dirictiveElement;
+    public Structural getStructural() {
+        return structural;
+    }
+
+    public void setStructural(Structural structural) {
+        this.structural = structural;
+    }
+
+    public AttributeLable getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(AttributeLable attribute) {
+        this.attribute = attribute;
+    }
+
+    public Towway getTowway() {
+        return towway;
+    }
+
+    public void setTowway(Towway towway) {
+        this.towway = towway;
     }
 
     @Override
@@ -16,11 +39,9 @@ public class Dirictive extends Content {
 
     @Override
     public String getValue() {
-        if (dirictiveElement!=null)
-           return dirictiveElement.getValue();
-    return "";}
-
-    public void setDirictiveElement(DirictiveElement dirictiveElement) {
-        this.dirictiveElement = dirictiveElement;
+        if (attribute!=null) {
+            return attribute.getValue();
+        }
+        return "";
     }
 }

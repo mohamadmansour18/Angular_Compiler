@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class QutAngular extends Node implements Info {
 
     private ArrayList<Element> elements=new ArrayList<>();
-    private ArrayList<Text>texts=new ArrayList<>();
+    private ArrayList<TextLable> textLable = new ArrayList<>();
 
     public ArrayList<Element> getElements() {
         return elements;
@@ -18,12 +18,12 @@ public class QutAngular extends Node implements Info {
         this.elements = elements;
     }
 
-    public ArrayList<Text> getTexts() {
-        return texts;
+    public ArrayList<TextLable> getTextLable() {
+        return textLable;
     }
 
-    public void setTexts(ArrayList<Text> texts) {
-        this.texts = texts;
+    public void setTextLable(ArrayList<TextLable> textLable) {
+        this.textLable = textLable;
     }
 
     @Override

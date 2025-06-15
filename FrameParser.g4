@@ -200,7 +200,7 @@ element :
 
 // Angular template content: can be a character, text, or any element
 content:
-    character           #Characters
+    character          #Characters
   | text               #Texts
   | htmlElement        #Html
   | angularComponent   #AngularComponents

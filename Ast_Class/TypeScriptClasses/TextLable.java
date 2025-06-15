@@ -1,24 +1,33 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
-public class TextLable extends Content {
-    private Text  text;
+import java.util.ArrayList;
 
-    public Text getText() {
-        return text;
+public class TextLable extends Node implements Content {
+    private ArrayList<String> strings = new ArrayList<>();
+    private ArrayList<Inter> inters = new ArrayList<>();
+
+    public ArrayList<String> getStrings() {
+        return strings;
     }
 
-    public void setText(Text text) {
-        this.text = text;
+    public void setStrings(ArrayList<String> strings) {
+        this.strings = strings;
+    }
+
+    public ArrayList<Inter> getInters() {
+        return inters;
+    }
+
+    public void setInters(ArrayList<Inter> inters) {
+        this.inters = inters;
     }
 
     @Override
     public void accept(AST_Visitor ast_Visitor) {
         ast_Visitor.visit(this);
-        if(text!=null) {
-            text.accept(ast_Visitor);
-        }
     }
 }
 

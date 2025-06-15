@@ -5,23 +5,23 @@ import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
 public class Element extends Node {
-    private HtmlElement htmlElement;
-    private Angular angular;
+    private Html html;
+    private AngularComponents angularComponents;
 
-    public HtmlElement getHtmlElement() {
-        return htmlElement;
+    public Html getHtml() {
+        return html;
     }
 
-    public void setHtmlElement(HtmlElement htmlElement) {
-        this.htmlElement = htmlElement;
+    public void setHtml(Html html) {
+        this.html = html;
     }
 
-    public Angular getAngular() {
-        return angular;
+    public AngularComponents getAngularComponents() {
+        return angularComponents;
     }
 
-    public void setAngular(Angular angular) {
-        this.angular = angular;
+    public void setAngularComponents(AngularComponents angularComponents) {
+        this.angularComponents = angularComponents;
     }
 
     @Override

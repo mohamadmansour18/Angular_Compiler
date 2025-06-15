@@ -7,10 +7,6 @@ import Ast_Class.TypeScriptClasses.Object;
 
 public interface AST_Visitor {
 
-    void visit(Angular angular);
-
-    void visit(HtmlElement htmlElement);
-
     void visit(Keyword keyword);
 
     void visit(TowwayDirective towwayDirective);
@@ -23,8 +19,6 @@ public interface AST_Visitor {
 
     void visit(TagOpenEmpty tagOpenEmpty);
 
-    void visit(AngularComponent angularComponent);
-
     void visit(Attribute attribute);
 
     void visit(AttributeLable attributeLable);
@@ -33,17 +27,7 @@ public interface AST_Visitor {
 
     void visit(Char aChar);
 
-    void visit(Charcter charcter);
-
-    void visit(Content content);
-
-    void visit(Dirictive dirictive);
-
-    void visit(DirictiveElement dirictiveElement);
-
     void visit(ElementContent elementContent);
-
-    void visit(Html html);
 
     void visit(Inter inter);
 
@@ -52,8 +36,6 @@ public interface AST_Visitor {
     void visit(Arguments arguments);
 
     void visit(RootProgram rootProgram);
-
-    void visit(Text text);
 
     void visit(Element element);
 
@@ -209,4 +191,13 @@ public interface AST_Visitor {
 
     void visit(QutAngular angular);
 
+    void visit(Characters characters);
+
+    void visit(TextLable textLable);
+
+    void visit(Html html);
+
+    void visit(AngularComponents angularComponents);
+
+    void visit(Dirictive dirictive);
 }

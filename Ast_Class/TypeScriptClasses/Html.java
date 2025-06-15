@@ -1,16 +1,44 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
-public class Html extends Content {
-    private HtmlElement htmlElement;
+public class Html extends Node implements Content {
+    private TagOpen tagOpen;
+    private TagClose tagClose;
+    private ElementContent elementContent;
+    private TagOpenEmpty tagOpenEmpty;
 
-    public HtmlElement getHtmlElement() {
-        return htmlElement;
+    public TagOpen getTagOpen() {
+        return tagOpen;
     }
 
-    public void setHtmlElement(HtmlElement htmlElement) {
-        this.htmlElement = htmlElement;
+    public void setTagOpen(TagOpen tagOpen) {
+        this.tagOpen = tagOpen;
+    }
+
+    public TagClose getTagClose() {
+        return tagClose;
+    }
+
+    public void setTagClose(TagClose tagClose) {
+        this.tagClose = tagClose;
+    }
+
+    public ElementContent getElementContent() {
+        return elementContent;
+    }
+
+    public void setElementContent(ElementContent elementContent) {
+        this.elementContent = elementContent;
+    }
+
+    public TagOpenEmpty getTagOpenEmpty() {
+        return tagOpenEmpty;
+    }
+
+    public void setTagOpenEmpty(TagOpenEmpty tagOpenEmpty) {
+        this.tagOpenEmpty = tagOpenEmpty;
     }
 
     @Override

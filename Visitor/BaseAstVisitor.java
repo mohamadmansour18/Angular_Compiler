@@ -6,40 +6,6 @@ import Ast_Class.TypeScriptClasses.Object;
 
 
 public class BaseAstVisitor implements AST_Visitor {
-    @Override
-    public void visit(Angular angular) {
-        System.out.println("**********************************************");
-        System.out.println("[Angular Node]");
-        System.out.println("Child Count : " + angular.getChildeCount());
-
-        if(angular.getString()!=null) {
-            System.out.println(angular.getString());
-        }
-        if(angular.getAttributes()!=null) {
-            for (Attribute a : angular.getAttributes()) {
-                a.accept(this);
-            }
-        }
-    }
-
-    @Override
-    public void visit(HtmlElement htmlElement) {
-        System.out.println("**********************************************");
-        System.out.println("[HtmlElement Node]");
-        System.out.println("Child Count : " + htmlElement.getChildeCount());
-        if(htmlElement.getTagClose()!=null) {
-            htmlElement.getTagClose().accept(this);
-        }
-        if(htmlElement.getTagOpen()!=null) {
-            htmlElement.getTagOpen().accept(this);
-        }
-        if(htmlElement.getElementContent()!=null) {
-            htmlElement.getElementContent().accept(this);
-        }
-        if(htmlElement.getTagOpenEmpty()!=null) {
-            htmlElement.getTagOpenEmpty().accept(this);
-        }
-    }
 
     @Override
     public void visit(Keyword keyword) {
@@ -126,17 +92,6 @@ public class BaseAstVisitor implements AST_Visitor {
     }
 
     @Override
-    public void visit(AngularComponent angularComponent) {
-        System.out.println("**********************************************");
-        System.out.println("[AngularComponent Node]");
-        System.out.println("Child Count : " + angularComponent.getChildeCount());
-
-        if (angularComponent.getAngular() != null) {
-            angularComponent.getAngular().accept(this);
-        }
-    }
-
-    @Override
     public void visit(Attribute attribute) {
         System.out.println("**********************************************");
         System.out.println("[Attribute Node]");
@@ -184,50 +139,6 @@ public class BaseAstVisitor implements AST_Visitor {
     }
 
     @Override
-    public void visit(Charcter charcter) {
-        if (charcter.getaChar()!=null) {
-            charcter.getaChar().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(Content content) {
-        System.out.println("**********************************************");
-        System.out.println("[Content Node]");
-        if(content.getCharcter()!=null)
-            content.getCharcter().accept(this);
-        if(content.getTextLable()!=null)
-            content.getTextLable().accept(this);
-        if(content.getComponent()!=null)
-            content.getComponent().accept(this);
-        if(content.getHtml()!=null)
-            content.getHtml().accept(this);
-        if(content.getDirictive()!=null)
-            content.getDirictive().accept(this);
-    }
-
-    @Override
-    public void visit(Dirictive dirictive) {
-        System.out.println("**********************************************");
-        System.out.println("[Dirictive Node]");
-        if(dirictive.getDirictiveElement()!=null) {
-            dirictive.getDirictiveElement().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(DirictiveElement dirictiveElement) {
-        System.out.println("**********************************************");
-        System.out.println("[DirictiveElement Node]");
-        if(dirictiveElement.getStructural()!=null)
-            dirictiveElement.getStructural().accept(this);
-        if(dirictiveElement.getAttribute()!=null)
-            dirictiveElement.getAttribute().accept(this);
-        if(dirictiveElement.getTowway()!=null)
-            dirictiveElement.getTowway().accept(this);
-    }
-
-    @Override
     public void visit(ElementContent elementContent) {
         System.out.println("**********************************************");
         System.out.println("[ElementContent Node]");
@@ -237,16 +148,6 @@ public class BaseAstVisitor implements AST_Visitor {
             for (Content c : elementContent.getContents()){
                 c.accept(this);
             }
-        }
-    }
-
-    @Override
-    public void visit(Html html) {
-        System.out.println("**********************************************");
-        System.out.println("[Html Node]");
-        System.out.println("Child Count : " + html.getChildeCount());
-        if(html.getHtmlElement()!=null) {
-            html.getHtmlElement().accept(this);
         }
     }
 
@@ -320,32 +221,15 @@ public class BaseAstVisitor implements AST_Visitor {
     }
 
     @Override
-    public void visit(Text text) {
-        System.out.println("**********************************************");
-        System.out.println("[Text Node]");
-        System.out.println("Child Count : " + text.getChildeCount());
-        if (text.getStrings() != null) {
-            for (String s : text.getStrings() ){
-                System.out.println(s);
-            }
-        }
-        if(text.getInters() != null) {
-            for (Inter i : text.getInters()) {
-                i.accept(this);
-            }
-        }
-    }
-
-    @Override
     public void visit(Element element) {
         System.out.println("**********************************************");
         System.out.println("[Element Node]");
         System.out.println("Child Count : " + element.getChildeCount());
 
-        if(element.getHtmlElement()!=null)
-            element.getHtmlElement().accept(this);
-        if(element.getAngular()!=null)
-            element.getAngular().accept(this);
+        if(element.getHtml()!=null)
+            element.getHtml().accept(this);
+        if(element.getAngularComponents()!=null)
+            element.getAngularComponents().accept(this);
     }
 
     @Override
@@ -1327,8 +1211,8 @@ public class BaseAstVisitor implements AST_Visitor {
                 a.accept(this);
             }
         }
-        if (angularTemplet.getTexts()!=null){
-            for(Text a : angularTemplet.getTexts())
+        if (angularTemplet.getTextLable()!=null){
+            for(TextLable a : angularTemplet.getTextLable())
             {
                 a.accept(this);
             }
@@ -1347,11 +1231,79 @@ public class BaseAstVisitor implements AST_Visitor {
                 a.accept(this);
             }
         }
-        if (angular.getTexts()!=null){
-            for(Text a : angular.getTexts())
+        if (angular.getTextLable()!=null){
+            for(TextLable a : angular.getTextLable())
             {
                 a.accept(this);
             }
         }
+    }
+
+    @Override
+    public void visit(Characters characters){
+        System.out.println("**********************************************");
+        System.out.println("[characters Node]");
+        System.out.println("Child Count : " + characters.getChildeCount());
+        if (characters.getaChar()!=null) {
+            characters.getaChar().accept(this);
+        }
+    }
+
+    @Override
+    public void visit(TextLable textLable){
+        System.out.println("**********************************************");
+        System.out.println("[textLable Node]");
+        System.out.println("Child Count : " + textLable.getChildeCount());
+        if (textLable.getStrings() != null) {
+            for (String s : textLable.getStrings() ){
+                System.out.println(s);
+            }
+        }
+        if(textLable.getInters() != null) {
+            for (Inter i : textLable.getInters()) {
+                i.accept(this);
+            }
+        }
+    }
+
+    @Override
+    public void visit(Html html) {
+        System.out.println("**********************************************");
+        System.out.println("[Html Node]");
+        System.out.println("Child Count : " + html.getChildeCount());
+        if(html.getTagClose()!=null) {
+            html.getTagClose().accept(this);
+        }
+        if(html.getTagOpen()!=null) {
+            html.getTagOpen().accept(this);
+        }
+        if(html.getElementContent()!=null) {
+            html.getElementContent().accept(this);
+        }
+        if(html.getTagOpenEmpty()!=null) {
+            html.getTagOpenEmpty().accept(this);
+        }
+    }
+
+    @Override
+    public void visit(AngularComponents angularComponents)
+    {
+        System.out.println("**********************************************");
+        System.out.println("[angularComponents Node]");
+        System.out.println("Child Count : " + angularComponents.getChildeCount());
+
+        if(angularComponents.getString()!=null) {
+            System.out.println(angularComponents.getString());
+        }
+        if(angularComponents.getAttributes()!=null) {
+            for (Attribute a : angularComponents.getAttributes()) {
+                a.accept(this);
+            }
+        }
+    }
+
+    @Override
+    public void visit(Dirictive dirictive) {
+
     }
 }
