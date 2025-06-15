@@ -1,20 +1,30 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
-public class InterfaceStatement extends Statment{
-    private Interface anInterface;
+import java.util.ArrayList;
 
-    public Interface getAnInterface() {
-        return anInterface;
+public class InterfaceStatement extends Node implements Stetment{
+    private String interfaceName;
+    private ArrayList<InterfaceBody> interfaceBodies = new ArrayList<>();
+
+    public String getName() {
+        return interfaceName;
     }
 
-
-    public void setAnInterface(Interface anInterface) {
-        this.anInterface = anInterface;
+    public void setName(String name) {
+        this.interfaceName = name;
     }
 
-    @Override
+    public ArrayList<InterfaceBody> getInterfaceBodies() {
+        return interfaceBodies;
+    }
+
+    public void setInterfaceBodies(ArrayList<InterfaceBody> interfaceBodies) {
+        this.interfaceBodies = interfaceBodies;
+    }
+
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
     }

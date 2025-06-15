@@ -1,23 +1,29 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
-public class PrintStatement extends Statment{
-    private Print print;
+public class PrintStatement extends Node implements Stetment {
+    private String string;
+    private Arguments arguments;
 
-    public Print getPrint() {
-        return print;
+    public String getString() {
+        return string;
     }
 
-    public void setPrint(Print print) {
-        this.print = print;
+    public void setString(String string) {
+        this.string = string;
     }
 
-    @Override
-    public void accept(AST_Visitor astVisitor) {
+    public Arguments getArguments() {
+        return arguments;
+    }
+
+    public void setArguments(Arguments arguments) {
+        this.arguments = arguments;
+    }
+
+    public void accept(AST_Visitor astVisitor){
         astVisitor.visit(this);
-        if(print!=null) {
-            print.accept(astVisitor);
-        }
     }
 }

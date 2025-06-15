@@ -1,23 +1,29 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
-public class TypeDeclareStatement extends Statment{
-    private TypeDeclare type;
+public class TypeDeclareStatement extends Node implements Stetment {
+    private String nmae;
+    private TypeEqual typeEqual;
 
-    public TypeDeclare getType() {
-        return type;
+    public String getNmae() {
+        return nmae;
     }
 
-    public void setType(TypeDeclare type) {
-        this.type = type;
+    public void setNmae(String nmae) {
+        this.nmae = nmae;
     }
 
-    @Override
+    public TypeEqual getTypeEqual() {
+        return typeEqual;
+    }
+
+    public void setTypeEqual(TypeEqual typeEqual) {
+        this.typeEqual = typeEqual;
+    }
+
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        if(type!=null) {
-            type.accept(astVisitor);
-        }
     }
 }

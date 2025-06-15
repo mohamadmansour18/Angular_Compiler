@@ -1,25 +1,39 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
-public class ComponentStatement extends Statment
+public class ComponentStatement extends Node implements Stetment
 {
-private Component component;
+    private String component;
+    private Objects objects;
+    private TemplateStatement templateStatement ;
 
-    @Override
-    public void accept(AST_Visitor astVisitor) {
-        astVisitor.visit(this);
-        if(component!=null)
-            component.accept(astVisitor);
+    public TemplateStatement getTemplateStatement() {
+        return templateStatement;
     }
 
+    public void setTemplateStatement(TemplateStatement templateStatement) {
+        this.templateStatement = templateStatement;
+    }
 
-    public Component getComponent() {
+    public String getComponent() {
         return component;
     }
 
-
-    public void setComponent(Component component) {
+    public void setComponent(String component) {
         this.component = component;
+    }
+
+    public Objects getObjects() {
+        return objects;
+    }
+
+    public void setObjects(Objects objects) {
+        this.objects = objects;
+    }
+
+    public void accept(AST_Visitor astVisitor) {
+        astVisitor.visit(this);
     }
 }

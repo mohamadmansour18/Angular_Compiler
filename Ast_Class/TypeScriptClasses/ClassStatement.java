@@ -1,22 +1,58 @@
     package Ast_Class.TypeScriptClasses;
 
+    import Ast_Class.Node.Node;
     import Visitor.AST_Visitor;
 
-    public class ClassStatement extends Statment{
-    private Class aClass;
+    import java.util.ArrayList;
 
-        @Override
-        public void accept(AST_Visitor astVisitor) {
-            astVisitor.visit(this);
+    public class ClassStatement extends Node implements Stetment {
+        private String className;
+        private ArrayList<ClassBody> classBodies=new ArrayList<>();
+        private String Implements ;
+        private String interfaceName ;
+
+        public String getInterfaceName() {
+            return interfaceName;
+        }
+
+        public void setInterfaceName(String interfaceName) {
+            this.interfaceName = interfaceName;
         }
 
 
-    public Class getaClass() {
-        return aClass;
-    }
+        public String getClassName() {
+            return className;
+        }
 
+        public void setClassName(String className) {
+            this.className = className;
+        }
 
-    public void setaClass(Class aClass) {
-        this.aClass = aClass;
-    }
+        public String getImplements() {
+            return Implements;
+        }
+
+        public void setImplements(String anImplements) {
+            Implements = anImplements;
+        }
+
+        public String getName() {
+            return className;
+        }
+
+        public void setName(String name) {
+            this.className = name;
+        }
+
+        public ArrayList<ClassBody> getClassBodies() {
+            return classBodies;
+        }
+
+        public void setClassBodies(ArrayList<ClassBody> classBodies) {
+            this.classBodies = classBodies;
+        }
+
+        public void accept(AST_Visitor astVisitor) {
+            astVisitor.visit(this);
+        }
 }

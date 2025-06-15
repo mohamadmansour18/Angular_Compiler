@@ -1,20 +1,32 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
-public class IfStatement extends Statment{
-    private If_statment ifStatment;
+import java.util.ArrayList;
 
-    public If_statment getIfStatment() {
-        return ifStatment;
+public class IfStatement extends Node implements Stetment {
+    private Expression expression =new Expression();
+    private ArrayList<Statements> statements=new ArrayList<>();
+
+    public Expression getExpression() {
+        return expression;
     }
 
-    public void setIfStatment(If_statment ifStatment) {
-        this.ifStatment = ifStatment;
+    public void setExpression(Expression expression) {
+        this.expression = expression;
+    }
+
+    public ArrayList<Statements> getStatements() {
+        return statements;
+    }
+
+    public void setStatements(ArrayList<Statements> statements) {
+        this.statements = statements;
     }
 
     @Override
-    public void accept(AST_Visitor astVisitor) {
-        astVisitor.visit(this);
+    public void accept(AST_Visitor ast_Visitor) {
+        ast_Visitor.visit(this);
     }
 }

@@ -1,23 +1,29 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
-public class VarDeclareStatement extends Statment{
-    private VarDeclare varDeclare;
+public class VarDeclareStatement extends Node implements Stetment {
+    private Keyword key;
+    private Prameter prameter;
 
-    public VarDeclare getVarDeclare() {
-        return varDeclare;
+    public Keyword getKey() {
+        return key;
     }
 
-    public void setVarDeclare(VarDeclare varDeclare) {
-        this.varDeclare = varDeclare;
+    public void setKey(Keyword key) {
+        this.key = key;
     }
 
-    @Override
+    public Prameter getPrameter() {
+        return prameter;
+    }
+
+    public void setPrameter(Prameter prameter) {
+        this.prameter = prameter;
+    }
+
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        if(varDeclare!=null) {
-            varDeclare.accept(astVisitor);
-        }
     }
 }

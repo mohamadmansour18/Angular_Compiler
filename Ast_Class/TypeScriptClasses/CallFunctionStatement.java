@@ -1,22 +1,45 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
-public class CallFunctionStatement extends Statment{
-    private CullFunction cullFunction;
+public class CallFunctionStatement extends Node implements Stetment {
+    private String name;
+    private Arguments arguments;
 
-    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Arguments getArguments() {
+        return arguments;
+    }
+
+    public void setArguments(Arguments arguments) {
+        this.arguments = arguments;
+    }
+
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
     }
 
-
-    public CullFunction getCullFunction() {
-        return cullFunction;
-    }
-
-
-    public void setCullFunction(CullFunction cullFunction) {
-        this.cullFunction = cullFunction;
+    StringBuilder s = new StringBuilder();
+    String st="";
+    String st1="";
+    @Override
+    public String getValue() {
+        if(name!=null)
+        {
+            st=name;
+        }
+        if(arguments!=null)
+        {
+            st1="("+arguments.getValue()+")";
+        }
+        return st+st1;
     }
 }

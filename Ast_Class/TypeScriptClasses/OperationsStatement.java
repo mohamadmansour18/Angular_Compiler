@@ -1,28 +1,31 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
-public class OperationsStatement extends Statment{
-    private Operations operations;
+public class OperationsStatement extends Node implements Stetment {
+    private AccessStatement access;
+    private Equal equal;
 
-    public Operations getOperations() {
-        return operations;
+    public AccessStatement getAccess() {
+        return access;
     }
 
-
-    public void setOperations(Operations operations) {
-        this.operations = operations;
+    public void setAccess(AccessStatement access) {
+        this.access = access;
     }
 
-    @Override
+    public Equal getEqual() {
+        return equal;
+    }
+
+    public void setEqual(Equal equal) {
+        this.equal = equal;
+    }
+
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        if (operations!=null)
-        {
-            operations.accept(astVisitor);
-        }
     }
-
 
 
 }

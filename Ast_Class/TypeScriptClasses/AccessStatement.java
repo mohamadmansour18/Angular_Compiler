@@ -1,24 +1,35 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
-public class AccessStatement extends Statment{
-    private Access access;
+import java.util.ArrayList;
 
-    @Override
+public class AccessStatement extends Node implements Stetment {
+    private ArrayList<Culls> culls = new ArrayList<>();
+
+    public ArrayList<Culls> getCulls() {
+        return culls;
+    }
+
+    public void setCulls(ArrayList<Culls> culls) {
+        this.culls = culls;
+    }
+
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
-        if(access!=null)
-            access.accept(astVisitor);
     }
 
+    StringBuilder s = new StringBuilder();
 
-    public Access getAccess() {
-        return access;
-    }
-
-
-    public void setAccess(Access access) {
-        this.access = access;
+    @Override
+    public String getValue() {
+        if (culls != null) {
+            for (Culls c : culls) {
+                s.append(c.getValue());
+            }
+            s.append(".");
+        }
+        return s.toString();
     }
 }

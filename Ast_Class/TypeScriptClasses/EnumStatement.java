@@ -1,19 +1,28 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
-public class EnumStatement extends Statment{
-    private Enum anEnum;
+public class EnumStatement extends Node implements Stetment {
+    private String name;
+    private EnumAssignable enumAssignable;
 
-    public Enum getAnEnum() {
-        return anEnum;
+    public String getName() {
+        return name;
     }
 
-    public void setAnEnum(Enum anEnum) {
-        this.anEnum = anEnum;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    @Override
+    public EnumAssignable getEnumAssignable() {
+        return enumAssignable;
+    }
+
+    public void setEnumAssignable(EnumAssignable enumAssignable) {
+        this.enumAssignable = enumAssignable;
+    }
+
     public void accept(AST_Visitor astVisitor) {
         astVisitor.visit(this);
     }

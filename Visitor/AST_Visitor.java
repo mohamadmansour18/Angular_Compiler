@@ -3,8 +3,6 @@ package Visitor;
 
 import Ast_Class.TypeScriptClasses.RootProgram;
 import Ast_Class.TypeScriptClasses.*;
-import Ast_Class.TypeScriptClasses.Class;
-import Ast_Class.TypeScriptClasses.Enum;
 import Ast_Class.TypeScriptClasses.Object;
 
 public interface AST_Visitor {
@@ -32,15 +30,9 @@ void visit(TagOpenEmpty tagOpenEmpty);
 
     void visit(AttributeDirictive attributeDirictive);
 
-    void visit(CallFunction function);
-
     void visit(Char aChar);
 
     void visit(Charcter charcter);
-
-    void visit(ClassStatement classStatement);
-
-    void visit(CallFunctionStatement functionStatement);
 
     void visit(Content content);
 
@@ -50,36 +42,17 @@ void visit(TagOpenEmpty tagOpenEmpty);
 
     void visit(ElementContent elementContent);
 
-    void visit(FunctionStatement functionStatement);
-
     void visit(Html html);
-
-    void visit(IfStatement ifStatement);
-
-    void visit(ImportStatement importStatement);
 
     void visit(Info info);
 
     void visit(Inter inter);
-
-    void visit(InterfaceStatement interfaceStatement);
-
-    void visit(LoopStatement loopStatement);
 
     void visit(Argument argument);
 
     void visit(Arguments arguments);
 
     void visit(RootProgram rootProgram);
-
-    //void visit(Array array);
-    void visit(Templet templet);
-
-    void visit(If_statment ifStatment);
-
-    void visit(LoopStatments loopStatments);
-
-    void visit(Prefix prefix);
 
     void visit(Text text);
 
@@ -121,8 +94,6 @@ void visit(TagOpenEmpty tagOpenEmpty);
 
     void visit(Relation relation);
 
-    void visit(Statment statment);
-
     void visit(Unary unary);
 
     void visit(While aWhile);
@@ -138,8 +109,6 @@ void visit(TagOpenEmpty tagOpenEmpty);
     void visit(Class aClass);
 
     void visit(ClassFunction classFunction);
-
-    void visit(Component component);
 
     void visit(Constructor constructor);
 
@@ -159,13 +128,7 @@ void visit(TagOpenEmpty tagOpenEmpty);
 
     void visit(EqualBaseData equalBaseData);
 
-    void visit(Function function);
-
     void visit(Header header);
-
-    void visit(ImportRule importRule);
-
-    void visit(Interface anInterface);
 
     void visit(InterfaceBody interfaceBody);
 
@@ -183,17 +146,11 @@ void visit(TagOpenEmpty tagOpenEmpty);
 
     void visit(ObjectsType objectTypes);
 
-    void visit(Operations operations);
-
     void visit(Prameter prameter);
-
-    void visit(Print print);
 
     void visit(Program program);
 
     void visit(Return aReturn);
-
-    void visit(Services services);
 
     void visit(Statements statements);
 
@@ -203,22 +160,51 @@ void visit(TagOpenEmpty tagOpenEmpty);
 
     void visit(TypeCurles typeCurles);
 
-    void visit(TypeDeclare typeDeclare);
-
     void visit(TypeEqual typeEqual);
 
     void visit(Types types);
 
     void visit(Var var);
 
-    void visit(VarDeclare varDeclare);
-    //void visit(Access access);
-
-    void visit(Ast_Class.TypeScriptClasses.Access access);
-
     void visit(Prameters prameters);
 
     void visit(Ast_Class.TypeScriptClasses.Array array);
 
     void visit(ClassBody classBody);
+
+    void visit(ServicesStatement srvicesStatement);
+
+    void visit(ComponentStatement componentStatement);
+
+    void visit(PrintStatement printStatement);
+
+    void visit(VarDeclareStatement varDeclareStatement);
+
+    void visit(FunctionStatement functionStatement);
+
+    void visit(CallFunctionStatement callFunctionStatement);
+
+    void visit(AccessStatement accessStatement);
+
+    void visit(TypeDeclareStatement typeDeclareStatement);
+
+    void visit(EnumStatement enumStatement);
+
+    void visit(InterfaceStatement interfaceStatement);
+
+    void visit(ClassStatement classStatement);
+
+    void visit(OperationsStatement operationsStatement);
+
+    void visit(ImportStatement importStatement);
+
+    void visit(TemplateStatement templateStatement);
+
+    void visit(IfStatement ifStatement);
+
+    void visit(LoopStatement loopStatement);
+
+    void visit(PrefixStatement prefixStatement);
+
+
 }

@@ -2,10 +2,7 @@ package Visitor;
 
 import Ast_Class.TypeScriptClasses.RootProgram;
 import Ast_Class.TypeScriptClasses.*;
-import Ast_Class.TypeScriptClasses.Class;
-import Ast_Class.TypeScriptClasses.Enum;
 import Ast_Class.TypeScriptClasses.Object;
-import Ast_Class.TypeScriptClasses.Access;
 
 
 public class BaseAstVisitor implements AST_Visitor {
@@ -208,17 +205,6 @@ public class BaseAstVisitor implements AST_Visitor {
     }
 
     @Override
-    public void visit(CallFunction function) {
-        System.out.println("**********************************************");
-        System.out.println("[CallFunction Node]");
-        System.out.println("Child Count : " + function.getChildeCount());
-
-        if (function.getCullFunction()!=null) {
-            function.getCullFunction().accept(this);
-        }
-    }
-
-    @Override
     public void visit(Char aChar) {
         System.out.println("**********************************************");
         System.out.println("[Char Node]");
@@ -231,27 +217,6 @@ public class BaseAstVisitor implements AST_Visitor {
     public void visit(Charcter charcter) {
         if (charcter.getaChar()!=null) {
             charcter.getaChar().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(ClassStatement classStatement) {
-        System.out.println("**********************************************");
-        System.out.println("[ClassStatement Node]");
-        System.out.println("Child Count : " + classStatement.getChildeCount());
-        if(classStatement.getaClass()!=null) {
-            classStatement.getaClass().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(CallFunctionStatement functionStatement) {
-        System.out.println("**********************************************");
-        System.out.println("[CallFunctionStatement Node]");
-        System.out.println("Child Count : " + functionStatement.getChildeCount());
-
-        if(functionStatement.getCullFunction()!=null) {
-            functionStatement.getCullFunction().accept(this);
         }
     }
 
@@ -306,42 +271,12 @@ public class BaseAstVisitor implements AST_Visitor {
     }
 
     @Override
-    public void visit(FunctionStatement functionStatement) {
-        System.out.println("**********************************************");
-        System.out.println("[Html Node]");
-        System.out.println("Child Count : " + functionStatement.getChildeCount());
-        if(functionStatement.getFunction()!=null) {
-            functionStatement.getFunction().accept(this);
-        }
-    }
-
-    @Override
     public void visit(Html html) {
         System.out.println("**********************************************");
         System.out.println("[Html Node]");
         System.out.println("Child Count : " + html.getChildeCount());
         if(html.getHtmlElement()!=null) {
             html.getHtmlElement().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(IfStatement ifStatement) {
-        System.out.println("**********************************************");
-        System.out.println("[IfStatement Node]");
-        System.out.println("Child Count : " + ifStatement.getChildeCount());
-        if(ifStatement.getIfStatment()!=null) {
-            ifStatement.getIfStatment().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(ImportStatement importStatement) {
-        System.out.println("**********************************************");
-        System.out.println("[importStatement Node]");
-        System.out.println("Child Count : " + importStatement.getChildeCount());
-        if (importStatement.getImportRul()!=null){
-            importStatement.getImportRul().accept(this);
         }
     }
 
@@ -387,26 +322,6 @@ public class BaseAstVisitor implements AST_Visitor {
         System.out.println("Child Count : " + inter.getChildeCount());
         if(inter.getExpression()!=null) {
             inter.getExpression().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(InterfaceStatement interfaceStatement) {
-        System.out.println("**********************************************");
-        System.out.println("[InterfaceStatement Node]");
-        System.out.println("Child Count : " + interfaceStatement.getChildeCount());
-        if(interfaceStatement.getAnInterface()!=null) {
-            interfaceStatement.getAnInterface().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(LoopStatement loopStatement) {
-        System.out.println("**********************************************");
-        System.out.println("[loopStatement Node]");
-        System.out.println("Child Count : " + loopStatement.getChildeCount());
-        if (loopStatement.getLoopStatments()!=null) {
-            loopStatement.getLoopStatments().accept(this);
         }
     }
 
@@ -483,23 +398,6 @@ public class BaseAstVisitor implements AST_Visitor {
         {
             for (Text t : templet.getTexts())
                 t.accept(this);
-        }
-    }
-
-    @Override
-    public void visit(If_statment ifStatment) {
-        System.out.println("**********************************************");
-        System.out.println("[If_statment Node]");
-        System.out.println("Child Count : " + ifStatment.getChildeCount());
-
-        if(ifStatment.getExpression()!=null) {
-            ifStatment.getExpression().accept(this);
-        }
-        if (ifStatment.getStatements()!=null)
-        {
-            for (Statements s : ifStatment.getStatements()) {
-                s.accept(this);
-            }
         }
     }
 
@@ -862,64 +760,6 @@ public class BaseAstVisitor implements AST_Visitor {
     }
 
     @Override
-    public void visit(Statment statment) {
-        System.out.println("**********************************************");
-        System.out.println("[Statment Node]");
-        System.out.println("Child Count : " + statment.getChildeCount());
-        if (statment.getServicesStatement() != null) {
-            statment.getServicesStatement().accept(this);
-        }
-        if (statment.getComponentStatement() != null) {
-            statment.getComponentStatement().accept(this);
-        }
-        if (statment.getPrintStatement() != null) {
-            statment.getPrintStatement().accept(this);
-        }
-        if (statment.getVarDeclareStatement() != null) {
-            statment.getVarDeclareStatement().accept(this);
-        }
-        if (statment.getFunctionStatement() != null) {
-            statment.getFunctionStatement().accept(this);
-        }
-        if (statment.getCallFunctionStatement() != null) {
-            statment.getCallFunctionStatement().accept(this);
-        }
-        if (statment.getAccessStatement() != null) {
-            statment.getAccessStatement().accept(this);
-        }
-        if (statment.getTypeDeclareStatement() != null) {
-            statment.getTypeDeclareStatement().accept(this);
-        }
-        if (statment.getEnumStatement() != null) {
-            statment.getEnumStatement().accept(this);
-        }
-        if (statment.getInterfaceStatement() != null) {
-            statment.getInterfaceStatement().accept(this);
-        }
-        if (statment.getClassStatement() != null) {
-            statment.getClassStatement().accept(this);
-        }
-        if (statment.getOperationsStatement() != null) {
-            statment.getOperationsStatement().accept(this);
-        }
-        if (statment.getImportStatement() != null) {
-            statment.getImportStatement().accept(this);
-        }
-        if (statment.getTemplateStatement() != null) {
-            statment.getTemplateStatement().accept(this);
-        }
-        if (statment.getIfStatement() != null) {
-            statment.getIfStatement().accept(this);
-        }
-        if (statment.getLoopStatement() != null) {
-            statment.getLoopStatement().accept(this);
-        }
-        if (statment.getPrefixStatement() != null) {
-            statment.getPrefixStatement().accept(this);
-        }
-    }
-
-    @Override
     public void visit(Unary unary) {
         System.out.println("**********************************************");
         System.out.println("[Unary Node]");
@@ -1046,21 +886,6 @@ public class BaseAstVisitor implements AST_Visitor {
         if (classFunction.getBody() != null) {
             System.out.println("function body");
             classFunction.getBody().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(Component component) {
-        System.out.println("**********************************************");
-        System.out.println("[Component Node]");
-        System.out.println("Child Count : " + component.getChildeCount());
-
-        if (component.getComponent() != null) {
-            System.out.println("declare component");
-        }
-        if (component.getObjects() != null) {
-            System.out.println("component content");
-            component.getObjects().accept(this);
         }
     }
 
@@ -1202,21 +1027,6 @@ public class BaseAstVisitor implements AST_Visitor {
     }
 
     @Override
-    public void visit(Function function) {
-        System.out.println("**********************************************");
-        System.out.println("[Function Node]");
-        System.out.println("Child Count : " + function.getChildeCount());
-        if (function.getClassFunction() != null) {
-            System.out.println("node for function details:");
-            function.getClassFunction().accept(this);
-        }
-        if(function.getFunction() != null)
-        {
-            System.out.println("function is : " + function.getFunction());
-        }
-    }
-
-    @Override
     public void visit(Header header) {
         System.out.println("**********************************************");
         System.out.println("[Header Node]");
@@ -1228,45 +1038,6 @@ public class BaseAstVisitor implements AST_Visitor {
         if (header.getType() != null) {
             System.out.println("type : ");
             header.getType().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(ImportRule importRule) {
-        System.out.println("**********************************************");
-        System.out.println("[Import rule Node]");
-        System.out.println("Child Count : " + importRule.getChildeCount());
-        if(importRule.getStrings()!=null)
-        {
-            for (String s : importRule.getStrings()) {
-                System.out.println(s);
-            }
-        }
-        if(importRule.getIds()!=null)
-        {
-            for (String s : importRule.getIds()) {
-                System.out.println(s);
-            }
-        }
-        if(importRule.getUrl()!=null)
-        {
-            System.out.println("url for import : " + importRule.getUrl());
-        }
-    }
-
-    @Override
-    public void visit(Interface anInterface) {
-        System.out.println("**********************************************");
-        System.out.println("[Interface Node]");
-        System.out.println("Child Count : " + anInterface.getChildeCount());
-        if (anInterface.getName() != null) {
-            System.out.println("interface name: " + anInterface.getName());
-        }
-        if (anInterface.getInterfaceBodies() != null) {
-            System.out.println("interface body: ");
-            for (InterfaceBody i : anInterface.getInterfaceBodies()) {
-                i.accept(this);
-            }
         }
     }
 
@@ -1383,19 +1154,6 @@ public class BaseAstVisitor implements AST_Visitor {
     }
 
     @Override
-    public void visit(Operations operations) {
-        System.out.println("**********************************************");
-        System.out.println("[Operations Node]");
-        System.out.println("Child Count : " + operations.getChildeCount());
-        if (operations.getAccess() != null) {
-            operations.getAccess().accept(this);
-        }
-        if (operations.getEqual() != null) {
-            operations.getEqual().accept(this);
-        }
-    }
-
-    @Override
     public void visit(Prameter prameter) {
         System.out.println("**********************************************");
         System.out.println("[Parameter Node]");
@@ -1414,20 +1172,6 @@ public class BaseAstVisitor implements AST_Visitor {
         if (prameter.getObjects() != null) {
             System.out.println("parameter object type: ");
             prameter.getObjects().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(Print print) {
-        System.out.println("**********************************************");
-        System.out.println("[Print Node]");
-        System.out.println("Child Count : " + print.getChildeCount());
-        if(print.getString()!=null)
-        {
-            System.out.println("printed value: " + print.getString());
-        }
-        if(print.getArguments()!=null) {
-            print.getArguments().accept(this);
         }
     }
 
@@ -1452,20 +1196,6 @@ public class BaseAstVisitor implements AST_Visitor {
         if (aReturn.getBaseData() != null) {
             System.out.println("date return: ");
             aReturn.getBaseData().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(Services services) {
-        System.out.println("**********************************************");
-        System.out.println("[services Node]");
-        System.out.println("Child Count : " + services.getChildeCount());
-        if (services.getInjectable() != null) {
-            System.out.println("using services : (injectable)");
-        }
-        if (services.getObjects() != null) {
-            System.out.println("services content : ");
-            services.getObjects().accept(this);
         }
     }
 
@@ -1519,19 +1249,6 @@ public class BaseAstVisitor implements AST_Visitor {
             {
                 t.accept(this);
             }
-        }
-    }
-
-    @Override
-    public void visit(TypeDeclare typeDeclare) {
-        System.out.println("**********************************************");
-        System.out.println("[TypeDeclare Node]");
-        System.out.println("Child Count : " + typeDeclare.getChildeCount());
-        if (typeDeclare.getNmae() != null) {
-            System.out.println("typeDeclare : " + typeDeclare.getNmae());
-        }
-        if (typeDeclare.getTypeEqual() != null) {
-            typeDeclare.getTypeEqual().accept(this);
         }
     }
 
@@ -1597,32 +1314,6 @@ public class BaseAstVisitor implements AST_Visitor {
     }
 
     @Override
-    public void visit(VarDeclare varDeclare) {
-        System.out.println("**********************************************");
-        System.out.println("[VarDeclare Node]");
-        System.out.println("Child Count : " + varDeclare.getChildeCount());
-        if (varDeclare.getKey() != null) {
-            varDeclare.getKey().accept(this);
-        }
-        if (varDeclare.getPrameter() != null) {
-            System.out.println("var name");
-            varDeclare.getPrameter().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(Access access) {
-        System.out.println("**********************************************");
-        System.out.println("[Access Node]");
-        System.out.println("Child Count : " + access.getChildeCount());
-        if (access.getCulls() != null) {
-            for (Culls c : access.getCulls())
-                c.accept(this);
-        }
-        System.out.println("**********************************************");
-    }
-
-    @Override
     public void visit(Prameters prameters) {
         System.out.println("**********************************************");
         System.out.println("[Parameters Node]");
@@ -1666,5 +1357,90 @@ public class BaseAstVisitor implements AST_Visitor {
             System.out.println("class function : ");
             classBody.getClassFunction().accept(this);
         }
+    }
+
+    @Override
+    public void visit(ServicesStatement srvicesStatement){
+
+    }
+
+    @Override
+    public void visit(ComponentStatement componentStatement){
+
+    }
+
+    @Override
+    public void visit(PrintStatement printStatement){
+
+    }
+
+    @Override
+    public void visit(VarDeclareStatement varDeclareStatement){
+
+    }
+
+    @Override
+    public void visit(FunctionStatement functionStatement){
+
+    }
+
+    @Override
+    public void visit(CallFunctionStatement callFunctionStatement){
+
+    }
+
+    @Override
+    public void visit(AccessStatement accessStatement){
+
+    }
+
+    @Override
+    public void visit(TypeDeclareStatement typeDeclareStatement){
+
+    }
+
+    @Override
+    public void visit(EnumStatement enumStatement){
+
+    }
+
+    @Override
+    public void visit(InterfaceStatement interfaceStatement){
+
+    }
+
+    @Override
+    public void visit(ClassStatement classStatement){
+
+    }
+
+    @Override
+    public void visit(OperationsStatement operationsStatement){
+
+    }
+
+    @Override
+    public void visit(ImportStatement importStatement){
+
+    }
+
+    @Override
+    public void visit(TemplateStatement templateStatement){
+
+    }
+
+    @Override
+    public void visit(IfStatement ifStatement){
+
+    }
+
+    @Override
+    public void visit(LoopStatement loopStatement){
+
+    }
+
+    @Override
+    public void visit(PrefixStatement prefixStatement){
+
     }
 }
