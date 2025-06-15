@@ -34,11 +34,13 @@ public class Main {
             parser.addErrorListener(new Syntex_Error());
             ParseTree tree = parser.rootprogram();
 
+            System.out.println();
 
             if(Syntex_Error.hasError){
 
             }
             else{
+                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
                 System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
                 TypeScriptVisitor visitor = new TypeScriptVisitor();
                 RootProgram startProgram = (RootProgram) visitor.visit(tree);
