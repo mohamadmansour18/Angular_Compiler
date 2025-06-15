@@ -1,7 +1,5 @@
-// Main parser grammar for TypeScript-like input with Angular support
 parser grammar FrameParser;
 
-// This parser uses tokens defined in FrameLexer.g4
 options { tokenVocab=FrameLexer; }
 
 // Entry point of the TypeScript program: can be multiple programs or just EOF

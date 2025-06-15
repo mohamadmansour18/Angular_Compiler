@@ -6,15 +6,15 @@ import Visitor.AST_Visitor;
 import java.util.ArrayList;
 
 public class LoopInit extends Node {
-    private VarDeclare varDeclare;
+    private VarDeclareStatement varDeclareStatement;
     private ArrayList<Expression> expressions=new ArrayList<>();
 
-    public VarDeclare getVarDeclare() {
-        return varDeclare;
+    public VarDeclareStatement getVarDeclareStatement() {
+        return varDeclareStatement;
     }
 
-    public void setVarDeclare(VarDeclare varDeclare) {
-        this.varDeclare = varDeclare;
+    public void setVarDeclareStatement(VarDeclareStatement varDeclareStatement) {
+        this.varDeclareStatement = varDeclareStatement;
     }
 
     public ArrayList<Expression> getExpressions() {

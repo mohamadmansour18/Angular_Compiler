@@ -7,7 +7,7 @@ public class Prameter extends Node {
     private String name;
     private Type type;
     private Equal equal;
-    private Objects objects;
+    private ObjectsLable objectsLable;
 
     public String getName() {
         return name;
@@ -33,12 +33,12 @@ public class Prameter extends Node {
         this.equal = equal;
     }
 
-    public Objects getObjects() {
-        return objects;
+    public ObjectsLable getObjectsLable() {
+        return objectsLable;
     }
 
-    public void setObjects(Objects objects) {
-        this.objects = objects;
+    public void setObjectsLable(ObjectsLable objectsLable) {
+        this.objectsLable = objectsLable;
     }
 
     public void accept(AST_Visitor astVisitor) {

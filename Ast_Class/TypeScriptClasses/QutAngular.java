@@ -1,10 +1,12 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
 import java.util.ArrayList;
 
-public class QutAngular extends Info {
+public class QutAngular extends Node implements Info {
+
     private ArrayList<Element> elements=new ArrayList<>();
     private ArrayList<Text>texts=new ArrayList<>();
 

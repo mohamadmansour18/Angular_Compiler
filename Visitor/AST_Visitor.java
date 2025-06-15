@@ -25,12 +25,6 @@ public interface AST_Visitor {
 
     void visit(AngularComponent angularComponent);
 
-    void visit(AngularTemplet angularTemplet);
-
-    void visit(QutAngular angular);
-
-    void visit(ArratLable arratLable);
-
     void visit(Attribute attribute);
 
     void visit(AttributeLable attributeLable);
@@ -50,8 +44,6 @@ public interface AST_Visitor {
     void visit(ElementContent elementContent);
 
     void visit(Html html);
-
-    void visit(Info info);
 
     void visit(Inter inter);
 
@@ -139,11 +131,7 @@ public interface AST_Visitor {
 
     void visit(InterfaceVar interfaceVar);
 
-    void visit(NumberStringBool numberStringBool);
-
     void visit(Object object);
-
-    void visit(Objects objects);
 
     void visit(ObjectType objectType);
 
@@ -170,8 +158,6 @@ public interface AST_Visitor {
     void visit(Var var);
 
     void visit(Prameters prameters);
-
-    void visit(Ast_Class.TypeScriptClasses.Array array);
 
     void visit(ClassBody classBody);
 
@@ -209,5 +195,18 @@ public interface AST_Visitor {
 
     void visit(PrefixStatement prefixStatement);
 
+    void visit(Variable Variable);
+
+    void visit(ObjectsLable objectsLable);
+
+    void visit(CallFunction callFunction);
+
+    void visit(Accesss accesss);
+
+    void visit(ArrayLable arrayLable);
+
+    void visit(AngularTemplet angularTemplet);
+
+    void visit(QutAngular angular);
 
 }

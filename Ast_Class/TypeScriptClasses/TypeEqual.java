@@ -4,17 +4,17 @@ import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
 public class TypeEqual extends Node {
-    private NumberStringBool numberStringBool;
+    private Variable variable;
     private CullFunction cullFunction;
     private AccessStatement accessStatement;
     private TypeCurles typeCurles;
 
-    public NumberStringBool getNumberStringBool() {
-        return numberStringBool;
+    public Variable getVariable() {
+        return variable;
     }
 
-    public void setNumberStringBool(NumberStringBool numberStringBool) {
-        this.numberStringBool = numberStringBool;
+    public void setVariable(Variable variable) {
+        this.variable = variable;
     }
 
     public CullFunction getCullFunction() {

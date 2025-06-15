@@ -6,7 +6,7 @@ import Visitor.AST_Visitor;
 public class Argument extends Node {
     private String name;
     private EqualBaseData equalBaseData;
-    private Objects objects;
+    private ObjectsLable objectsLable;
     private BaseData baseData;
     private ArrowFunction arrowFunction;
 
@@ -26,12 +26,12 @@ public class Argument extends Node {
         this.equalBaseData = equalBaseData;
     }
 
-    public Objects getObjects() {
-        return objects;
+    public ObjectsLable getObjectsLable() {
+        return objectsLable;
     }
 
-    public void setObjects(Objects objects) {
-        this.objects = objects;
+    public void setObjectsLable(ObjectsLable objectsLable) {
+        this.objectsLable = objectsLable;
     }
 
     public BaseData getBaseData() {
