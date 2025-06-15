@@ -37,9 +37,14 @@ public class Main {
             System.out.println();
 
             if(Syntex_Error.hasError){
+                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
+                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
+                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
+                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
 
             }
             else{
+                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
                 System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
                 TypeScriptVisitor visitor = new TypeScriptVisitor();
                 RootProgram startProgram = (RootProgram) visitor.visit(tree);
