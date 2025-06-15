@@ -40,6 +40,7 @@ public class Main {
             }
             else{
                 System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
+                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
                 TypeScriptVisitor visitor = new TypeScriptVisitor();
                 RootProgram startProgram = (RootProgram) visitor.visit(tree);
                 startProgram.accept(new BaseAstVisitor());
