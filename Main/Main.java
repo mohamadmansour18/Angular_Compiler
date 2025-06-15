@@ -40,6 +40,8 @@ public class Main {
                 System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
                 System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
 
+                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
+
             }
             else{
                 System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
