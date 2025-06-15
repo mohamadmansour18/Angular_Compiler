@@ -18,31 +18,6 @@ public class BaseAstVisitor implements AST_Visitor {
     }
 
     @Override
-    public void visit(TowwayDirective towwayDirective) {
-        System.out.println("**********************************************");
-        System.out.println("[TowwayDirective Node]");
-        System.out.println("Child Count : " + towwayDirective.getChildeCount());
-        if (towwayDirective.getExpressions()!=null) {
-            for (Expression e : towwayDirective.getExpressions()) {
-                e.accept(this);
-            }
-        }
-    }
-
-    @Override
-    public void visit(StructuralDirective structuralDirective) {
-        System.out.println("**********************************************");
-        System.out.println("[StructuralDirective Node]");
-        System.out.println("Child Count : " + structuralDirective.getChildeCount());
-        if(structuralDirective.getString()!=null) {
-            System.out.println(structuralDirective.getString());
-        }
-        if(structuralDirective.getExpression()!=null) {
-            structuralDirective.getExpression().accept(this);
-        }
-    }
-
-    @Override
     public void visit(TagOpen tagOpen) {
         System.out.println("**********************************************");
         System.out.println("[TagOpen Node]");
@@ -104,28 +79,6 @@ public class BaseAstVisitor implements AST_Visitor {
         }
         if (attribute.getCom()!=null) {
             System.out.println(attribute.getCom());
-        }
-    }
-
-    @Override
-    public void visit(AttributeLable attributeLable) {
-        System.out.println("**********************************************");
-        System.out.println("[AttributeLable Node]");
-
-        if (attributeLable.getAttributeLable()!=null) {
-            attributeLable.getAttributeLable().accept(this);
-        }
-    }
-
-    @Override
-    public void visit(AttributeDirictive attributeDirictive) {
-        System.out.println("**********************************************");
-        System.out.println("[AttributeDirictive Node]");
-
-        if (attributeDirictive.getExpressions()!=null) {
-            for (Expression e : attributeDirictive.getExpressions()) {
-                e.accept(this);
-            }
         }
     }
 
@@ -1305,5 +1258,45 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(Dirictive dirictive) {
 
+    }
+
+    @Override
+    public void visit(Structural structural)
+    {
+        System.out.println("**********************************************");
+        System.out.println("[Structural Node]");
+        System.out.println("Child Count : " + structural.getChildeCount());
+        if(structural.getString()!=null) {
+            System.out.println(structural.getString());
+        }
+        if(structural.getExpression()!=null) {
+            structural.getExpression().accept(this);
+        }
+    }
+
+    @Override
+    public void visit(AttributeLable attributeLable) {
+        System.out.println("**********************************************");
+        System.out.println("[AttributeLable Node]");
+        System.out.println("Child Count : " + attributeLable.getChildeCount());
+
+        if (attributeLable.getExpressions()!=null) {
+            for (Expression e : attributeLable.getExpressions()) {
+                e.accept(this);
+            }
+        }
+    }
+
+    @Override
+    public void visit(Towway towway)
+    {
+        System.out.println("**********************************************");
+        System.out.println("[Towway Node]");
+        System.out.println("Child Count : " + towway.getChildeCount());
+        if (towway.getExpressions()!=null) {
+            for (Expression e : towway.getExpressions()) {
+                e.accept(this);
+            }
+        }
     }
 }

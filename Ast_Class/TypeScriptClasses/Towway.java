@@ -1,23 +1,23 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
-public class Towway extends DirictiveElement {
-private TowwayDirective towwayDirective;
+import java.util.ArrayList;
 
-    public TowwayDirective getTowwayDirective() {
-        return towwayDirective;
+public class Towway extends Node implements DirectiveElement {
+    private ArrayList<Expression> expressions = new ArrayList<>();
+
+    public ArrayList<Expression> getExpressions() {
+        return expressions;
     }
 
-    public void setTowwayDirective(TowwayDirective towwayDirective) {
-        this.towwayDirective = towwayDirective;
+    public void setExpressions(ArrayList<Expression> expressions) {
+        this.expressions = expressions;
     }
 
     @Override
     public void accept(AST_Visitor ast_Visitor) {
         ast_Visitor.visit(this);
-        if (towwayDirective!=null) {
-            towwayDirective.accept(ast_Visitor);
-        }
     }
 }

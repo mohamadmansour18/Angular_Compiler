@@ -9,10 +9,6 @@ public interface AST_Visitor {
 
     void visit(Keyword keyword);
 
-    void visit(TowwayDirective towwayDirective);
-
-    void visit(StructuralDirective  structuralDirective);
-
     void visit(TagOpen tagOpen);
 
     void visit(TagClose tagClose);
@@ -20,10 +16,6 @@ public interface AST_Visitor {
     void visit(TagOpenEmpty tagOpenEmpty);
 
     void visit(Attribute attribute);
-
-    void visit(AttributeLable attributeLable);
-
-    void visit(AttributeDirictive attributeDirictive);
 
     void visit(Char aChar);
 
@@ -200,4 +192,10 @@ public interface AST_Visitor {
     void visit(AngularComponents angularComponents);
 
     void visit(Dirictive dirictive);
+
+    void visit(Structural structural);
+
+    void visit(AttributeLable attributeLable);
+
+    void visit(Towway towway);
 }

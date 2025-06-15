@@ -1,9 +1,20 @@
 package Ast_Class.TypeScriptClasses;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
-public class AttributeLable extends DirictiveElement {
-    private AttributeDirictive attributeLable;
+import java.util.ArrayList;
+
+public class AttributeLable extends Node implements DirectiveElement {
+    private ArrayList<Expression> expressions=new ArrayList<>();
+
+    public ArrayList<Expression> getExpressions() {
+        return expressions;
+    }
+
+    public void setExpressions(ArrayList<Expression> expressions) {
+        this.expressions = expressions;
+    }
 
     @Override
     public void accept(AST_Visitor ast_Visitor) {
@@ -12,16 +23,9 @@ public class AttributeLable extends DirictiveElement {
 
     @Override
     public String getValue() {
-        if (attributeLable!=null) {
-            return attributeLable.getValue();
-        }
-    return "";}
-
-    public AttributeDirictive getAttributeLable() {
-        return attributeLable;
-    }
-
-    public void setAttributeLable(AttributeDirictive attributeLable) {
-        this.attributeLable = attributeLable;
+        if (expressions!=null)
+            if(expressions.getFirst()!=null)
+                return expressions.getFirst().getValue();
+        return " ";
     }
 }
