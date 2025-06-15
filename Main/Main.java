@@ -35,7 +35,8 @@ public class Main {
             ParseTree tree = parser.rootprogram();
 
             System.out.println("<<<<<<<<---------[ Syntex_Error.hasError ]--------->>>>>>>>");
-
+            System.out.println("<<<<<<<<---------[ Syntex_Error.hasError ]--------->>>>>>>>");
+            System.out.println("<<<<<<<<---------[ Syntex_Error.hasError ]--------->>>>>>>>");
             if(Syntex_Error.hasError){
 
             }
