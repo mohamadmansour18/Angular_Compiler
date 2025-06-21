@@ -59,10 +59,10 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
             statements.setExport(ctx.Export().getText());
         }
         if (ctx.Await() != null) {
-            statements.setAtt(ctx.Await().getText());
+            statements.setAwait(ctx.Await().getText());
         }
         if (ctx.stetment() != null) {
-            statements.setStatment((Statment) visit(ctx.stetment()));
+            statements.setStetment((Stetment) visit(ctx.stetment()));
         }
 
         return statements;
@@ -71,6 +71,9 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
     @Override
     public ServicesStatement visitServicesStatement(FrameParser.ServicesStatementContext ctx) {
         ServicesStatement services = new ServicesStatement();
+
+        services.initializeNode(ctx , false , "");
+
         if (ctx.services() != null) {
             services.setServices(visitServices(ctx.services()));
         }

@@ -5,7 +5,7 @@ import Visitor.AST_Visitor;
 
 public class ServicesStatement extends Node implements Stetment  {
     private String injectable;
-    private Objects objects;
+    private ObjectsLable objectsLable;
 
     public String getInjectable() {
         return injectable;
@@ -15,12 +15,12 @@ public class ServicesStatement extends Node implements Stetment  {
         this.injectable = injectable;
     }
 
-    public Objects getObjects() {
-        return objects;
+    public ObjectsLable getObjects() {
+        return objectsLable;
     }
 
-    public void setObjects(Objects objects) {
-        this.objects = objects;
+    public void setObjects(ObjectsLable objectsLable) {
+        this.objectsLable = objectsLable;
     }
 
     @Override
