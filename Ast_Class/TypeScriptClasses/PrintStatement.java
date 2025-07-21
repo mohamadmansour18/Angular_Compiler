@@ -4,15 +4,15 @@ import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
 public class PrintStatement extends Node implements Stetment {
-    private String string;
+    private String ID;
     private Arguments arguments;
 
-    public String getString() {
-        return string;
+    public String getID() {
+        return ID;
     }
 
-    public void setString(String string) {
-        this.string = string;
+    public void setID(String string) {
+        this.ID = string;
     }
 
     public Arguments getArguments() {

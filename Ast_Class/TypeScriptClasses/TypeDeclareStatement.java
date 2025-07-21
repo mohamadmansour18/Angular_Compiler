@@ -4,15 +4,15 @@ import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
 public class TypeDeclareStatement extends Node implements Stetment {
-    private String nmae;
+    private String name;
     private TypeEqual typeEqual;
 
-    public String getNmae() {
-        return nmae;
+    public String getName() {
+        return name;
     }
 
-    public void setNmae(String nmae) {
-        this.nmae = nmae;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public TypeEqual getTypeEqual() {

@@ -6,7 +6,7 @@ import Visitor.AST_Visitor;
 public class ComponentStatement extends Node implements Stetment
 {
     private String component;
-    private Objects objects;
+    private ObjectsLable objectsLable;
     private TemplateStatement templateStatement ;
 
     public TemplateStatement getTemplateStatement() {
@@ -25,12 +25,12 @@ public class ComponentStatement extends Node implements Stetment
         this.component = component;
     }
 
-    public Objects getObjects() {
-        return objects;
+    public ObjectsLable getObjectsLable() {
+        return objectsLable;
     }
 
-    public void setObjects(Objects objects) {
-        this.objects = objects;
+    public void setObjectsLable(ObjectsLable objectsLable) {
+        this.objectsLable = objectsLable;
     }
 
     @Override

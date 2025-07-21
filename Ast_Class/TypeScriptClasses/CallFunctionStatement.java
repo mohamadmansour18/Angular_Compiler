@@ -4,15 +4,15 @@ import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
 public class CallFunctionStatement extends Node implements Stetment {
-    private String name;
+    private String ID;
     private Arguments arguments;
 
-    public String getName() {
-        return name;
+    public String getID() {
+        return ID;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     public Arguments getArguments() {
@@ -33,9 +33,9 @@ public class CallFunctionStatement extends Node implements Stetment {
     String st1="";
     @Override
     public String getValue() {
-        if(name!=null)
+        if(ID!=null)
         {
-            st=name;
+            st=ID;
         }
         if(arguments!=null)
         {

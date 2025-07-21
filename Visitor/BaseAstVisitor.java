@@ -86,6 +86,7 @@ public class BaseAstVisitor implements AST_Visitor {
     public void visit(Char aChar) {
         System.out.println("**********************************************");
         System.out.println("[Char Node]");
+        System.out.println("Child Count : " + aChar.getChildeCount());
         if(aChar.getS()!=null) {
             System.out.println(aChar.getS());
         }
@@ -201,6 +202,7 @@ public class BaseAstVisitor implements AST_Visitor {
     public void visit(ArrayLitiral arrayLitiral) {
         System.out.println("**********************************************");
         System.out.println("[ArrayLitiral Node]");
+        System.out.println("Child Count : " + arrayLitiral.getChildeCount());
 
         if (arrayLitiral.getBaseExpression()!=null) {
             arrayLitiral.getBaseExpression().accept(this);
@@ -732,6 +734,7 @@ public class BaseAstVisitor implements AST_Visitor {
         System.out.println("**********************************************");
         System.out.println("[InterfaceBody Node]");
         System.out.println("Child Count : " + interfaceBody.getChildeCount());
+
         if (interfaceBody.getInterfaceFun() != null) {
             System.out.println("interface function: ");
             interfaceBody.getInterfaceFun().accept(this);
@@ -747,6 +750,7 @@ public class BaseAstVisitor implements AST_Visitor {
         System.out.println("**********************************************");
         System.out.println("[Interface function body Node]");
         System.out.println("Child Count : " + interfaceFun.getChildeCount());
+
         if (interfaceFun.getName() != null) {
             System.out.println("interface function name: " + interfaceFun.getName());
         }
@@ -764,6 +768,7 @@ public class BaseAstVisitor implements AST_Visitor {
         System.out.println("**********************************************");
         System.out.println("[InterfaceVar variable Node]");
         System.out.println("Child Count : " + interfaceVar.getChildeCount());
+
         if (interfaceVar.getName() != null) {
             System.out.println("interface variable name: " + interfaceVar.getName());
         }
@@ -777,6 +782,7 @@ public class BaseAstVisitor implements AST_Visitor {
         System.out.println("**********************************************");
         System.out.println("[Object Node]");
         System.out.println("Child Count : " + object.getChildeCount());
+
         if (object.getName() != null) {
             System.out.println("object name: " + object.getName());
         }
@@ -791,6 +797,7 @@ public class BaseAstVisitor implements AST_Visitor {
         System.out.println("**********************************************");
         System.out.println("[ObjectType Node]");
         System.out.println("Child Count : " + objectType.getChildeCount());
+
         if (objectType.getName() != null) {
             System.out.println("object name : " + objectType.getName());
         }
@@ -804,6 +811,7 @@ public class BaseAstVisitor implements AST_Visitor {
         System.out.println("**********************************************");
         System.out.println("[ObjectType Node]");
         System.out.println("Child Count : " + objectTypes.getChildeCount());
+
         if (objectTypes.getObjectTypes() != null) {
             for (ObjectType s : objectTypes.getObjectTypes()) {
                 s.accept(this);
@@ -816,6 +824,7 @@ public class BaseAstVisitor implements AST_Visitor {
         System.out.println("**********************************************");
         System.out.println("[Parameter Node]");
         System.out.println("Child Count : " + prameter.getChildeCount());
+
         if (prameter.getName() != null) {
             System.out.println("parameter name: " + prameter.getName());
         }
@@ -838,6 +847,7 @@ public class BaseAstVisitor implements AST_Visitor {
         System.out.println("**********************************************");
         System.out.println("[program Node]");
         System.out.println("Child Count : " + program.getChildeCount());
+
         if(program.getStatements()!=null)
         {
             for (Statements s : program.getStatements()) {
@@ -851,6 +861,7 @@ public class BaseAstVisitor implements AST_Visitor {
         System.out.println("**********************************************");
         System.out.println("[Return Node]");
         System.out.println("Child Count : " + aReturn.getChildeCount());
+
         if (aReturn.getBaseData() != null) {
             System.out.println("date return: ");
             aReturn.getBaseData().accept(this);
@@ -862,6 +873,7 @@ public class BaseAstVisitor implements AST_Visitor {
         System.out.println("**********************************************");
         System.out.println("[Statements Node]");
         System.out.println("Child Count : " + statements.getChildeCount());
+
         if(statements.getExport() != null)
         {
             System.out.println("Stetment's type : " + statements.getExport());

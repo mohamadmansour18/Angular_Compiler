@@ -7,7 +7,7 @@
 
     public class ClassStatement extends Node implements Stetment {
         private String className;
-        private ArrayList<ClassBody> classBodies=new ArrayList<>();
+        private ArrayList<ClassBody> classBodies = new ArrayList<>();
         private String Implements ;
         private String interfaceName ;
 

@@ -3,8 +3,6 @@ package Visitor;
 import Ast_Class.Node.Node;
 import Ast_Class.TypeScriptClasses.RootProgram;
 import Ast_Class.TypeScriptClasses.*;
-import Ast_Class.TypeScriptClasses.Class;
-import Ast_Class.TypeScriptClasses.Enum;
 import SymbolTable.Scope;
 import gen.FrameParser;
 import Main.Main;
@@ -70,38 +68,110 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
 
     @Override
     public ServicesStatement visitServicesStatement(FrameParser.ServicesStatementContext ctx) {
-        ServicesStatement services = new ServicesStatement();
+        ServicesStatement servicesStatement = new ServicesStatement();
 
-        services.initializeNode(ctx , false , "");
+        servicesStatement.initializeNode(ctx , false , "");
 
         if (ctx.services() != null) {
-            services.setServices(visitServices(ctx.services()));
+            if(ctx.services().Injectable() != null)
+            {
+                servicesStatement.setInjectable(ctx.services().Injectable().getText());
+            }
+            if(ctx.services().objects() != null)
+            {
+                servicesStatement.setObjectsLable(visitObjects(ctx.services().objects()));
+            }
         }
-        return services;
+        return servicesStatement;
+    }
+
+    public ObjectsLable visitObjects(FrameParser.ObjectsContext ctx) {
+        ObjectsLable objectsLable = new ObjectsLable();
+
+        objectsLable.initializeNode(ctx , false , "");
+
+        if(ctx.object() != null) {
+            for (int i = 0; i < ctx.object().size(); i++) {
+                objectsLable.getObjects().add(visitObject(ctx.object(i)));
+            }
+        }
+        return objectsLable;
     }
 
     @Override
     public ComponentStatement visitComponentStatement(FrameParser.ComponentStatementContext ctx) {
         ComponentStatement componentStatement = new ComponentStatement();
+
+        componentStatement.initializeNode(ctx , false , "");
+
         if (ctx.component() != null) {
-            componentStatement.setComponent(visitComponent(ctx.component()));
+            if(ctx.component().Component() != null)
+            {
+                componentStatement.setComponent(ctx.component().Component().getText());
+            }
+            if(ctx.component().objects() != null)
+            {
+                componentStatement.setObjectsLable(visitObjects(ctx.component().objects()));
+            }
+            if(ctx.component().template() != null)
+            {
+                componentStatement.setTemplateStatement(visitTemplate(ctx.component().template()));
+            }
         }
         return componentStatement;
+    }
+
+
+    public TemplateStatement visitTemplate(FrameParser.TemplateContext  ctx) {
+        TemplateStatement templateStatement = new TemplateStatement();
+
+        templateStatement.initializeNode(ctx , false , "");
+
+        if (ctx.element() != null) {
+            for (int i = 0; i < ctx.element().size(); i++) {
+                templateStatement.getElements().add(visitElement(ctx.element(i)));
+            }
+        }
+        if (ctx.text() != null)
+        {
+            for (int i = 0; i < ctx.text().size(); i++) {
+                templateStatement.getTextLable().add(visitTexts(ctx.text(i)));
+            }
+        }
+        return templateStatement;
     }
 
     @Override
     public PrintStatement visitPrintStatement(FrameParser.PrintStatementContext ctx) {
         PrintStatement printStatement = new PrintStatement();
-        if (ctx.print() != null)
-            printStatement.setPrint(visitPrint(ctx.print()));
+        if (ctx.print() != null) {
+            if(ctx.print().IDENTIFIER() != null)
+            {
+                printStatement.setID(ctx.print().IDENTIFIER().getText());
+            }
+            if(ctx.print().arguments() != null)
+            {
+                printStatement.setArguments(visitArguments(ctx.print().arguments()));
+            }
+        }
+
         return printStatement;
     }
 
     @Override
     public VarDeclareStatement visitVarDeclareStatement(FrameParser.VarDeclareStatementContext ctx) {
         VarDeclareStatement varDeclareStatement = new VarDeclareStatement();
-        if (ctx.vardeclare() != null)
-            varDeclareStatement.setVarDeclare(visitVardeclare(ctx.vardeclare()));
+
+        if (ctx.vardeclare() != null){
+            if(ctx.vardeclare().keyword() != null)
+            {
+                varDeclareStatement.setKey(visitKeyword(ctx.vardeclare().keyword()));
+            }
+            if(ctx.vardeclare().prameter() != null)
+            {
+                varDeclareStatement.setPrameter(visitPrameter(ctx.vardeclare().prameter()));
+            }
+        }
         return varDeclareStatement;
     }
 
@@ -109,26 +179,46 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
     public FunctionStatement visitFunctionStatement(FrameParser.FunctionStatementContext ctx) {
         FunctionStatement functionStatement = new FunctionStatement();
         if (ctx.function() != null) {
-            functionStatement.setFunction(visitFunction(ctx.function()));
+            if(ctx.function().Function() != null)
+            {
+                functionStatement.setFunction(ctx.function().Function().getText());
+            }
+            if(ctx.function().class_function() != null)
+            {
+                functionStatement.setClassFunction(visitClass_function(ctx.function().class_function()));
+            }
         }
         return functionStatement;
     }
 
     @Override
     public CallFunctionStatement visitCallFunctionStatement(FrameParser.CallFunctionStatementContext ctx) {
-        CallFunctionStatement functionStatement = new CallFunctionStatement();
-        functionStatement.setChildeCount(ctx.getChildCount());
+        CallFunctionStatement callFunctionStatement = new CallFunctionStatement();
+
         if (ctx.cullfunction() != null) {
-            functionStatement.setCullFunction(visitCullfunction(ctx.cullfunction()));
+            if(ctx.cullfunction().IDENTIFIER() != null)
+            {
+                callFunctionStatement.setID(ctx.cullfunction().IDENTIFIER().getText());
+            }
+            if(ctx.cullfunction().arguments() != null)
+            {
+                callFunctionStatement.setArguments(visitArguments(ctx.cullfunction().arguments()));
+            }
         }
-        return functionStatement;
+        return callFunctionStatement;
     }
 
     @Override
     public AccessStatement visitAccessStatement(FrameParser.AccessStatementContext ctx) {
         AccessStatement accessStatement = new AccessStatement();
+
         if (ctx.access() != null) {
-            accessStatement.setAccess(visitAccess(ctx.access()));
+            if(ctx.access().culls() != null)
+            {
+                for (int i = 0; i < ctx.access().culls().size(); i++) {
+                    accessStatement.getCulls().add(visitCulls(ctx.access().culls(i)));
+                }
+            }
         }
         return accessStatement;
     }
@@ -136,33 +226,82 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
     @Override
     public TypeDeclareStatement visitTypeDeclareStatement(FrameParser.TypeDeclareStatementContext ctx) {
         TypeDeclareStatement typeDeclareStatement = new TypeDeclareStatement();
+
         if (ctx.typedeclare() != null)
-            typeDeclareStatement.setType(visitTypedeclare(ctx.typedeclare()));
+        {
+            if(ctx.typedeclare().IDENTIFIER() != null)
+            {
+                typeDeclareStatement.setName(ctx.typedeclare().IDENTIFIER().getText());
+            }
+            if(ctx.typedeclare().typeequal() != null)
+            {
+                typeDeclareStatement.setTypeEqual(visitTypeequal(ctx.typedeclare().typeequal()));
+            }
+        }
         return typeDeclareStatement;
     }
 
     @Override
     public EnumStatement visitEnumStatement(FrameParser.EnumStatementContext ctx) {
         EnumStatement enumStatement = new EnumStatement();
+
         if (ctx.enum_() != null)
-            enumStatement.setAnEnum(visitEnum(ctx.enum_()));
+        {
+            if(ctx.enum_().IDENTIFIER() != null)
+            {
+                enumStatement.setName(ctx.enum_().IDENTIFIER().getText());
+            }
+            if(ctx.enum_().enumassignable() != null)
+            {
+                enumStatement.setEnumAssignable(visitEnumassignable(ctx.enum_().enumassignable()));
+            }
+        }
         return enumStatement;
     }
 
     @Override
     public InterfaceStatement visitInterfaceStatement(FrameParser.InterfaceStatementContext ctx) {
         InterfaceStatement interfaceStatement = new InterfaceStatement();
+
         if (ctx.interface_() != null)
-            interfaceStatement.setAnInterface(visitInterface(ctx.interface_()));
+        {
+            if(ctx.interface_().IDENTIFIER() != null)
+            {
+                interfaceStatement.setName(ctx.interface_().IDENTIFIER().getText());
+            }
+            if(ctx.interface_().interfacebody() != null)
+            {
+                for (int i = 0; i < ctx.interface_().interfacebody().size(); i++) {
+                    interfaceStatement.getInterfaceBodies().add(visitInterfacebody(ctx.interface_().interfacebody(i)));
+                }
+            }
+        }
         return interfaceStatement;
     }
 
     @Override
     public ClassStatement visitClassStatement(FrameParser.ClassStatementContext ctx) {
         ClassStatement classStatement = new ClassStatement();
-        classStatement.setChildeCount(ctx.getChildCount());
+
         if (ctx.class_() != null) {
-            classStatement.setaClass(visitClass(ctx.class_()));
+            if(ctx.class_().IDENTIFIER() != null)
+            {
+                classStatement.setClassName(ctx.class_().IDENTIFIER().getText());
+            }
+            if(ctx.class_().classbody() != null)
+            {
+                for (int i = 0; i < ctx.class_().classbody().size(); i++) {
+                    classStatement.getClassBodies().add(visitClassbody(ctx.class_().classbody(i)));
+                }
+            }
+            if(ctx.class_().Implements() != null)
+            {
+                classStatement.setImplements(ctx.class_().Implements().getText());
+            }
+            if(ctx.class_().IDENT() != null)
+            {
+                classStatement.setInterfaceName(ctx.class_().IDENT().getText());
+            }
         }
         return classStatement;
     }
@@ -170,26 +309,41 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
     @Override
     public OperationsStatement visitOperationsStatement(FrameParser.OperationsStatementContext ctx) {
         OperationsStatement operationsStatement = new OperationsStatement();
-        if (ctx.operations() != null)
-            operationsStatement.setOperations(visitOperations(ctx.operations()));
+
+        if (ctx.operations() != null){
+            if(ctx.operations().access() != null)
+            {
+                operationsStatement.setAccess(visitAccessStatement(ctx.operations().access()));
+            }
+            if(ctx.operations().equal() != null)
+            {
+                operationsStatement.setEqual(visitEqual(ctx.operations().equal()));
+            }
+        }
+
         return operationsStatement;
     }
 
     @Override
     public ImportStatement visitImportStatement(FrameParser.ImportStatementContext ctx) {
         ImportStatement importStatement = new ImportStatement();
-        if (ctx.import_rule() != null)
-            importStatement.setImportRul(visitImport_rule(ctx.import_rule()));
-        return importStatement;
-    }
 
-    @Override
-    public TemplateStatement visitTemplateStatement(FrameParser.TemplateStatementContext ctx) {
-        TemplateStatement templetLable = new TemplateStatement();
-        if (ctx.template() != null) {
-            templetLable.setTemplet(visitTemplate(ctx.template()));
+        if (ctx.import_rule() != null)
+        {
+            if(ctx.import_rule().)
+            {
+
+            }
+            if()
+            {
+
+            }
+            if()
+            {
+
+            }
         }
-        return templetLable;
+        return importStatement;
     }
 
     @Override
@@ -248,20 +402,6 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
         if (ctx.Const() != null)
             keyword.setS(ctx.Const().getText());
         return keyword;
-    }
-
-    @Override
-    public Templet visitTemplate(FrameParser.TemplateContext ctx) {
-        Templet templet = new Templet();
-        if (ctx.element() != null)
-            for (int i = 0; i < ctx.element().size(); i++) {
-                templet.getElements().add(visitElement(ctx.element(i)));
-            }
-        if (ctx.text() != null)
-            for (int i = 0; i < ctx.text().size(); i++) {
-                templet.getTexts().add(visitText(ctx.text(i)));
-            }
-        return templet;
     }
 
     @Override
@@ -693,34 +833,6 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
     }
 
     @Override
-    public If_statment visitIf_statement (FrameParser.If_statementContext ctx){
-        If_statment ifStatment = new If_statment();
-        if (ctx.expression() != null) {
-            ifStatment.setExpression(visitExpression(ctx.expression()));
-        }
-        if (ctx.statements() != null) {
-            for (int i = 0; i < ctx.statements().size(); i++) {
-                ifStatment.getStatements().add(visitStatements(ctx.statements(i)));
-            }
-        }
-        return ifStatment;
-    }
-
-    @Override
-    public LoopStatments visitLoop_statement (FrameParser.Loop_statementContext ctx){
-        LoopStatments loopStatement = new LoopStatments();
-        if (ctx.while_() != null)
-            loopStatement.setAnwhile(visitWhile(ctx.while_()));
-        if (ctx.for_() != null)
-            loopStatement.setAfor(visitFor(ctx.for_()));
-        if (ctx.statements() != null)
-            for (int i = 0; i < ctx.statements().size(); i++) {
-                loopStatement.getStatements().add(visitStatements(ctx.statements(i)));
-            }
-        return loopStatement;
-    }
-
-    @Override
     public While visitWhile (FrameParser.WhileContext ctx){
         While aWhile = new While();
         if (ctx.expression() != null)
@@ -762,75 +874,6 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
         return loopStep;
     }
 
-    @Override
-    public Component visitComponent (FrameParser.ComponentContext ctx){
-        Component component = new Component();
-
-        component.setScopeID(component.getCurrentScope().getId());
-        component.createScope("Component");
-        component.setChildeCount(ctx.getChildCount());
-
-        if (ctx.Component() != null) {
-            component.setComponent(ctx.Component().getText());
-        }
-        if (ctx.objects() != null) {
-            component.setObjects(visitObjects(ctx.objects()));
-            component.createSymbol(component.getScopeID(), component.getObjects().getValue(), "object");
-        }
-        //Node.removeScope();
-        return component;
-    }
-
-    @Override
-    public Services visitServices (FrameParser.ServicesContext ctx){
-        Services services = new Services();
-
-        services.setScopeID(services.getCurrentScope().getId());
-        services.createScope("services");
-        services.setChildeCount(ctx.getChildCount());
-
-        if (ctx.Injectable() != null) {
-            services.setInjectable(ctx.Injectable().getText());
-        }
-        if (ctx.objects() != null) {
-            services.setObjects(visitObjects(ctx.objects()));
-            services.createSymbol(services.getScopeID(), services.getObjects().getValue(), "Object");
-        }
-        //   Node.removeScope();
-        return services;
-    }
-
-    @Override
-    public ImportRule visitImport_rule (FrameParser.Import_ruleContext ctx){
-        ImportRule importRule = new ImportRule();
-        importRule.setScopeID(importRule.getCurrentScope().getId());
-        importRule.setChildeCount(ctx.getChildCount());
-        if (ctx.IDENTIFIER() != null)
-            for (int i = 0; i < ctx.IDENTIFIER().size(); i++) {
-                importRule.getIds().add(ctx.IDENTIFIER(i).getText());
-            }
-        if (ctx.Component() != null)
-            for (int i = 0; i < ctx.Component().size(); i++) {
-                importRule.getStrings().add(ctx.Component(i).getText());
-            }
-        if (ctx.STRING() != null)
-            importRule.setUrl(ctx.STRING().getText());
-        return importRule;
-    }
-
-    @Override
-    public Operations visitOperations (FrameParser.OperationsContext ctx){
-        Operations operations = new Operations();
-        operations.setScopeID(operations.getCurrentScope().getId());
-        operations.setChildeCount(ctx.getChildCount());
-        if (ctx.access() != null) {
-            operations.setAccess(visitAccess(ctx.access()));
-        }
-        if (ctx.equal() != null) {
-            operations.setEqual(visitEqual(ctx.equal()));
-        }
-        return operations;
-    }
 
     @Override
     public Class visitClass (FrameParser.ClassContext ctx){
@@ -908,24 +951,6 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
         return constructor;
     }
 
-    @Override
-    public Interface visitInterface (FrameParser.InterfaceContext ctx){
-        Interface anInterface = new Interface();
-        anInterface.setScopeID(anInterface.getCurrentScope().getId());
-        anInterface.createScope("interface");
-        anInterface.setChildeCount(ctx.getChildCount());
-        if (ctx.IDENTIFIER() != null) {
-            anInterface.setName(ctx.IDENTIFIER().getText());
-            anInterface.createSymbol(anInterface.getScopeID(), anInterface.getName(), "interface IDENTIFIER");
-        }
-        if (ctx.interfacebody() != null) {
-            for (int i = 0; i < ctx.interfacebody().size(); i++) {
-                anInterface.getInterfaceBodies().add(visitInterfacebody(ctx.interfacebody(i)));
-            }
-        }
-        //Node.removeScope();
-        return anInterface;
-    }
 
     @Override
     public InterfaceBody visitInterfacebody (FrameParser.InterfacebodyContext ctx){
@@ -1044,20 +1069,6 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
     }
 
     @Override
-    public Function visitFunction (FrameParser.FunctionContext ctx){
-        Function function = new Function();
-        function.setScopeID(function.getCurrentScope().getId());
-        function.setChildeCount(ctx.getChildCount());
-        if (ctx.Function() != null) {
-            function.setFunction(ctx.Function().getText());
-        }
-        if (ctx.class_function() != null) {
-            function.setClassFunction(visitClass_function(ctx.class_function()));
-        }
-        return function;
-    }
-
-    @Override
     public BodyWithOutCurly visitBody_with_out_curly (FrameParser.Body_with_out_curlyContext ctx){
         BodyWithOutCurly bodyWithOutCurly = new BodyWithOutCurly();
         bodyWithOutCurly.setScopeID(bodyWithOutCurly.getCurrentScope().getId());
@@ -1163,23 +1174,6 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
     }
 
     @Override
-    public TypeDeclare visitTypedeclare (FrameParser.TypedeclareContext ctx){
-        TypeDeclare typeDeclare = new TypeDeclare();
-        typeDeclare.setScopeID(typeDeclare.getCurrentScope().getId());
-        typeDeclare.createScope("Type Scoep");
-        typeDeclare.setChildeCount(ctx.getChildCount());
-        if (ctx.IDENTIFIER() != null) {
-            typeDeclare.setNmae(ctx.IDENTIFIER().getText());
-            typeDeclare.createSymbol(typeDeclare.getScopeID(), typeDeclare.getNmae(), "Type IDENTIFIER");
-        }
-
-        if (ctx.typeequal() != null) {
-            typeDeclare.setTypeEqual(visitTypeequal(ctx.typeequal()));
-        }
-        return typeDeclare;
-    }
-
-    @Override
     public Prameters visitPrameters (FrameParser.PrametersContext ctx){
         Prameters prameters = new Prameters();
         prameters.setScopeID(prameters.getCurrentScope().getId());
@@ -1223,19 +1217,6 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
         }
         // Node.removeScope();
         return arrowFunction;
-    }
-
-    @Override
-    public Print visitPrint (FrameParser.PrintContext ctx){
-        Print print = new Print();
-        print.setScopeID(print.getCurrentScope().getId());
-        print.setChildeCount(ctx.getChildCount());
-        if (ctx.IDENTIFIER() != null) {
-            print.setString(ctx.IDENTIFIER().getText());
-        }
-        if (ctx.arguments() != null)
-            print.setArguments(visitArguments(ctx.arguments()));
-        return print;
     }
 
     @Override
@@ -1305,22 +1286,6 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
     }
 
     @Override
-    public VarDeclare visitVardeclare (FrameParser.VardeclareContext ctx){
-        VarDeclare varDeclare = new VarDeclare();
-        varDeclare.setScopeID(varDeclare.getCurrentScope().getId());
-        varDeclare.setChildeCount(ctx.getChildCount());
-        if (ctx.keyword() != null) {
-            varDeclare.setKey(visitKeyword(ctx.keyword()));
-        }
-        if (ctx.prameter() != null) {
-            varDeclare.setPrameter(visitPrameter(ctx.prameter()));
-            if (varDeclare.getPrameter().getType() != null)
-                varDeclare.createSymbol(varDeclare.getScopeID(), varDeclare.getPrameter().getValue(), varDeclare.getPrameter().getType().getValue());
-        }
-        return varDeclare;
-    }
-
-    @Override
     public Equal visitEqual (FrameParser.EqualContext ctx){
         Equal equal = new Equal();
         equal.setScopeID(equal.getCurrentScope().getId());
@@ -1382,18 +1347,6 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
         return type;
     }
 
-    @Override
-    public Access visitAccess (FrameParser.AccessContext ctx){
-        Access access = new Access();
-        access.setScopeID(access.getCurrentScope().getId());
-        access.setChildeCount(ctx.getChildCount());
-        if (ctx.culls() != null) {
-            for (int i = 0; i < ctx.culls().size(); i++) {
-                access.getCulls().add(visitCulls(ctx.culls(i)));
-            }
-        }
-        return access;
-    }
 
     @Override
     public Culls visitCulls (FrameParser.CullsContext ctx){
@@ -1424,22 +1377,6 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
             cullFunction.setArguments(visitArguments(ctx.arguments()));
         }
         return cullFunction;
-    }
-
-    @Override
-    public Objects visitObjects (FrameParser.ObjectsContext ctx){
-        Objects objects = new Objects();
-        objects.setScopeID(objects.getCurrentScope().getId());
-        objects.createScope("object");
-        objects.setChildeCount(ctx.getChildCount());
-        if (ctx.object() != null) {
-            for (int i = 0; i < ctx.object().size(); i++) {
-                objects.getObjects().add(visitObject(ctx.object(i)));
-                objects.createSymbol(objects.getScopeID(), objects.getObjects().get(i).getValue(), "Objects");
-            }
-        }
-        //Node.removeScope();
-        return objects;
     }
 
     @Override
@@ -1527,11 +1464,16 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
 
     @Override
     public ObjectsLable visitObjectss (FrameParser.ObjectssContext ctx){
-        ObjectsLable objects = new ObjectsLable();
+        ObjectsLable objectsLable = new ObjectsLable();
         if (ctx.objects() != null) {
-            objects.setObjects(visitObjects(ctx.objects()));
+            if(ctx.objects().object() != null)
+            {
+                for (int i = 0; i < ctx.objects().object().size(); i++) {
+                    objectsLable.getObjects().add(visitObject(ctx.objects().object(i)));
+                }
+            }
         }
-        return objects;
+        return objectsLable;
     }
 
     @Override
@@ -1551,14 +1493,6 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
         return accessLable;
     }
 
-    @Override
-    public ArratLable visitArrays (FrameParser.ArraysContext ctx){
-        ArratLable arratLable = new ArratLable();
-        if (ctx.array() != null) {
-            arratLable.setArray(visitArray(ctx.array()));
-        }
-        return arratLable;
-    }
 
     @Override
     public AngularTemplet visitAngularTemplet (FrameParser.AngularTempletContext ctx){
@@ -1577,13 +1511,6 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
         return qutAngular;
     }
 
-    @Override
-    public Charcter visitCharacters (FrameParser.CharactersContext ctx){
-        Charcter charcter = new Charcter();
-        if (ctx.character() != null)
-            charcter.setaChar(visitCharacter(ctx.character()));
-        return charcter;
-    }
 
     @Override
     public TextLable visitTexts (FrameParser.TextsContext ctx){
@@ -1599,15 +1526,6 @@ public class TypeScriptVisitor extends FrameParserBaseVisitor {
         if (ctx.htmlElement() != null)
             html.setHtmlElement(visitHtmlElement(ctx.htmlElement()));
         return html;
-    }
-
-    @Override
-    public AngularComponent visitAngularComponents (FrameParser.AngularComponentsContext ctx){
-        AngularComponent angularComponent = new AngularComponent();
-        if (ctx.angularComponent() != null) {
-            angularComponent.setAngular(visitAngularComponent(ctx.angularComponent()));
-        }
-        return angularComponent;
     }
 
     @Override

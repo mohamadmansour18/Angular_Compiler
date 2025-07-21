@@ -15,11 +15,11 @@ public class ServicesStatement extends Node implements Stetment  {
         this.injectable = injectable;
     }
 
-    public ObjectsLable getObjects() {
+    public ObjectsLable getObjectsLable() {
         return objectsLable;
     }
 
-    public void setObjects(ObjectsLable objectsLable) {
+    public void setObjectsLable(ObjectsLable objectsLable) {
         this.objectsLable = objectsLable;
     }
 
