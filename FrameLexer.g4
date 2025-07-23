@@ -98,14 +98,19 @@ PROVIDEDIN     : 'providedIn';
 USECLASS       : 'useClass';
 USEVALUE       : 'useValue';
 EXTENDS  : 'extends';
-UNCTION : 'function';
+FUNCTION : 'function';
 ARROW : '=>';
 INTERFACE : 'interface';
 ENUM : 'enum';
-
+SELECT : 'select';
 ROUTES    : 'Routes';
 PATH      : 'path';
 COMPONENT : 'component';
+CREATEACTION : 'createAction';
+STORE    : 'store';
+DISPATCH : 'dispatch';
+CREATEREDUCER : 'createReducer';
+ON            : 'on';
 
 EQ                   : '=';
 STRING               : '"' (~["\r\n])* '"';

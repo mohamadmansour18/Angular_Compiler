@@ -7,14 +7,14 @@ root
     ;
 
 htmlSection
-    : htmlDivTag         #HTMLDiv
-    | htmlFormTag        #HTMLForm
-    | htmlParagraphTag   #HTMLParagraph
-    | htmlButtonTag      #HTMLButton
-    | htmlInputTag       #HTMLInput
-    | htmlImageTag       #HTMLImage
+    : htmlDivTag         #HTMLDivLabel
+    | htmlFormTag        #HTMLFormLabel
+    | htmlParagraphTag   #HTMLParagraphLabel
+    | htmlButtonTag      #HTMLButtonLabel
+    | htmlInputTag       #HTMLInputLabel
+    | htmlImageTag       #HTMLImageLabel
     | htmlLabelTag       #HTMLLabel
-    | routerOutletTag    #HTMLRouterOutlet
+    | routerOutletTag    #HTMLRouterOutletLabel
     ;
 
 tsSection
@@ -28,6 +28,8 @@ tsSection
     | enumDeclaration          #TSEnumLabel
     //---------------<state mangment>---------------//
     | routingDeclaration       #TSRoutingLabel
+    | ngrxActionDeclaration    #TSActionLabel
+    | ngrxReducerDeclaration     #TSReducerLabel
     ;
 
 
@@ -156,10 +158,10 @@ divContent
     | htmlInputTag                 #DivInputLabel
     | htmlParagraphTag             #DivParagraphLabel
     | htmlDivTag                   #DivNestedLabel
-    | routerOutletTag              #DivRouterOutlet
-    | ngIfDirective                #DivNgIf
-    | ngForDirective               #DivNgFor
-    | STRING                       #DivPlainText
+    | routerOutletTag              #DivRouterOutletLabel
+    | ngIfDirective                #DivNgIfLabel
+    | ngForDirective               #DivNgForLabel
+    | STRING                       #DivPlainTextLabel
     ;
 
 //-----------------------------------------
@@ -273,6 +275,7 @@ expression
     | IDENTITY                         #IdentifierExpressionLabel
     | objectLiteral                    #ObjectLiteralExpressionLabel
     | LPAREN expression RPAREN         #ParenExpressionLabel
+    | storeSelectExpression            #SelectExpressionLabel
     ;
 
 binaryOp
@@ -338,7 +341,8 @@ statement
     : assignmentStatement        #AssignmentStmtLabel
     | functionCallStatement      #FunctionCallStmtLabel
     | variableDeclaration SEMI   #VarDeclarationStmtLabel
-    | returnStatement            #ReturnStmt
+    | returnStatement            #ReturnStmtLabel
+    | storeDispatchStatement     #DispatchStmtLabel
     ;
 
 //this.name = name ;  & x = 5 ;
@@ -507,4 +511,62 @@ pathProperty
 
 routeComponentProperty
     : COMPONENT COLON IDENTITY
+    ;
+
+//-----------------------------------------
+
+// في NgRx ال Action هو كائن يستخدم لاخبار التخزين ان شيئا حدث
+//export const login = createAction('[Auth] Login');
+
+ngrxActionDeclaration
+    : EXPORT CONST IDENTITY EQ CREATEACTION LPAREN actionType RPAREN SEMI
+    ;
+
+actionType
+    : STRING
+    ;
+
+
+//-----------------------------------------
+
+//this.store.dispatch(actionName());
+storeDispatchStatement
+    : THIS DOT STORE DOT DISPATCH LPAREN actionCall RPAREN SEMI
+    ;
+
+actionCall
+    : IDENTITY LPAREN RPAREN
+    ;
+
+//-----------------------------------------
+
+//this.store.select(someSelector);
+storeSelectExpression
+    : THIS DOT STORE DOT SELECT LPAREN selectorCall RPAREN
+    ;
+
+selectorCall
+    : IDENTITY
+    ;
+
+//-----------------------------------------
+
+// نستخدم Reduce للاستماع لل Action وتحديث ال State بناءا على كل Action
+
+//export const myReducer = createReducer(
+//  initialState,
+//  on(toggle, state => { return { ...state, active: !state.active }; }),
+//  on(reset, state => { return initialState; })
+//);
+
+ngrxReducerDeclaration
+    : EXPORT CONST IDENTITY EQ CREATEREDUCER LPAREN reducerConfig RPAREN SEMI
+    ;
+
+reducerConfig
+    : IDENTITY COMMA onReducerBlock+
+    ;
+
+onReducerBlock
+    : COMMA ON LPAREN IDENTITY COMMA ARROW block RPAREN
     ;

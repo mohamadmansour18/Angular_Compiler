@@ -1,6 +1,5 @@
 package Main;
 
-import Ast_Class.TypeScriptClasses.RootProgram;
 import SymbolTable.Scope;
 import SymbolTable.SymbolTable;
 import Visitor.BaseAstVisitor;
@@ -47,8 +46,8 @@ public class Main {
                 System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
                 System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
                 TypeScriptVisitor visitor = new TypeScriptVisitor();
-                RootProgram startProgram = (RootProgram) visitor.visit(tree);
-                startProgram.accept(new BaseAstVisitor());
+//                RootProgram startProgram = (RootProgram) visitor.visit(tree);
+//                startProgram.accept(new BaseAstVisitor());
 
                 System.out.println();
                 System.out.println("<<<<<<<<---------[ Symbol Table ]--------->>>>>>>>");
