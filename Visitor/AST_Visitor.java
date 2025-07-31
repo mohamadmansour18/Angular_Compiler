@@ -38,6 +38,66 @@ public interface AST_Visitor {
     void visit(HTMLButtonLabel button);
     void visit(HTMLInputLabel input);
     void visit(HTMLImageLabel image);
+    void visit(HTMLLabel label);
+    void visit(HTMLRouterOutletLabel routerOutlet);
+
+    //------------------{ TS Function }------------------//
+
+    void visit(TSComponentLabel component);
+    void visit(ComponentBody body);
+    void visit(ComponentProperty property);
+    void visit(ClassBlock classBlock);
+    void visit(ClassVariableLabel variable);
+    void visit(Type type);
+
+    // Expressions
+    void visit(LiteralExpressionLabel literal);
+    void visit(IdentifierExpressionLabel identifier);
+    void visit(BinaryExpressionLabel binary);
+    void visit(UnaryExpressionLabel unary);
+    void visit(ParenExpressionLabel paren);
+    void visit(ArrayAccessExpressionLabel access);
+    void visit(ObjectLiteralExpressionLabel objectLiteral);
+    void visit(ObjectProperty property);
+    void visit(SelectExpressionLabel select);
+    void visit(SelectorCall selectorCall);
+
+    //construct
+    void visit(ClassConstructorLabel constructor);
+    void visit(Parameter parameter);
+    void visit(Block block);
+    void visit(ParameterList paramList);
+
+    void visit(AssignmentStmtLabel stmt);
+    void visit(FunctionCallStmtLabel stmt);
+    void visit(ArgumentList args);
+    void visit(VarDeclarationStmtLabel stmt);
+    void visit(ReturnStmtLabel stmt);
+    void visit(DispatchStmtLabel stmt);
+    void visit(ActionCall action);
+
+    //method
+    void visit(MethodModifier modifier);
+    void visit(ClassMethodLabel method);
+
+    void visit(ArrayLiteral array);
+
+    void visit(InjectableProperty prop);
+    void visit(TSServiceLabel service);
+    void visit(InjectableBody body);
+
+    void visit(TSClassLabel classNode);
+    void visit(TSFunctionLabel func);
+    void visit(TSArrowFunctionLabel arrow);
+
+    void visit(TSVariableLabel variable);
+    void visit(TSInterfaceLabel inter);
+    void visit(InterfaceBody body);
+    void visit(InterfaceProperty prop);
+
+    void visit(TSEnumLabel node);
+    void visit(EnumBody body);
+    void visit(EnumMember member);
 
 
 }
