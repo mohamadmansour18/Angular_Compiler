@@ -99,5 +99,17 @@ public interface AST_Visitor {
     void visit(EnumBody body);
     void visit(EnumMember member);
 
+    //------------------{ STATE MANGMENT }------------------//
 
+    void visit(TSRoutingLabel node);
+    void visit(RouteConfig config);
+    void visit(PathProperty path);
+    void visit(RouteComponentProperty component);
+
+    void visit(TSActionLabel node);
+    void visit(ActionType actionType);
+
+    void visit(TSReducerLabel node);
+    void visit(ReducerConfig config);
+    void visit(OnReducerBlock reducer);
 }

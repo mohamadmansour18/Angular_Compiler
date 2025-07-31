@@ -27,8 +27,8 @@ tsSection
     | interfaceDeclaration     #TSInterfaceLabel
     | enumDeclaration          #TSEnumLabel
     //---------------<state mangment>---------------//
-    | routingDeclaration       #TSRoutingLabel
-    | ngrxActionDeclaration    #TSActionLabel
+    | routingDeclaration         #TSRoutingLabel
+    | ngrxActionDeclaration      #TSActionLabel
     | ngrxReducerDeclaration     #TSReducerLabel
     ;
 

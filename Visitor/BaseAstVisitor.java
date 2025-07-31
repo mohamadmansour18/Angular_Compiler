@@ -666,6 +666,62 @@ public class BaseAstVisitor implements AST_Visitor {
         }
     }
 
+    @Override
+    public void visit(TSRoutingLabel node) {
+        System.out.println("→ Routing Declaration: " + node.getVariableName());
+        for (RouteConfig config : node.getRouteConfigs()) {
+            config.accept(this);
+        }
+    }
+
+    @Override
+    public void visit(RouteConfig config) {
+        System.out.println("  Route:");
+        config.getPath().accept(this);
+        config.getComponent().accept(this);
+    }
+
+    @Override
+    public void visit(PathProperty path) {
+        System.out.println("    Path: " + path.getValueString());
+    }
+
+    @Override
+    public void visit(RouteComponentProperty component) {
+        System.out.println("    Component: " + component.getComponentName());
+    }
+
+    @Override
+    public void visit(TSActionLabel node) {
+        System.out.println("→ NGRX Action: " + node.getName());
+        node.getActionType().accept(this);
+    }
+
+    @Override
+    public void visit(ActionType actionType) {
+        System.out.println("  Action Type: " + actionType.getRawValue());
+    }
+
+    @Override
+    public void visit(TSReducerLabel node) {
+        System.out.println("→ Reducer: " + node.getName());
+        node.getConfig().accept(this);
+    }
+
+    @Override
+    public void visit(ReducerConfig config) {
+        System.out.println("  Initial State: " + config.getInitialState());
+        for (OnReducerBlock reducer : config.getReducers()) {
+            reducer.accept(this);
+        }
+    }
+
+    @Override
+    public void visit(OnReducerBlock reducer) {
+        System.out.println("    ON Reducer for action: " + reducer.getActionName());
+        reducer.getBlock().accept(this);
+    }
+
 //    @Override
 //    public void visit(Keyword keyword) {
 //        System.out.println("**********************************************");
