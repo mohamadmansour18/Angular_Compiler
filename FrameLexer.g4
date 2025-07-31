@@ -62,7 +62,7 @@ LT         : '<';
 AND        : '&&';
 OR         : '||';
 NOT        : '!';
-NUMBER     : [0-9]+;
+
 BOOLEAN    : 'true' | 'false';
 
 LBRACE        : '{';
@@ -73,7 +73,7 @@ COLON         : ':';
 COMMA         : ',';
 LBRACK       : '[';
 RBRACK       : ']';
-IDENTITY      : [a-zA-Z_][a-zA-Z0-9_]*;
+
 
 
 CONSTRUCTOR       : 'constructor';
@@ -113,8 +113,12 @@ CREATEREDUCER : 'createReducer';
 ON            : 'on';
 
 EQ                   : '=';
+
+IDENTITY            : [a-zA-Z_][a-zA-Z0-9_]*;
 STRING               : '"' (~["\r\n])* '"';
+NUMBER               : [0-9]+;
 WS                   : [ \t\r\n]+ -> skip;
+
 
 //// ====== Literals ======
 //STRING          : ('"' ~["]* '"') | ('\'' ~[']* '\'');
@@ -124,7 +128,6 @@ WS                   : [ \t\r\n]+ -> skip;
 //
 //// ====== Escapes & Whitespace ======
 //ESCAPE          : '\\\\' [btnfr"\\'];
-//WS              : [ \t\r\n]+ -> skip;
 //
 //// ====== Fragments ======
 //fragment LETTER : [a-zA-Z#];

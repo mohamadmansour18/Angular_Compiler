@@ -107,10 +107,10 @@ paragraphAttribute
     ;
 
 paragraphContent
-    : STRING                   #ParagraphTextLabel
-    | htmlImageTag             #ParagraphImageLabel
-    | htmlButtonTag            #ParagraphButtonLabel
-    | htmlInputTag             #ParagraphInputLabel
+    : STRING                                      #ParagraphTextLabel
+    | htmlImageTag                                #ParagraphImageLabel
+    | htmlButtonTag                               #ParagraphButtonLabel
+    | htmlInputTag                                #ParagraphInputLabel
     ;
 
 //-----------------------------------------
