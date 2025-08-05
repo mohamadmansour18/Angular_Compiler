@@ -1,5 +1,6 @@
 package Ast_Class.TS_Classes;
 
+import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
 public class ClassVariableLabel extends Node implements ClassMemberNode {
