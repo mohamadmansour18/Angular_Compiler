@@ -1,5 +1,6 @@
 parser grammar FrameParser;
 
+@parser::package {Parser}
 options { tokenVocab=FrameLexer; }
 
 root

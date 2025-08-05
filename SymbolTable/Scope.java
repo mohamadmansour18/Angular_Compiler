@@ -68,4 +68,13 @@ public class Scope {
         return null;
     }
 
+    public Symbol resolve(String name) {
+        Symbol found = this.searchForSymbol(name);
+        if (found != null) {
+            return found;
+        } else if (parent != null) {
+            return parent.resolve(name);
+        }
+        return null;
+    }
 }

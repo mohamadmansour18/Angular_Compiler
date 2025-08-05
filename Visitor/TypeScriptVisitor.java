@@ -1,15 +1,5 @@
 package Visitor;
 
-import Ast_Class.Node.Node;
-import Ast_Class.TypeScriptClasses.RootProgram;
-import Ast_Class.TypeScriptClasses.*;
-import SymbolTable.Scope;
-import gen.FrameParser;
-import Main.Main;
-import SemanticErros.*;
-import SymbolTable.Symbol;
-import gen.FrameParserBaseVisitor;
-import java.lang.Object;
 
 public class TypeScriptVisitor extends FrameParserBaseVisitor {
     public ErrorCollector errorCollector = new ErrorCollector();

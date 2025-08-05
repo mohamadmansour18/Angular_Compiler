@@ -35,10 +35,14 @@ public class Symbol {
         this.scope = scope;
     }
 
-   public void print (){
-        System.out.print(" | " + "Symbol :  " + this.getName() + " | ");
-        System.out.print("Symbol Type: " + this.getType() + " | ");
-        System.out.print("Scope Number of Symbol: " + this.getScope().getId() + " | ");
-        System.out.print("Scope Name: " + this.getScope().getName() + " | ");
+    public String describe() {
+        return "Symbol: " + this.getName() +
+                " | Type: " + this.getType() +
+                " | Scope ID: " + this.getScope().getId() +
+                " | Scope Name: " + this.getScope().getName();
+    }
+
+    public void print() {
+        System.out.println(describe());
     }
 }

@@ -1,4 +1,5 @@
 lexer grammar FrameLexer;
+@lexer::package {Parser}
 
 IMG_TAG_OPEN         : '<img';
 TAG_SELF_CLOSE   : '/>';

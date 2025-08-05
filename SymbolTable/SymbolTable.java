@@ -41,11 +41,26 @@ public class SymbolTable {
         this.scopeStack = scopeStack;
     }
 
+
+    public Symbol resolve(String name) {
+        if (scopeStack.isEmpty()) return null;
+        return scopeStack.peek().resolve(name);
+    }
+
     public Scope searchForSymbol(String symbol) {
         for (Scope current : scopes) {
             if (current.searchForSymbol(symbol) != null)
                 return current;
         }
         return null;
+    }
+
+    public void printAllSymbols() {
+        for (Scope scope : scopes) {
+            System.out.println("Scope #" + scope.getId() + " - " + scope.getName());
+            for (Symbol sym : scope.getSymbolList()) {
+                System.out.println("    " + sym.describe());
+            }
+        }
     }
 }
