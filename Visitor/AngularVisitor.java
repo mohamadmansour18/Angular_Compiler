@@ -468,4 +468,92 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
         Node.removeScope();
         return enumNode;
     }
+
+    @Override
+    public Node visitTSRoutingLabel(FrameParser.TSRoutingLabelContext ctx) {
+        TSRoutingLabel routingNode = new TSRoutingLabel();
+
+        routingNode.initializeNode(ctx, false, "");
+
+        ArrayList<RouteConfig> configs = new ArrayList<>();
+        String variableName = null;
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal && terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+                variableName = terminal.getText();
+                routingNode.setVariableName(variableName);
+
+            } else if (child instanceof FrameParser.RouteConfigContext) {
+                RouteConfig config = (RouteConfig) visit(child);
+                configs.add(config);
+            }
+        }
+
+        routingNode.setRouteConfigs(configs);
+
+        if (variableName != null) {
+            routingNode.createSymbol(routingNode.getScopeID(), variableName, "Routes");
+        }
+
+        return routingNode;
+    }
+
+    @Override
+    public Node visitTSActionLabel(FrameParser.TSActionLabelContext ctx) {
+        TSActionLabel actionNode = new TSActionLabel();
+
+        actionNode.initializeNode(ctx, false, "");
+
+        String name = null;
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal &&
+                    terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+                name = terminal.getText();
+                actionNode.setName(name);
+
+            } else if (child instanceof FrameParser.ActionTypeContext) {
+                ActionType actionType = (ActionType) visit(child);
+                actionNode.setActionType(actionType);
+            }
+        }
+
+        if (name != null) {
+            actionNode.createSymbol(actionNode.getScopeID(), name, "Action");
+        }
+
+        return actionNode;
+    }
+
+    @Override
+    public Node visitTSReducerLabel(FrameParser.TSReducerLabelContext ctx) {
+        TSReducerLabel reducerNode = new TSReducerLabel();
+
+        reducerNode.initializeNode(ctx, false, "");
+
+        String name = null;
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal && terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+                name = terminal.getText();
+                reducerNode.setName(name);
+
+            } else if (child instanceof FrameParser.ReducerConfigContext) {
+                ReducerConfig config = (ReducerConfig) visit(child);
+                reducerNode.setConfig(config);
+            }
+        }
+
+        if (name != null) {
+            reducerNode.createSymbol(reducerNode.getScopeID(), name, "Reducer");
+        }
+
+        return reducerNode;
+    }
 }
