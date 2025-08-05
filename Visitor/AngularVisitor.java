@@ -8,6 +8,8 @@ import Parser.FrameParserBaseVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import java.util.ArrayList;
+
 public class AngularVisitor extends FrameParserBaseVisitor<Node>{
 
     @Override
@@ -466,6 +468,4 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
         Node.removeScope();
         return enumNode;
     }
-
-
 }

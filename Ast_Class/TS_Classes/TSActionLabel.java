@@ -8,11 +8,6 @@ public class TSActionLabel extends Node implements TsSectionNode {
     private String name;          // IDENTITY
     private ActionType actionType; // STRING
 
-    public TSActionLabel(String name, ActionType actionType) {
-        this.name = name;
-        this.actionType = actionType;
-    }
-
     public String getName() {
         return name;
     }

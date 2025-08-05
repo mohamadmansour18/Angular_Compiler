@@ -7,11 +7,6 @@ public class TSReducerLabel extends Node implements TsSectionNode {
     private String name;
     private ReducerConfig config;
 
-    public TSReducerLabel(String name, ReducerConfig config) {
-        this.name = name;
-        this.config = config;
-    }
-
     public String getName() {
         return name;
     }
