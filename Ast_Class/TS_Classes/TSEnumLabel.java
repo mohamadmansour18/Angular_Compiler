@@ -8,11 +8,6 @@ public class TSEnumLabel extends Node implements TsSectionNode {
     private String name;
     private EnumBody body;
 
-    public TSEnumLabel(String name, EnumBody body) {
-        this.name = name;
-        this.body = body;
-    }
-
     public String getName() {
         return name;
     }

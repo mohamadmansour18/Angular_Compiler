@@ -269,13 +269,13 @@ type
 //{ age: 25, active: true }
 //{ data: user, meta: { count: 2 } }
 expression
-    : expression binaryOp expression   #BinaryExpressionLabel ////
-    | unaryOp expression               #UnaryExpressionLabel    ////
-    | literal                          #LiteralExpressionLabel ////
-    | expression arrayAccess           #ArrayAccessExpression ////
-    | IDENTITY                         #IdentifierExpressionLabel ////
-    | objectLiteral                    #ObjectLiteralExpressionLabel ////
-    | LPAREN expression RPAREN         #ParenExpressionLabel ////
+    : expression binaryOp expression   #BinaryExpressionLabel
+    | unaryOp expression               #UnaryExpressionLabel
+    | literal                          #LiteralExpressionLabel
+    | expression arrayAccess           #ArrayAccessExpression
+    | IDENTITY                         #IdentifierExpressionLabel
+    | objectLiteral                    #ObjectLiteralExpressionLabel
+    | LPAREN expression RPAREN         #ParenExpressionLabel
     | storeSelectExpression            #SelectExpressionLabel
     ;
 

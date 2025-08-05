@@ -9,12 +9,6 @@ public class TSClassLabel extends Node implements TsSectionNode{
     private String superClassName; // Nullable
     private ClassBlock classBlock;
 
-    public TSClassLabel(String className, String superClassName, ClassBlock classBlock) {
-        this.className = className;
-        this.superClassName = superClassName;
-        this.classBlock = classBlock;
-    }
-
     public String getClassName() {
         return className;
     }

@@ -259,6 +259,213 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
         return serviceNode;
     }
 
+    @Override
+    public Node visitTSClassLabel(FrameParser.TSClassLabelContext ctx) {
+        TSClassLabel classNode = new TSClassLabel();
+
+        classNode.initializeNode(ctx, true, "Class");
+
+        String className = null;
+        String superClassName = null;
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal && terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+
+                if (className == null) {
+                    className = terminal.getText();
+                    classNode.setClassName(className);
+                } else {
+                    superClassName = terminal.getText();
+                    classNode.setSuperClassName(superClassName);
+                }
+
+            } else if (child instanceof FrameParser.ClassBlockContext) {
+                ClassBlock block = (ClassBlock) visit(child);
+                classNode.setClassBlock(block);
+            }
+        }
+
+        if (className != null) {
+            classNode.createSymbol(classNode.getScopeID(), className, "Class");
+        }
+
+        Node.removeScope();
+        return classNode;
+    }
+
+    @Override
+    public Node visitTSFunctionLabel(FrameParser.TSFunctionLabelContext ctx) {
+        TSFunctionLabel functionNode = new TSFunctionLabel();
+
+        functionNode.initializeNode(ctx, true, "Function");
+
+        String name = null;
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                int type = terminal.getSymbol().getType();
+
+                if (type == FrameParser.ASYNC) {
+                    functionNode.setAsync(true);
+
+                } else if (type == FrameParser.IDENTITY && name == null) {
+                    name = terminal.getText();
+                    functionNode.setName(name);
+                }
+
+            } else if (child instanceof FrameParser.ParameterListContext) {
+                ParameterList params = (ParameterList) visit(child);
+                functionNode.setParameterList(params);
+
+            } else if (child instanceof FrameParser.TypeContext) {
+                Type returnType = (Type) visit(child);
+                functionNode.setReturnType(returnType);
+
+            } else if (child instanceof FrameParser.BlockContext) {
+                Block body = (Block) visit(child);
+                functionNode.setBody(body);
+            }
+        }
+
+        if (name != null) {
+            functionNode.createSymbol(functionNode.getScopeID(), name, "Function");
+        }
+
+        Node.removeScope();
+        return functionNode;
+    }
+
+    @Override
+    public Node visitTSArrowFunctionLabel(FrameParser.TSArrowFunctionLabelContext ctx) {
+        TSArrowFunctionLabel arrowNode = new TSArrowFunctionLabel();
+
+        arrowNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.ParameterListContext) {
+                ParameterList params = (ParameterList) visit(child);
+                arrowNode.setParameterList(params);
+
+            } else if (child instanceof FrameParser.TypeContext) {
+                Type returnType = (Type) visit(child);
+                arrowNode.setReturnType(returnType);
+
+            } else if (child instanceof FrameParser.BlockContext) {
+                Block block = (Block) visit(child);
+                arrowNode.setBodyBlock(block);
+
+            } else if (child instanceof FrameParser.ExpressionContext) {
+                ExpressionNode expr = (ExpressionNode) visit(child);
+                arrowNode.setBodyExpression(expr);
+            }
+        }
+
+        return arrowNode;
+    }
+
+    @Override
+    public Node visitTSVariableLabel(FrameParser.TSVariableLabelContext ctx) {
+        TSVariableLabel varNode = new TSVariableLabel();
+
+        varNode.initializeNode(ctx, false, "");
+
+        String name = null;
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                int tokenType = terminal.getSymbol().getType();
+
+                if (tokenType == FrameParser.LET || tokenType == FrameParser.CONST || tokenType == FrameParser.VAR) {
+                    varNode.setKeyword(terminal.getText());
+
+                } else if (tokenType == FrameParser.IDENTITY) {
+                    name = terminal.getText();
+                    varNode.setName(name);
+                }
+
+            } else if (child instanceof FrameParser.TypeContext) {
+                Type type = (Type) visit(child);
+                varNode.setType(type);
+
+            } else if (child instanceof FrameParser.ExpressionContext) {
+                ExpressionNode expr = (ExpressionNode) visit(child);
+                varNode.setValue(expr);
+            }
+        }
+
+        if (name != null) {
+            varNode.createSymbol(varNode.getScopeID(), name, "Variable");
+        }
+
+        return varNode;
+    }
+
+    @Override
+    public Node visitTSInterfaceLabel(FrameParser.TSInterfaceLabelContext ctx) {
+        TSInterfaceLabel interfaceNode = new TSInterfaceLabel();
+
+        interfaceNode.initializeNode(ctx, true, "Interface");
+
+        String name = null;
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal &&
+                    terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+                name = terminal.getText();
+                interfaceNode.setName(name);
+
+            } else if (child instanceof FrameParser.InterfaceBodyContext) {
+                InterfaceBody body = (InterfaceBody) visit(child);
+                interfaceNode.setBody(body);
+            }
+        }
+
+        if (name != null) {
+            interfaceNode.createSymbol(interfaceNode.getScopeID(), name, "Interface");
+        }
+
+        Node.removeScope();
+        return interfaceNode;
+    }
+
+    @Override
+    public Node visitTSEnumLabel(FrameParser.TSEnumLabelContext ctx) {
+        TSEnumLabel enumNode = new TSEnumLabel();
+
+        enumNode.initializeNode(ctx, true, "Enum");
+
+        String name = null;
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal && terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+                name = terminal.getText();
+                enumNode.setName(name);
+
+            } else if (child instanceof FrameParser.EnumBodyContext) {
+                EnumBody body = (EnumBody) visit(child);
+                enumNode.setBody(body);
+            }
+        }
+
+        if (name != null) {
+            enumNode.createSymbol(enumNode.getScopeID(), name, "Enum");
+        }
+
+        Node.removeScope();
+        return enumNode;
+    }
 
 
 }

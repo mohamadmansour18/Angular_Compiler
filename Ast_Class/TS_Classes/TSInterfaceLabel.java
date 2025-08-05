@@ -8,11 +8,6 @@ public class TSInterfaceLabel extends Node implements TsSectionNode {
     private String name;
     private InterfaceBody body;
 
-    public TSInterfaceLabel(String name, InterfaceBody body) {
-        this.name = name;
-        this.body = body;
-    }
-
     public String getName() {
         return name;
     }
