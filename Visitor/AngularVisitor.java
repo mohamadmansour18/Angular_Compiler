@@ -123,4 +123,75 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
 
         return buttonNode;
     }
+
+    @Override
+    public Node visitHTMLInputLabel(FrameParser.HTMLInputLabelContext ctx) {
+        HTMLInputLabel inputNode = new HTMLInputLabel();
+
+        inputNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.InputAttributeContext) {
+                InputAttribute attr = (InputAttribute) visit(child);
+                inputNode.getAttributes().add(attr);
+            }
+        }
+
+        return inputNode;
+    }
+
+    @Override
+    public Node visitHTMLImageLabel(FrameParser.HTMLImageLabelContext ctx) {
+        HTMLImageLabel imgNode = new HTMLImageLabel();
+
+        imgNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.ImgAttributeContext) {
+                ImgAttribute attr = (ImgAttribute) visit(child);
+                imgNode.getAttributes().add(attr);
+            }
+        }
+
+        return imgNode;
+    }
+
+    @Override
+    public Node visitHTMLLabel(FrameParser.HTMLLabelContext ctx) {
+        HTMLLabel labelNode = new HTMLLabel();
+
+        labelNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.LabelAttributeContext) {
+                LabelAttribute attr = (LabelAttribute) visit(child);
+                labelNode.getAttributes().add(attr);
+
+            } else if (child instanceof FrameParser.LabelContentContext) {
+                LabelContent content = (LabelContent) visit(child);
+                labelNode.setContent(content);
+            }
+        }
+
+        return labelNode;
+    }
+
+    @Override
+    public Node visitHTMLRouterOutletLabel(FrameParser.HTMLRouterOutletLabelContext ctx) {
+        HTMLRouterOutletLabel outletNode = new HTMLRouterOutletLabel();
+
+        // نهيئ النود بدون إنشاء Scope لأنه مجرد عنصر توجيه
+        outletNode.initializeNode(ctx, false, "");
+
+        return outletNode;
+    }
+
+
+
 }
