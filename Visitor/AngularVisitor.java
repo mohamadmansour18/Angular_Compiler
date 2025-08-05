@@ -6,6 +6,7 @@ import Ast_Class.TS_Classes.*;
 import Parser.FrameParser;
 import Parser.FrameParserBaseVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class AngularVisitor extends FrameParserBaseVisitor<Node>{
 
@@ -186,10 +187,76 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
     public Node visitHTMLRouterOutletLabel(FrameParser.HTMLRouterOutletLabelContext ctx) {
         HTMLRouterOutletLabel outletNode = new HTMLRouterOutletLabel();
 
-        // نهيئ النود بدون إنشاء Scope لأنه مجرد عنصر توجيه
         outletNode.initializeNode(ctx, false, "");
 
         return outletNode;
+    }
+
+    @Override
+    public Node visitTSComponentLabel(FrameParser.TSComponentLabelContext ctx) {
+        TSComponentLabel componentNode = new TSComponentLabel();
+
+        componentNode.initializeNode(ctx, true, "Component");
+
+        String name = null;
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.ComponentBodyContext) {
+                ComponentBody body = (ComponentBody) visit(child);
+                componentNode.setBody(body);
+
+            } else if (child instanceof TerminalNode terminal && terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+                name = terminal.getText();
+                componentNode.setName(name);
+
+            } else if (child instanceof FrameParser.ClassBlockContext) {
+                ClassBlock block = (ClassBlock) visit(child);
+                componentNode.setClassBlock(block);
+            }
+        }
+
+        if (name != null) {
+            componentNode.createSymbol(componentNode.getScopeID(), name, "Component");
+        }
+
+        Node.removeScope();
+        return componentNode;
+    }
+
+    @Override
+    public Node visitTSServiceLabel(FrameParser.TSServiceLabelContext ctx) {
+        TSServiceLabel serviceNode = new TSServiceLabel();
+
+        serviceNode.initializeNode(ctx, true, "Service");
+
+        String name = null;
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.InjectableBodyContext) {
+                InjectableBody body = (InjectableBody) visit(child);
+                serviceNode.setInjectableBody(body);
+
+            } else if (child instanceof TerminalNode terminal &&
+                    terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+                name = terminal.getText();
+                serviceNode.setServiceName(name);
+
+            } else if (child instanceof FrameParser.ClassBlockContext) {
+                ClassBlock block = (ClassBlock) visit(child);
+                serviceNode.setClassBlock(block);
+            }
+        }
+
+        if (name != null) {
+            serviceNode.createSymbol(serviceNode.getScopeID(), name, "Service");
+        }
+
+        Node.removeScope();
+        return serviceNode;
     }
 
 

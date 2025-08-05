@@ -8,12 +8,6 @@ public class TSServiceLabel extends Node implements TsSectionNode{
     private InjectableBody injectableBody;
     private ClassBlock classBlock;
 
-    public TSServiceLabel(String serviceName, InjectableBody injectableBody, ClassBlock classBlock) {
-        this.serviceName = serviceName;
-        this.injectableBody = injectableBody;
-        this.classBlock = classBlock;
-    }
-
     public String getServiceName() {
         return serviceName;
     }

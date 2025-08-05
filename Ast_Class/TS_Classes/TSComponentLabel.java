@@ -9,12 +9,6 @@ public class TSComponentLabel extends Node implements TsSectionNode {
     private String name;         // اسم الكلاس مثل TestComponent
     private ClassBlock classBlock;  // جسم الكلاس
 
-    public TSComponentLabel(ComponentBody body, String name, ClassBlock classBlock) {
-        this.body = body;
-        this.name = name;
-        this.classBlock = classBlock;
-    }
-
     public ComponentBody getBody() {
         return body;
     }
