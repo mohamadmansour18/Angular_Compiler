@@ -555,5 +555,188 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
         }
 
         return reducerNode;
+
+
+        @Override
+        public Node visitDivAttribute(FrameParser.DivAttributeContext ctx) {
+            DivAttribute attribute = new DivAttribute();
+
+            attribute.initializeNode(ctx, false, "");
+
+            for (int i = 0; i < ctx.getChildCount(); i++) {
+                ParseTree child = ctx.getChild(i);
+
+                if (child instanceof TerminalNode terminal) {
+                    int tokenType = terminal.getSymbol().getType();
+
+                    switch (tokenType) {
+                        case FrameParser.ID:
+                        case FrameParser.CLASS:
+                        case FrameParser.STYLE:
+                        case FrameParser.STAR_NG_IF:
+                        case FrameParser.STAR_NG_FOR:
+                        case FrameParser.CLICK:
+                        case FrameParser.NG_MODEL:
+                        case FrameParser.NG_MODEL_TWO_WAY:
+                            attribute.setAttributeType(terminal.getText());
+                            break;
+
+                        case FrameParser.STRING:
+                            attribute.setAttributeValue(terminal.getText().replaceAll("^\"|\"$", ""));
+                            break;
+                    }
+                }
+            }
+
+            return attribute;
+        }
+
+        @Override
+        public Node visitDivImageLabel(FrameParser.DivImageLabelContext ctx) {
+            DivImageLabel imgNode = new DivImageLabel();
+
+            imgNode.initializeNode(ctx, false, "");
+
+            for (int i = 0; i < ctx.getChildCount(); i++) {
+                ParseTree child = ctx.getChild(i);
+
+                if (child instanceof FrameParser.ImgAttributeContext) {
+                    ImgAttribute attr = (ImgAttribute) visit(child);
+                    imgNode.getAttributes().add(attr);
+                }
+            }
+
+            return imgNode;
+        }
+
+        @Override
+        public Node visitDivButtonLabel(FrameParser.DivButtonLabelContext ctx) {
+            DivButtonLabel buttonNode = new DivButtonLabel();
+
+            buttonNode.initializeNode(ctx, false, "");
+
+            for (int i = 0; i < ctx.getChildCount(); i++) {
+                ParseTree child = ctx.getChild(i);
+
+                if (child instanceof FrameParser.ButtonAttributeContext) {
+                    ButtonAttribute attr = (ButtonAttribute) visit(child);
+                    buttonNode.getAttributes().add(attr);
+
+                } else if (child instanceof FrameParser.ButtonContentContext) {
+                    ButtonContent content = (ButtonContent) visit(child);
+                    buttonNode.setContent(content);
+                }
+            }
+
+            return buttonNode;
+        }
+
+        @Override
+        public Node visitDivInputLabel(FrameParser.DivInputLabelContext ctx) {
+            DivInputLabel inputNode = new DivInputLabel();
+
+            inputNode.initializeNode(ctx, false, "");
+
+            for (int i = 0; i < ctx.getChildCount(); i++) {
+                ParseTree child = ctx.getChild(i);
+
+                if (child instanceof FrameParser.InputAttributeContext) {
+                    InputAttribute attr = (InputAttribute) visit(child);
+                    inputNode.getAttributes().add(attr);
+                }
+            }
+
+            return inputNode;
+        }
+
+        @Override
+        public Node visitDivParagraphLabel(FrameParser.DivParagraphLabelContext ctx) {
+            DivParagraphLabel paragraphNode = new DivParagraphLabel();
+
+            paragraphNode.initializeNode(ctx, false, "");
+
+            for (int i = 0; i < ctx.getChildCount(); i++) {
+                ParseTree child = ctx.getChild(i);
+
+                if (child instanceof FrameParser.ParagraphAttributeContext) {
+                    ParagraphAttribute attr = (ParagraphAttribute) visit(child);
+                    paragraphNode.getAttributes().add(attr);
+
+                } else if (child instanceof FrameParser.ParagraphContentContext) {
+                    ParagraphContentNode content = (ParagraphContentNode) visit(child);
+                    paragraphNode.setContent(content);
+                }
+            }
+
+            return paragraphNode;
+        }
+
+        @Override
+        public Node visitDivNestedLabel(FrameParser.DivNestedLabelContext ctx) {
+            DivNestedLabel nestedDivNode = new DivNestedLabel();
+
+            nestedDivNode.initializeNode(ctx, false, "");
+
+            for (int i = 0; i < ctx.getChildCount(); i++) {
+                ParseTree child = ctx.getChild(i);
+
+                if (child instanceof FrameParser.DivAttributeContext) {
+                    DivAttribute attr = (DivAttribute) visit(child);
+                    nestedDivNode.getAttributes().add(attr);
+
+                } else if (child instanceof FrameParser.DivContentContext) {
+                    DivContentNode content = (DivContentNode) visit(child);
+                    nestedDivNode.getContent().add(content);
+                }
+            }
+
+            return nestedDivNode;
+        }
+
+        @Override
+        public Node visitDivRouterOutletLabel(FrameParser.DivRouterOutletLabelContext ctx) {
+            DivRouterOutletLabel outletNode = new DivRouterOutletLabel();
+
+            outletNode.initializeNode(ctx, false, "");
+
+            return outletNode;
+        }
+
+        @Override
+        public Node visitDivNgIfLabel(FrameParser.DivNgIfLabelContext ctx) {
+            DivNgIfLabel divNgIfLabel = new DivNgIfLabel();
+
+            divNgIfLabel.initializeNode(ctx, false, "");
+
+            for (int i = 0; i < ctx.getChildCount(); i++) {
+                ParseTree child = ctx.getChild(i);
+
+                if (child instanceof TerminalNode terminal && terminal.getSymbol().getType() == FrameParser.STRING) {
+                    String condition = terminal.getText().replaceAll("^\"|\"$", "");
+                }
+            }
+
+            return divNgIfLabel;
+        }
+
+        @Override
+        public Node visitDivNgForLabel(FrameParser.DivNgForLabelContext ctx) {
+            DivNgForLabel divNgForLabel = new DivNgForLabel();
+
+            divNgForLabel.initializeNode(ctx, false, "");
+
+            for (int i = 0; i < ctx.getChildCount(); i++) {
+                ParseTree child = ctx.getChild(i);
+
+                if (child instanceof TerminalNode terminal &&
+                        terminal.getSymbol().getType() == FrameParser.STRING) {
+                    String loopExpr = terminal.getText().replaceAll("^\"|\"$", "");
+                    divNgForLabel.setLoopExpression(loopExpr);
+                }
+            }
+
+            return divNgForLabel;
+        }
+
     }
 }
