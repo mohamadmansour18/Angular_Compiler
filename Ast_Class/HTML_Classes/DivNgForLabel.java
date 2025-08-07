@@ -8,9 +8,6 @@ public class DivNgForLabel extends Node implements DivContentNode {
     // يحتفظ بتعبير التكرار (مثل: "let x of list")
     private String loopExpression;
 
-    public DivNgForLabel(String loopExpression) {
-        this.loopExpression = loopExpression;
-    }
 
     public String getLoopExpression() {
         return loopExpression;

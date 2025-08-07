@@ -8,10 +8,6 @@ public class ButtonContent extends Node {
     // يمثل النص الموجود داخل الزر
     private String content;
 
-    public ButtonContent(String content) {
-        this.content = content;
-    }
-
     public String getRawContent() {
         return content;
     }

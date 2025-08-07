@@ -7,10 +7,6 @@ public class FormTextLabel extends Node implements FormContentNode {
 
     private String text;
 
-    public FormTextLabel(String text) {
-        this.text = text;
-    }
-
     public String getText() {
         return text;
     }

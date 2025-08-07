@@ -25,6 +25,7 @@ public interface AST_Visitor {
     void visit(DivRouterOutletLabel outlet);
     void visit(DivNgIfLabel ngIf);
     void visit(DivNgForLabel ngFor);
+    void visit(DivPlainTextLabel text);
     void visit(FormAttribute attribute);
     void visit(HTMLFormLabel form);
     void visit(FormInputLabel input);

@@ -10,13 +10,6 @@ public class ClassVariableLabel extends Node implements ClassMemberNode {
     private Type type;          // نوع البيانات
     private ExpressionNode value;   // القيمة الابتدائية (اختيارية)
 
-    public ClassVariableLabel(String declarationType, String name, Type type, ExpressionNode value) {
-        this.declarationType = declarationType;
-        this.name = name;
-        this.type = type;
-        this.value = value;
-    }
-
     public String getDeclarationType() {
         return declarationType;
     }

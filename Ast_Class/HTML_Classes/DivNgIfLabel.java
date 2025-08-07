@@ -8,10 +8,6 @@ public class DivNgIfLabel extends Node implements DivContentNode {
     // يحتفظ بشرط ngIf (مثلاً: "user.isLoggedIn")
     private String condition;
 
-    public DivNgIfLabel(String condition) {
-        this.condition = condition;
-    }
-
     public String getCondition() {
         return condition;
     }

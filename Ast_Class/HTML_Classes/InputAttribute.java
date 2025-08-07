@@ -11,11 +11,6 @@ public class InputAttribute extends Node {
     // يمثل القيمة المرافقة للخاصية مثل: "text", "username", ...
     private String value;
 
-    public InputAttribute(String attributeType, String value) {
-        this.attributeType = attributeType;
-        this.value = value;
-    }
-
     public String getAttributeType() {
         return attributeType;
     }

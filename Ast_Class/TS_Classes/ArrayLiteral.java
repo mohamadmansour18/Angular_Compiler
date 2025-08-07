@@ -9,10 +9,6 @@ public class ArrayLiteral extends Node {
 
     private ArrayList<ExpressionNode> elements = new ArrayList<>();
 
-    public ArrayLiteral(ArrayList<ExpressionNode> elements) {
-        this.elements = elements;
-    }
-
     public ArrayList<ExpressionNode> getElements() {
         return elements;
     }

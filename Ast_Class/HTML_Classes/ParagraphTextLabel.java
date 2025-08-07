@@ -7,10 +7,6 @@ public class ParagraphTextLabel extends Node implements ParagraphContentNode {
 
     private String text;
 
-    public ParagraphTextLabel(String text) {
-        this.text = text;
-    }
-
     public String getText() {
         return text;
     }

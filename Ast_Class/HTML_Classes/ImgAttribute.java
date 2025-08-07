@@ -11,11 +11,6 @@ public class ImgAttribute extends Node {
     // يمثل القيمة النصية للخاصية
     private String value;
 
-    public ImgAttribute(String attributeType, String value) {
-        this.attributeType = attributeType;
-        this.value = value;
-    }
-
     public String getAttributeType() {
         return attributeType;
     }

@@ -8,11 +8,6 @@ public class ParagraphAttribute extends Node {
     private String attributeType;
     private String value;
 
-    public ParagraphAttribute(String attributeType, String value) {
-        this.attributeType = attributeType;
-        this.value = value;
-    }
-
     public String getAttributeType() {
         return attributeType;
     }

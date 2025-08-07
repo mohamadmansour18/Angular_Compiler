@@ -185,6 +185,11 @@ public class BaseAstVisitor implements AST_Visitor {
     }
 
     @Override
+    public void visit(DivPlainTextLabel text){
+        System.out.println("[Div text Directive] = " + text.getText());
+    };
+
+    @Override
     public void visit(FormAttribute attribute) {
         System.out.println("[Form Attribute] " + attribute.getValue());
     }

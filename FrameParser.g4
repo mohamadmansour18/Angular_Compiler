@@ -64,7 +64,6 @@ buttonAttribute
     | CLICK EQ STRING
     | NG_MODEL EQ STRING
     | NG_MODEL_TWO_WAY EQ STRING
-
     ;
 
 buttonContent
