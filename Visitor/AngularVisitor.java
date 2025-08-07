@@ -555,7 +555,7 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
         }
 
         return reducerNode;
-
+    }
 
         @Override
         public Node visitDivAttribute(FrameParser.DivAttributeContext ctx) {
@@ -720,7 +720,7 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
         }
 
         @Override
-        public Node visitDivNgForLabel(FrameParser.DivNgForLabelContext ctx) {
+        public Node visitDivNgForLabel(FrameParser.DivNgForLabelContext ctx){
             DivNgForLabel divNgForLabel = new DivNgForLabel();
 
             divNgForLabel.initializeNode(ctx, false, "");
@@ -739,4 +739,4 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
         }
 
     }
-}
+
