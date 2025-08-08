@@ -917,5 +917,132 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
     }
 
 
+    @Override
+    public Node visitParagraphTextLabel(FrameParser.ParagraphTextLabelContext ctx) {
+        ParagraphTextLabel textLabel = new ParagraphTextLabel();
+        textLabel.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal && terminal.getSymbol().getType() == FrameParser.STRING) {
+                String rawText = terminal.getText().replaceAll("^\"|\"$", "");
+                textLabel.setText(rawText);
+            }
+        }
+
+        return textLabel;
+    }
+
+    @Override
+    public Node visitParagraphImageLabel(FrameParser.ParagraphImageLabelContext ctx) {
+        ParagraphImageLabel imgNode = new ParagraphImageLabel();
+        imgNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.ImgAttributeContext) {
+                ImgAttribute attr = (ImgAttribute) visit(child);
+                imgNode.getAttributes().add(attr);
+            }
+        }
+
+        return imgNode;
+    }
+
+    @Override
+    public Node visitParagraphButtonLabel(FrameParser.ParagraphButtonLabelContext ctx) {
+        ParagraphButtonLabel buttonNode = new ParagraphButtonLabel();
+        buttonNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.ButtonAttributeContext) {
+                ButtonAttribute attr = (ButtonAttribute) visit(child);
+                buttonNode.getAttributes().add(attr);
+
+            } else if (child instanceof FrameParser.ButtonContentContext) {
+                ButtonContent content = (ButtonContent) visit(child);
+                buttonNode.setContent(content);
+            }
+        }
+
+        return buttonNode;
+    }
+
+    @Override
+    public Node visitParagraphInputLabel(FrameParser.ParagraphInputLabelContext ctx) {
+        ParagraphInputLabel inputNode = new ParagraphInputLabel();
+        inputNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.InputAttributeContext) {
+                InputAttribute attr = (InputAttribute) visit(child);
+                inputNode.getAttributes().add(attr);
+            }
+        }
+
+        return inputNode;
+    }
+
+    @Override
+    public Node visitButtonAttribute(FrameParser.ButtonAttributeContext ctx) {
+        ButtonAttribute attribute = new ButtonAttribute();
+        attribute.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                int tokenType = terminal.getSymbol().getType();
+
+                switch (tokenType) {
+                    case FrameParser.TYPE:
+                    case FrameParser.CLICK:
+                    case FrameParser.STYLE:
+                    case FrameParser.STAR_NG_IF:
+                    case FrameParser.STAR_NG_FOR:
+                    case FrameParser.NG_MODEL:
+                    case FrameParser.NG_MODEL_TWO_WAY:
+                        attribute.setAttributeType(terminal.getText());
+                        break;
+
+                    case FrameParser.STRING:
+                        attribute.setAttributeValue(terminal.getText().replaceAll("^\"|\"$", ""));
+                        break;
+
+                    case FrameParser.DISABLED:
+                        attribute.setAttributeType(terminal.getText());
+                        attribute.setAttributeValue(null);
+                        break;
+                }
+            }
+        }
+
+        return attribute;
+    }
+
+    public Node visitButtonContent(FrameParser.ButtonContentContext ctx) {
+        ButtonContent buttonContent = new ButtonContent();
+        buttonContent.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal &&
+                    terminal.getSymbol().getType() == FrameParser.STRING) {
+                String text = terminal.getText().replaceAll("^\"|\"$", "");
+                buttonContent.setRawContent(text);
+            }
+        }
+
+        return buttonContent;
+    }
+
+
 }
 
