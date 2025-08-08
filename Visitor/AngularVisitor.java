@@ -738,5 +738,184 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
             return divNgForLabel;
         }
 
+
+    public Node visitDivPlainTextLabel(FrameParser.DivPlainTextLabelContext ctx) {
+        DivPlainTextLabel node = new DivPlainTextLabel();
+
+        node.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal && terminal.getSymbol().getType() == FrameParser.STRING) {
+                String rawText = terminal.getText().replaceAll("^\"|\"$", ""); // إزالة علامات التنصيص
+                node.setText(rawText);
+            }
+        }
+
+        return node;
     }
+
+    @Override
+    public Node visitFormAttribute(FrameParser.FormAttributeContext ctx) {
+        FormAttribute attribute = new FormAttribute();
+
+        attribute.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                int tokenType = terminal.getSymbol().getType();
+
+                switch (tokenType) {
+                    case FrameParser.ID:
+                    case FrameParser.CLASS:
+                    case FrameParser.STYLE:
+                    case FrameParser.NG_SUBMIT:
+                        attribute.setAttributeType(terminal.getText());
+                        break;
+
+                    case FrameParser.STRING:
+                        attribute.setAttributeValue(terminal.getText().replaceAll("^\"|\"$", ""));
+                        break;
+                }
+            }
+        }
+
+        return attribute;
+    }
+
+    @Override
+    public Node visitFormInputLabel(FrameParser.FormInputLabelContext ctx) {
+        FormInputLabel inputNode = new FormInputLabel();
+        inputNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.InputAttributeContext) {
+                InputAttribute attr = (InputAttribute) visit(child);
+                inputNode.getAttributes().add(attr);
+            }
+        }
+
+        return inputNode;
+    }
+
+    @Override
+    public Node visitFormButtonLabel(FrameParser.FormButtonLabelContext ctx) {
+        FormButtonLabel buttonNode = new FormButtonLabel();
+        buttonNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.ButtonAttributeContext) {
+                ButtonAttribute attr = (ButtonAttribute) visit(child);
+                buttonNode.getAttributes().add(attr);
+
+            } else if (child instanceof FrameParser.ButtonContentContext) {
+                ButtonContent content = (ButtonContent) visit(child);
+                buttonNode.setContent(content);
+            }
+        }
+
+        return buttonNode;
+    }
+
+    @Override
+    public Node visitFormLabel(FrameParser.FormLabelContext ctx) {
+        FormLabel labelNode = new FormLabel();
+        labelNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.LabelAttributeContext) {
+                LabelAttribute attr = (LabelAttribute) visit(child);
+                labelNode.getAttributes().add(attr);
+
+            } else if (child instanceof FrameParser.LabelContentContext) {
+                LabelContent content = (LabelContent) visit(child);
+                labelNode.setContent(content);
+            }
+        }
+
+        return labelNode;
+    }
+
+    @Override
+    public Node visitFormDivLabel(FrameParser.FormDivLabelContext ctx) {
+        FormDivLabel divNode = new FormDivLabel();
+        divNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.DivAttributeContext) {
+                DivAttribute attr = (DivAttribute) visit(child);
+                divNode.getAttributes().add(attr);
+
+            } else if (child instanceof FrameParser.DivContentContext) {
+                DivContentNode content = (DivContentNode) visit(child);
+                divNode.getContent().add(content);
+            }
+        }
+
+        return divNode;
+    }
+
+    @Override
+    public Node visitFormTextLabel(FrameParser.FormTextLabelContext ctx) {
+        FormTextLabel textLabel = new FormTextLabel();
+        textLabel.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal && terminal.getSymbol().getType() == FrameParser.STRING) {
+                String rawText = terminal.getText().replaceAll("^\"|\"$", "");
+                textLabel.setText(rawText);
+            }
+        }
+
+        return textLabel;
+    }
+
+    @Override
+    public Node visitParagraphAttribute(FrameParser.ParagraphAttributeContext ctx) {
+        ParagraphAttribute attribute = new ParagraphAttribute();
+        attribute.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                int tokenType = terminal.getSymbol().getType();
+
+                switch (tokenType) {
+                    case FrameParser.ID:
+                    case FrameParser.CLASS:
+                    case FrameParser.STYLE:
+                    case FrameParser.STAR_NG_IF:
+                    case FrameParser.STAR_NG_FOR:
+                    case FrameParser.CLICK:
+                    case FrameParser.NG_MODEL:
+                    case FrameParser.NG_MODEL_TWO_WAY:
+                        attribute.setAttributeType(terminal.getText());
+                        break;
+
+                    case FrameParser.STRING:
+                        attribute.setAttributeValue(terminal.getText().replaceAll("^\"|\"$", ""));
+                        break;
+                }
+            }
+        }
+
+        return attribute;
+    }
+
+
+}
 
