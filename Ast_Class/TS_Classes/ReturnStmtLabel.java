@@ -6,10 +6,6 @@ import Visitor.AST_Visitor;
 public class ReturnStmtLabel extends Node implements StatementNode{
     private ExpressionNode expression; // ممكن تكون null
 
-    public ReturnStmtLabel(ExpressionNode expression) {
-        this.expression = expression;
-    }
-
     public ExpressionNode getExpression() {
         return expression;
     }

@@ -1043,6 +1043,988 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
         return buttonContent;
     }
 
+    @Override
+    public Node visitInputAttribute(FrameParser.InputAttributeContext ctx) {
+        InputAttribute attribute = new InputAttribute();
+        attribute.initializeNode(ctx, false, "");
 
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                int tokenType = terminal.getSymbol().getType();
+
+                switch (tokenType) {
+                    case FrameParser.TYPE:
+                    case FrameParser.PLACEHOLDER:
+                    case FrameParser.STYLE:
+                    case FrameParser.VALUE:
+                    case FrameParser.NAME:
+                    case FrameParser.ID:
+                    case FrameParser.NG_MODEL:
+                    case FrameParser.NG_MODEL_TWO_WAY:
+                        attribute.setAttributeType(terminal.getText());
+                        break;
+
+                    case FrameParser.STRING:
+                        attribute.setAttributeValue(terminal.getText().replaceAll("^\"|\"$", ""));
+                        break;
+                }
+            }
+        }
+
+        return attribute;
+    }
+
+    @Override
+    public Node visitImgAttribute(FrameParser.ImgAttributeContext ctx) {
+        ImgAttribute attribute = new ImgAttribute();
+        attribute.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                int tokenType = terminal.getSymbol().getType();
+
+                switch (tokenType) {
+                    case FrameParser.SRC:
+                    case FrameParser.ALT:
+                    case FrameParser.STYLE:
+                        attribute.setAttributeType(terminal.getText());
+                        break;
+
+                    case FrameParser.STRING:
+                        attribute.setAttributeValue(terminal.getText().replaceAll("^\"|\"$", ""));
+                        break;
+                }
+            }
+        }
+
+        return attribute;
+    }
+
+    @Override
+    public Node visitLabelAttribute(FrameParser.LabelAttributeContext ctx) {
+        LabelAttribute attribute = new LabelAttribute(null, null);
+        attribute.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                int tokenType = terminal.getSymbol().getType();
+
+                switch (tokenType) {
+                    case FrameParser.FOR:
+                    case FrameParser.CLASS:
+                    case FrameParser.STYLE:
+                        attribute.setAttributeType(terminal.getText());
+                        break;
+
+                    case FrameParser.STRING:
+                        attribute.setAttributeValue(terminal.getText().replaceAll("^\"|\"$", ""));
+                        break;
+                }
+            }
+        }
+
+        return attribute;
+    }
+
+    @Override
+    public Node visitLabelContent(FrameParser.LabelContentContext ctx) {
+        LabelContent labelContent = new LabelContent();
+        labelContent.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal &&
+                    terminal.getSymbol().getType() == FrameParser.STRING) {
+                String rawText = terminal.getText().replaceAll("^\"|\"$", "");
+                labelContent.setText(rawText);
+            }
+        }
+
+        return labelContent;
+    }
+
+    public Node visitComponentBody(FrameParser.ComponentBodyContext ctx) {
+        ComponentBody bodyNode = new ComponentBody();
+        bodyNode.initializeNode(ctx, false, "");
+
+        ArrayList<ComponentProperty> props = new ArrayList<>();
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.ComponentPropertyContext) {
+                ComponentProperty prop = (ComponentProperty) visit(child);
+                props.add(prop);
+            }
+        }
+
+        bodyNode.setProperties(props);
+
+        return bodyNode;
+    }
+
+    @Override
+    public Node visitComponentProperty(FrameParser.ComponentPropertyContext ctx) {
+        ComponentProperty propNode = new ComponentProperty();
+        propNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                int tokenType = terminal.getSymbol().getType();
+
+                switch (tokenType) {
+                    case FrameParser.SELECTOR:
+                    case FrameParser.TEMPLATE:
+                    case FrameParser.STYLEURLS:
+                        propNode.setKey(terminal.getText());
+                        break;
+
+                    case FrameParser.STRING:
+                        String value = terminal.getText().replaceAll("^\"|\"$", "");
+                        propNode.setStringValue(value);
+                        break;
+                }
+
+            } else if (child instanceof FrameParser.ArrayLiteralContext) {
+                ArrayLiteral array = (ArrayLiteral) visit(child);
+                propNode.setArrayLiteralValue(array);
+            }
+        }
+
+        return propNode;
+    }
+
+    @Override
+    public Node visitArrayLiteral(FrameParser.ArrayLiteralContext ctx) {
+        ArrayLiteral arrayNode = new ArrayLiteral();
+        arrayNode.initializeNode(ctx, false, "");
+
+        ArrayList<ExpressionNode> elements = new ArrayList<>();
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.ExpressionContext) {
+                ExpressionNode expr = (ExpressionNode) visit(child);
+                elements.add(expr);
+            }
+        }
+
+        arrayNode.setElements(elements);
+
+        return arrayNode;
+    }
+
+    public Node visitClassBlock(FrameParser.ClassBlockContext ctx) {
+        ClassBlock blockNode = new ClassBlock();
+        blockNode.initializeNode(ctx, false, "");
+
+        ArrayList<ClassMemberNode> members = new ArrayList<>();
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.ClassMemberContext) {
+                ClassMemberNode member = (ClassMemberNode) visit(child);
+                members.add(member);
+            }
+        }
+
+        blockNode.setMembers(members);
+
+        return blockNode;
+    }
+
+    @Override
+    public Node visitClassVariableLabel(FrameParser.ClassVariableLabelContext ctx) {
+        ClassVariableLabel varNode = new ClassVariableLabel();
+        varNode.initializeNode(ctx, false, "");
+
+        String name = null;
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                int tokenType = terminal.getSymbol().getType();
+
+                switch (tokenType) {
+                    case FrameParser.LET:
+                    case FrameParser.CONST:
+                    case FrameParser.VAR:
+                        varNode.setDeclarationType(terminal.getText());
+                        break;
+
+                    case FrameParser.IDENTITY:
+                        name = terminal.getText();
+                        varNode.setName(name);
+                        break;
+                }
+
+            } else if (child instanceof FrameParser.TypeContext) {
+                Type type = (Type) visit(child);
+                varNode.setType(type);
+
+            } else if (child instanceof FrameParser.ExpressionContext) {
+                ExpressionNode expr = (ExpressionNode) visit(child);
+                varNode.setValueNode(expr);
+            }
+        }
+
+        // ✅ تسجيل المتغير داخل Symbol Table إذا كان داخل classBlock
+        if (name != null) {
+            varNode.createSymbol(varNode.getScopeID(), name, "ClassVariable");
+        }
+
+        return varNode;
+    }
+
+    @Override
+    public Node visitClassConstructorLabel(FrameParser.ClassConstructorLabelContext ctx) {
+        ClassConstructorLabel ctorNode = new ClassConstructorLabel();
+        ctorNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.ParameterListContext) {
+                ParameterList params = (ParameterList) visit(child);
+                ctorNode.setParameterList(params);
+
+            } else if (child instanceof FrameParser.BlockContext) {
+                Block block = (Block) visit(child);
+                ctorNode.setBlock(block);
+            }
+        }
+
+        return ctorNode;
+    }
+
+    @Override
+    public Node visitClassMethodLabel(FrameParser.ClassMethodLabelContext ctx) {
+        ClassMethodLabel methodNode = new ClassMethodLabel();
+        methodNode.initializeNode(ctx, false, "");
+
+        ArrayList<MethodModifier> modifiers = new ArrayList<>();
+        String name = null;
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            // معالجة الموديفايرز
+            if (child instanceof FrameParser.MethodModifierContext) {
+                MethodModifier mod = (MethodModifier) visit(child);
+                modifiers.add(mod);
+
+                // async
+            } else if (child instanceof TerminalNode terminal &&
+                    terminal.getSymbol().getType() == FrameParser.ASYNC) {
+                methodNode.setAsync(true);
+
+                // الاسم
+            } else if (child instanceof TerminalNode terminal &&
+                    terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+                name = terminal.getText();
+                methodNode.setName(name);
+
+                // البراميترز
+            } else if (child instanceof FrameParser.ParameterListContext) {
+                ParameterList params = (ParameterList) visit(child);
+                methodNode.setParameterList(params);
+
+                // نوع الإرجاع
+            } else if (child instanceof FrameParser.TypeContext) {
+                Type returnType = (Type) visit(child);
+                methodNode.setReturnType(returnType);
+
+                // الجسم
+            } else if (child instanceof FrameParser.BlockContext) {
+                Block body = (Block) visit(child);
+                methodNode.setBody(body);
+            }
+        }
+
+        methodNode.setModifiers(modifiers);
+
+        if (name != null) {
+            methodNode.createSymbol(methodNode.getScopeID(), name, "Method");
+        }
+
+        return methodNode;
+    }
+
+    @Override
+    public Node visitMethodModifier(FrameParser.MethodModifierContext ctx) {
+        MethodModifier node = new MethodModifier();
+        node.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                node.setModifier(terminal.getText());
+                break; // لأنه يوجد فقط عنصر واحد في القاعدة
+            }
+        }
+
+        return node;
+    }
+
+    @Override
+    public Node visitParameterList(FrameParser.ParameterListContext ctx) {
+        ParameterList paramListNode = new ParameterList();
+        paramListNode.initializeNode(ctx, false, "");
+
+        ArrayList<Parameter> parameters = new ArrayList<>();
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.ParameterContext) {
+                Parameter param = (Parameter) visit(child);
+                parameters.add(param);
+            }
+        }
+
+        paramListNode.setParameters(parameters);
+
+        return paramListNode;
+    }
+
+    @Override
+    public Node visitParameter(FrameParser.ParameterContext ctx) {
+        Parameter paramNode = new Parameter();
+        paramNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                int tokenType = terminal.getSymbol().getType();
+
+                switch (tokenType) {
+                    case FrameParser.PUBLIC:
+                    case FrameParser.PRIVATE:
+                    case FrameParser.PROTECTED:
+                        paramNode.setVisibility(terminal.getText());
+                        break;
+
+                    case FrameParser.IDENTITY:
+                        paramNode.setName(terminal.getText());
+                        break;
+                }
+
+            } else if (child instanceof FrameParser.TypeContext) {
+                Type type = (Type) visit(child);
+                paramNode.setType(type);
+            }
+        }
+
+        return paramNode;
+    }
+
+    @Override
+    public Node visitType(FrameParser.TypeContext ctx) {
+        Type typeNode = new Type();
+        typeNode.initializeNode(ctx, false, "");
+
+        String baseType = "";
+        boolean isArray = false;
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                int tokenType = terminal.getSymbol().getType();
+
+                if (tokenType == FrameParser.PRIMITIVE_TYPE || tokenType == FrameParser.IDENTITY) {
+                    baseType = terminal.getText();
+
+                } else if (tokenType == FrameParser.LBRACK) {
+                    isArray = true;
+                }
+            }
+        }
+
+        if (isArray) {
+            baseType += "[]";
+        }
+
+        typeNode.setTypeName(baseType);
+
+        return typeNode;
+    }
+
+    @Override
+    public Node visitBlock(FrameParser.BlockContext ctx) {
+        Block blockNode = new Block();
+
+        blockNode.initializeNode(ctx, true, "Block");
+
+        ArrayList<StatementNode> statements = new ArrayList<>();
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.StatementContext) {
+                StatementNode stmt = (StatementNode) visit(child);
+                statements.add(stmt);
+            }
+        }
+
+        blockNode.setStatements(statements);
+
+
+        Node.removeScope();
+        return blockNode;
+    }
+
+    @Override
+    public Node visitAssignmentStmtLabel(FrameParser.AssignmentStmtLabelContext ctx) {
+        AssignmentStmtLabel stmt = new AssignmentStmtLabel();
+        stmt.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            // التحقق من وجود "this"
+            if (child instanceof TerminalNode terminal) {
+                int tokenType = terminal.getSymbol().getType();
+
+                if (tokenType == FrameParser.THIS) {
+                    stmt.setThis(true);
+
+                } else if (tokenType == FrameParser.IDENTITY) {
+                    stmt.setIdentifier(terminal.getText());
+                }
+
+            } else if (child instanceof FrameParser.ExpressionContext) {
+                ExpressionNode expr = (ExpressionNode) visit(child);
+                stmt.setValue(expr);
+            }
+        }
+
+        return stmt;
+    }
+
+    @Override
+    public Node visitFunctionCallStmtLabel(FrameParser.FunctionCallStmtLabelContext ctx) {
+        FunctionCallStmtLabel stmt = new FunctionCallStmtLabel();
+        stmt.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                int tokenType = terminal.getSymbol().getType();
+
+                if (tokenType == FrameParser.THIS) {
+                    stmt.setThis(true);
+
+                } else if (tokenType == FrameParser.IDENTITY) {
+                    stmt.setFunctionName(terminal.getText());
+                }
+
+            } else if (child instanceof FrameParser.ArgumentListContext) {
+                ArgumentList args = (ArgumentList) visit(child);
+                stmt.setArguments(args);
+            }
+        }
+
+        return stmt;
+    }
+
+    @Override
+    public Node visitVarDeclarationStmtLabel(FrameParser.VarDeclarationStmtLabelContext ctx) {
+        VarDeclarationStmtLabel stmt = new VarDeclarationStmtLabel();
+        stmt.initializeNode(ctx, false, "");
+
+        String name = null;
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                int tokenType = terminal.getSymbol().getType();
+
+                switch (tokenType) {
+                    case FrameParser.LET:
+                    case FrameParser.CONST:
+                    case FrameParser.VAR:
+                        stmt.setModifier(terminal.getText());
+                        break;
+
+                    case FrameParser.IDENTITY:
+                        name = terminal.getText();
+                        stmt.setName(name);
+                        break;
+                }
+
+            } else if (child instanceof FrameParser.TypeContext) {
+                Type type = (Type) visit(child);
+                stmt.setType(type);
+
+            } else if (child instanceof FrameParser.ExpressionContext) {
+                ExpressionNode expr = (ExpressionNode) visit(child);
+                stmt.setExpression(expr);
+            }
+        }
+
+        if (name != null) {
+            stmt.createSymbol(stmt.getScopeID(), name, "Variable");
+        }
+
+        return stmt;
+    }
+
+    @Override
+    public Node visitReturnStmtLabel(FrameParser.ReturnStmtLabelContext ctx) {
+        ReturnStmtLabel stmt = new ReturnStmtLabel();
+        stmt.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.ExpressionContext) {
+                ExpressionNode expr = (ExpressionNode) visit(child);
+                stmt.setExpression(expr);
+            }
+        }
+
+        return stmt;
+    }
+
+    @Override
+    public Node visitDispatchStmtLabel(FrameParser.DispatchStmtLabelContext ctx) {
+        DispatchStmtLabel stmt = new DispatchStmtLabel();
+        stmt.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.ActionCallContext) {
+                ActionCall action = (ActionCall) visit(child);
+                stmt.setAction(action);
+            }
+        }
+
+        return stmt;
+    }
+
+    public Node visitActionCall(FrameParser.ActionCallContext ctx) {
+        ActionCall node = new ActionCall();
+        node.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal &&
+                    terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+                node.setActionName(terminal.getText());
+            }
+        }
+
+        return node;
+    }
+
+    @Override
+    public Node visitBinaryExpressionLabel(FrameParser.BinaryExpressionLabelContext ctx) {
+        BinaryExpressionLabel exprNode = new BinaryExpressionLabel();
+        exprNode.initializeNode(ctx, false, "");
+
+        ExpressionNode left = (ExpressionNode) visit(ctx.expression(0));
+        ExpressionNode right = (ExpressionNode) visit(ctx.expression(1));
+
+        String operator = ctx.binaryOp().getText();
+
+        exprNode.setLeft(left);
+        exprNode.setRight(right);
+        exprNode.setOperator(operator);
+
+        return exprNode;
+    }
+
+    @Override
+    public Node visitUnaryExpressionLabel(FrameParser.UnaryExpressionLabelContext ctx) {
+        UnaryExpressionLabel exprNode = new UnaryExpressionLabel();
+        exprNode.initializeNode(ctx, false, "");
+
+        String operator = ctx.unaryOp().getText();
+        ExpressionNode innerExpr = (ExpressionNode) visit(ctx.expression());
+
+        exprNode.setOperator(operator);
+        exprNode.setExpression(innerExpr);
+
+        return exprNode;
+    }
+
+    @Override
+    public Node visitLiteralExpressionLabel(FrameParser.LiteralExpressionLabelContext ctx) {
+        LiteralExpressionLabel literal = new LiteralExpressionLabel();
+        literal.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                String raw = terminal.getText();
+
+                if (terminal.getSymbol().getType() == FrameParser.STRING) {
+                    raw = raw.replaceAll("^\"|\"$", "");
+                }
+                literal.setValue(raw);
+                break;
+            }
+        }
+
+        return literal;
+    }
+
+    @Override
+    public Node visitArrayAccessExpression(FrameParser.ArrayAccessExpressionContext ctx) {
+        ArrayAccessExpressionLabel node = new ArrayAccessExpressionLabel();
+        node.initializeNode(ctx, false, "");
+
+        // استخرج التعبير الأساسي (array) من العنصر السابق في parent
+        ParseTree parentExpr = ctx.getParent().getChild(0);
+        ExpressionNode arrayExpr = (ExpressionNode) visit(parentExpr);
+
+        // استخرج التعبير داخل الأقواس [ ... ]
+        ExpressionNode indexExpr = (ExpressionNode) visit(ctx.expression());
+
+        node.setArray(arrayExpr);
+        node.setIndex(indexExpr);
+
+        return node;
+    }
+
+    public Node visitIdentifierExpressionLabel(FrameParser.IdentifierExpressionLabelContext ctx) {
+        IdentifierExpressionLabel node = new IdentifierExpressionLabel();
+        node.initializeNode(ctx, false, "");
+
+        node.setName(ctx.getText());
+
+        return node;
+    }
+
+    public Node visitObjectLiteralExpressionLabel(FrameParser.ObjectLiteralExpressionLabelContext ctx) {
+        ObjectLiteralExpressionLabel node = new ObjectLiteralExpressionLabel();
+        node.initializeNode(ctx, false, "");
+
+        ArrayList<ObjectProperty> props = new ArrayList<>();
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.ObjectPropertyContext) {
+                ObjectProperty prop = (ObjectProperty) visit(child);
+                props.add(prop);
+            }
+        }
+
+        node.setProperties(props);
+
+        return node;
+    }
+
+    public Node visitObjectProperty(FrameParser.ObjectPropertyContext ctx) {
+        ObjectProperty node = new ObjectProperty();
+        node.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal &&
+                    terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+                node.setKey(terminal.getText());
+
+            } else if (child instanceof FrameParser.ExpressionContext) {
+                ExpressionNode value = (ExpressionNode) visit(child);
+                node.setValue(value);
+            }
+        }
+
+        return node;
+    }
+
+    @Override
+    public Node visitParenExpressionLabel(FrameParser.ParenExpressionLabelContext ctx) {
+        ParenExpressionLabel node = new ParenExpressionLabel();
+        node.initializeNode(ctx, false, "");
+
+        ExpressionNode inner = (ExpressionNode) visit(ctx.expression());
+        node.setInner(inner);
+
+        return node;
+    }
+
+    @Override
+    public Node visitSelectExpressionLabel(FrameParser.SelectExpressionLabelContext ctx) {
+        SelectExpressionLabel node = new SelectExpressionLabel();
+        node.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.SelectorCallContext) {
+                SelectorCall selector = (SelectorCall) visit(child);
+                node.setSelectorCall(selector);
+            }
+        }
+
+        return node;
+    }
+
+    @Override
+    public Node visitSelectorCall(FrameParser.SelectorCallContext ctx) {
+        SelectorCall node = new SelectorCall();
+        node.initializeNode(ctx, false, "");
+
+        node.setSelectorName(ctx.getText());
+
+        return node;
+    }
+
+    @Override
+    public Node visitInjectableProperty(FrameParser.InjectablePropertyContext ctx) {
+        InjectableProperty node = new InjectableProperty(null, null);
+        node.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal) {
+                int type = terminal.getSymbol().getType();
+
+                switch (type) {
+                    case FrameParser.PROVIDEDIN:
+                        node.setKey("providedIn");
+                        break;
+                    case FrameParser.USECLASS:
+                        node.setKey("useClass");
+                        break;
+                    case FrameParser.USEVALUE:
+                        node.setKey("useValue");
+                        break;
+                    case FrameParser.STRING:
+                        String rawString = terminal.getText().replaceAll("^\"|\"$", "");
+                        node.setStringValue(rawString);
+                        break;
+                    case FrameParser.IDENTITY:
+                        node.setStringValue(terminal.getText());
+                        break;
+                }
+
+            } else if (child instanceof FrameParser.ExpressionContext) {
+                ExpressionNode expr = (ExpressionNode) visit(child);
+                node.setExpressionValue(expr);
+            }
+        }
+
+        return node;
+    }
+
+    public Node visitInterfaceBody(FrameParser.InterfaceBodyContext ctx) {
+        InterfaceBody node = new InterfaceBody();
+        node.initializeNode(ctx, false, "");
+
+        ArrayList<InterfaceProperty> props = new ArrayList<>();
+
+        for (ParseTree child : ctx.children) {
+            if (child instanceof FrameParser.InterfacePropertyContext) {
+                InterfaceProperty prop = (InterfaceProperty) visit(child);
+                props.add(prop);
+            }
+        }
+
+        node.setProperties(props);
+
+        return node;
+    }
+
+    @Override
+    public Node visitInterfaceProperty(FrameParser.InterfacePropertyContext ctx) {
+        InterfaceProperty node = new InterfaceProperty();
+        node.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal &&
+                    terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+                node.setName(terminal.getText());
+
+            } else if (child instanceof FrameParser.TypeContext) {
+                Type type = (Type) visit(child);
+                node.setType(type);
+            }
+        }
+
+        return node;
+    }
+
+    @Override
+    public Node visitEnumBody(FrameParser.EnumBodyContext ctx) {
+        EnumBody node = new EnumBody();
+        node.initializeNode(ctx, false, "");
+
+        ArrayList<EnumMember> members = new ArrayList<>();
+
+        for (ParseTree child : ctx.children) {
+            if (child instanceof FrameParser.EnumMemberContext) {
+                EnumMember member = (EnumMember) visit(child);
+                members.add(member);
+            }
+        }
+
+        node.setMembers(members);
+
+        return node;
+    }
+
+    @Override
+    public Node visitEnumMember(FrameParser.EnumMemberContext ctx) {
+        EnumMember node = new EnumMember();
+        node.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal &&
+                    terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+                node.setName(terminal.getText());
+
+            } else if (child instanceof FrameParser.ExpressionContext) {
+                ExpressionNode expr = (ExpressionNode) visit(child);
+                node.setValue(expr);
+            }
+        }
+
+        return node;
+    }
+
+    @Override
+    public Node visitRouteConfig(FrameParser.RouteConfigContext ctx) {
+        RouteConfig node = new RouteConfig();
+        node.initializeNode(ctx, false, "");
+
+        for (ParseTree child : ctx.children) {
+            if (child instanceof FrameParser.PathPropertyContext) {
+                PathProperty path = (PathProperty) visit(child);
+                node.setPath(path);
+
+            } else if (child instanceof FrameParser.RouteComponentPropertyContext) {
+                RouteComponentProperty component = (RouteComponentProperty) visit(child);
+                node.setComponent(component);
+            }
+        }
+
+        return node;
+    }
+
+    @Override
+    public Node visitPathProperty(FrameParser.PathPropertyContext ctx) {
+        PathProperty node = new PathProperty();
+        node.initializeNode(ctx, false, "");
+
+        for (ParseTree child : ctx.children) {
+            if (child instanceof TerminalNode terminal &&
+                    terminal.getSymbol().getType() == FrameParser.STRING) {
+
+                String raw = terminal.getText().replaceAll("^\"|\"$", ""); // إزالة علامات التنصيص
+                node.setValue(raw);
+            }
+        }
+
+        return node;
+    }
+
+    @Override
+    public Node visitRouteComponentProperty(FrameParser.RouteComponentPropertyContext ctx) {
+        RouteComponentProperty node = new RouteComponentProperty();
+        node.initializeNode(ctx, false, "");
+
+        for (ParseTree child : ctx.children) {
+            if (child instanceof TerminalNode terminal &&
+                    terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+
+                node.setComponentName(terminal.getText());
+            }
+        }
+
+        return node;
+    }
+
+    @Override
+    public Node visitActionType(FrameParser.ActionTypeContext ctx) {
+        ActionType node = new ActionType();
+        node.initializeNode(ctx, false, "");
+
+        TerminalNode stringNode = ctx.STRING();
+        if (stringNode != null) {
+            String raw = stringNode.getText().replaceAll("^\"|\"$", ""); // إزالة علامات التنصيص
+            node.setValue(raw);
+        }
+
+        return node;
+    }
+
+    @Override
+    public Node visitReducerConfig(FrameParser.ReducerConfigContext ctx) {
+        ReducerConfig node = new ReducerConfig();
+        node.initializeNode(ctx, false, "");
+
+        String initial = null;
+        ArrayList<OnReducerBlock> reducers = new ArrayList<>();
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal && terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+
+                initial = terminal.getText();
+
+            } else if (child instanceof FrameParser.OnReducerBlockContext) {
+                OnReducerBlock onBlock = (OnReducerBlock) visit(child);
+                reducers.add(onBlock);
+            }
+
+        }
+
+        node.setInitialState(initial);
+        node.setReducers(reducers);
+
+        return node;
+    }
+
+    @Override
+    public Node visitOnReducerBlock(FrameParser.OnReducerBlockContext ctx) {
+        OnReducerBlock node = new OnReducerBlock();
+        node.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof TerminalNode terminal && terminal.getSymbol().getType() == FrameParser.IDENTITY) {
+                // اسم الأكشن: on(<IDENTITY>, state => {...})
+                node.setActionName(terminal.getText());
+
+            } else if (child instanceof FrameParser.BlockContext) {
+                Block block = (Block) visit(child);
+                node.setBlock(block);
+            }
+        }
+
+        return node;
+    }
 }
 

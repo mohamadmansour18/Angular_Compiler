@@ -7,10 +7,6 @@ public class MethodModifier extends Node {
 
     private String modifier;
 
-    public MethodModifier(String modifier) {
-        this.modifier = modifier;
-    }
-
     public String getModifier() {
         return modifier;
     }

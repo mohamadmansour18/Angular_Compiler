@@ -6,10 +6,6 @@ import Visitor.AST_Visitor;
 public class ActionType extends Node {
     private String value;
 
-    public ActionType(String value) {
-        this.value = value;
-    }
-
     public String getRawValue() {
         return value;
     }

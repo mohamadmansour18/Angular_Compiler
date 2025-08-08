@@ -9,10 +9,6 @@ public class EnumBody extends Node {
 
     private ArrayList<EnumMember> members;
 
-    public EnumBody(ArrayList<EnumMember> members) {
-        this.members = members;
-    }
-
     public ArrayList<EnumMember> getMembers() {
         return members;
     }

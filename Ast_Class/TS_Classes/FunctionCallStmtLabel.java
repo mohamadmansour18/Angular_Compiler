@@ -8,12 +8,6 @@ public class FunctionCallStmtLabel extends Node implements StatementNode {
     private String functionName;
     private ArgumentList arguments;
 
-    public FunctionCallStmtLabel(boolean isThis, String functionName, ArgumentList arguments) {
-        this.isThis = isThis;
-        this.functionName = functionName;
-        this.arguments = arguments;
-    }
-
     public boolean isThis() {
         return isThis;
     }

@@ -9,10 +9,6 @@ public class InterfaceBody extends Node {
 
     private ArrayList<InterfaceProperty> properties;
 
-    public InterfaceBody(ArrayList<InterfaceProperty> properties) {
-        this.properties = properties;
-    }
-
     public ArrayList<InterfaceProperty> getProperties() {
         return properties;
     }

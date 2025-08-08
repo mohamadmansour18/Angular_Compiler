@@ -7,11 +7,6 @@ public class OnReducerBlock extends Node {
     private String actionName;
     private Block block;
 
-    public OnReducerBlock(String actionName, Block block) {
-        this.actionName = actionName;
-        this.block = block;
-    }
-
     public String getActionName() {
         return actionName;
     }

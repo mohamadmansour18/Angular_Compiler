@@ -19,6 +19,4 @@ public class SelectorCall extends Node {
     public void accept(AST_Visitor visitor) {
         visitor.visit(this);
     }
-
-
 }

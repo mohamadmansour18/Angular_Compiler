@@ -7,11 +7,6 @@ public class EnumMember extends Node {
     private String name;
     private ExpressionNode value; // optional
 
-    public EnumMember(String name, ExpressionNode value) {
-        this.name = name;
-        this.value = value;
-    }
-
     public String getName() {
         return name;
     }

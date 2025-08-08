@@ -3,13 +3,12 @@ import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Block extends Node {
 
     private ArrayList<StatementNode> statements = new ArrayList<>();
 
-    public Block(ArrayList<StatementNode> statements) {
+    public void setStatements(ArrayList<StatementNode> statements) {
         this.statements = statements;
     }
 

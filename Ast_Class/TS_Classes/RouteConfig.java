@@ -8,11 +8,6 @@ public class RouteConfig extends Node {
     private PathProperty path;
     private RouteComponentProperty component;
 
-    public RouteConfig(PathProperty path, RouteComponentProperty component) {
-        this.path = path;
-        this.component = component;
-    }
-
     public PathProperty getPath() {
         return path;
     }

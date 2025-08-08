@@ -7,10 +7,6 @@ public class PathProperty extends Node {
 
     private String value;
 
-    public PathProperty(String value) {
-        this.value = value;
-    }
-
     public String getValueString() {
         return value;
     }
@@ -28,5 +24,4 @@ public class PathProperty extends Node {
     public String getValue() {
         return "path: \"" + value + "\"";
     }
-
 }

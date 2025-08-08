@@ -20,11 +20,6 @@ public class InjectableProperty extends Node {
         this.expressionValue = expressionValue;
     }
 
-    public InjectableProperty(String key, String stringValue) {
-        this.key = key;
-        this.stringValue = stringValue;
-    }
-
     public InjectableProperty(String key, ExpressionNode expressionValue) {
         this.key = key;
         this.expressionValue = expressionValue;

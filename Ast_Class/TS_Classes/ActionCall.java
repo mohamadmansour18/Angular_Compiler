@@ -6,10 +6,6 @@ import Visitor.AST_Visitor;
 public class ActionCall extends Node {
     private String actionName;
 
-    public ActionCall(String actionName) {
-        this.actionName = actionName;
-    }
-
     public String getActionName() {
         return actionName;
     }

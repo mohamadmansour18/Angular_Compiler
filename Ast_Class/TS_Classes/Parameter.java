@@ -9,12 +9,6 @@ public class Parameter extends Node {
     private String name;
     private Type type;
 
-    public Parameter(String visibility, String name, Type type) {
-        this.visibility = visibility;
-        this.name = name;
-        this.type = type;
-    }
-
     public String getVisibility() {
         return visibility;
     }

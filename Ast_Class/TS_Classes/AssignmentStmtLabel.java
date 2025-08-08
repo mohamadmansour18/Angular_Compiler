@@ -9,12 +9,6 @@ public class AssignmentStmtLabel extends Node implements StatementNode{
     private String identifier;
     private ExpressionNode value;
 
-    public AssignmentStmtLabel(boolean isThis, String identifier, ExpressionNode value) {
-        this.isThis = isThis;
-        this.identifier = identifier;
-        this.value = value;
-    }
-
     public boolean isThis() {
         return isThis;
     }

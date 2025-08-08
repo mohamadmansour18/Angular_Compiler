@@ -7,11 +7,6 @@ public class InterfaceProperty extends Node {
     private String name;
     private Type type;
 
-    public InterfaceProperty(String name, Type type) {
-        this.name = name;
-        this.type = type;
-    }
-
     public String getName() {
         return name;
     }

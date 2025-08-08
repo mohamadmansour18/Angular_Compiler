@@ -6,10 +6,6 @@ import Visitor.AST_Visitor;
 public class DispatchStmtLabel extends Node implements StatementNode{
     private ActionCall action;
 
-    public DispatchStmtLabel(ActionCall action) {
-        this.action = action;
-    }
-
     public ActionCall getAction() {
         return action;
     }

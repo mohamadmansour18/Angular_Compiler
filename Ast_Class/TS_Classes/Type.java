@@ -8,10 +8,6 @@ public class Type extends Node {
     // يمثل النوع كما ظهر في الكود (مثل string، number، User، User[])
     private String typeName;
 
-    public Type(String typeName) {
-        this.typeName = typeName;
-    }
-
     public String getTypeName() {
         return typeName;
     }

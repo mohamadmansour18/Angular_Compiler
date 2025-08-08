@@ -10,13 +10,6 @@ public class VarDeclarationStmtLabel extends Node implements StatementNode{
     private Type type;
     private ExpressionNode expression; // optional
 
-    public VarDeclarationStmtLabel(String modifier, String name, Type type, ExpressionNode expression) {
-        this.modifier = modifier;
-        this.name = name;
-        this.type = type;
-        this.expression = expression;
-    }
-
     public String getModifier() {
         return modifier;
     }

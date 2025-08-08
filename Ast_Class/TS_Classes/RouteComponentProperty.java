@@ -7,10 +7,6 @@ public class RouteComponentProperty extends Node {
 
     private String componentName;
 
-    public RouteComponentProperty(String componentName) {
-        this.componentName = componentName;
-    }
-
     public String getComponentName() {
         return componentName;
     }
@@ -28,5 +24,4 @@ public class RouteComponentProperty extends Node {
     public String getValue() {
         return "component: " + componentName;
     }
-
 }
