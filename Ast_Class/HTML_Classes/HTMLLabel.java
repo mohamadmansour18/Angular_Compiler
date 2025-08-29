@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class HTMLLabel extends Node implements HtmlSectionNode {
 
     private ArrayList<LabelAttribute> attributes = new ArrayList<>();
-    private LabelContent content;
+    private ArrayList<LabelContent> contents = new ArrayList<>();
 
     public ArrayList<LabelAttribute> getAttributes() {
         return attributes;
@@ -17,12 +17,12 @@ public class HTMLLabel extends Node implements HtmlSectionNode {
         this.attributes = attributes;
     }
 
-    public LabelContent getContent() {
-        return content;
+    public ArrayList<LabelContent> getContents() {
+        return contents;
     }
 
-    public void setContent(LabelContent content) {
-        this.content = content;
+    public void setContents(ArrayList<LabelContent> contents) {
+        this.contents = contents;
     }
 
     @Override
@@ -38,8 +38,10 @@ public class HTMLLabel extends Node implements HtmlSectionNode {
             sb.append(" ").append(attr.getValue());
         }
         sb.append(">");
-        if (content != null) {
-            sb.append(content.getValue());
+        for (LabelContent c : contents) {
+            if (c != null) {
+                sb.append(c.getValue());
+            }
         }
         sb.append("</label>");
         return sb.toString();

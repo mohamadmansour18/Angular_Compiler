@@ -41,7 +41,15 @@ public interface AST_Visitor {
     void visit(HTMLImageLabel image);
     void visit(HTMLLabel label);
     void visit(HTMLRouterOutletLabel routerOutlet);
-
+    void visit(HTMLSpanLabel span);
+    void visit(HTMLAnchorLabel anchor);
+    void visit(SpanAttribute attr);
+    void visit(SpanContent content);
+    void visit(AnchorAttribute attr);
+    void visit(AnchorContent content);
+    void visit(DivSpanLabel node);
+    void visit(DivAnchorLabel node);
+    void visit(DivLabel node);
     //------------------{ TS Function }------------------//
 
     void visit(TSComponentLabel component);

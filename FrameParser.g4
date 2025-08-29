@@ -15,6 +15,8 @@ htmlSection
     | htmlInputTag       #HTMLInputLabel
     | htmlImageTag       #HTMLImageLabel
     | htmlLabelTag       #HTMLLabel
+    | htmlSpanTag        #HTMLSpanLabel         ///////////////
+    | htmlAnchorTag      #HTMLAnchorLabel       ///////////////
     | routerOutletTag    #HTMLRouterOutletLabel
     ;
 
@@ -117,7 +119,7 @@ paragraphContent
 
 //<label for="username">Username:</label>
 htmlLabelTag
-    : LABEL_TAG_OPEN labelAttribute* GT labelContent? LABEL_TAG_CLOSE
+    : LABEL_TAG_OPEN labelAttribute* GT labelContent* LABEL_TAG_CLOSE       ///////////////
     ;
 
 labelAttribute
@@ -128,6 +130,8 @@ labelAttribute
 
 labelContent
     : STRING
+    | htmlSpanTag               ///////////////
+    | htmlInputTag              ///////////////
     ;
 
 //-----------------------------------------
@@ -158,6 +162,9 @@ divContent
     | htmlInputTag                 #DivInputLabel
     | htmlParagraphTag             #DivParagraphLabel
     | htmlDivTag                   #DivNestedLabel
+        | htmlSpanTag        #DivSpanLabel          ///////////////
+        | htmlAnchorTag      #DivAnchorLabel        ///////////////
+        | htmlLabelTag       #DivLabel              ///////////////
     | routerOutletTag              #DivRouterOutletLabel
     | ngIfDirective                #DivNgIfLabel
     | ngForDirective               #DivNgForLabel
@@ -185,6 +192,39 @@ formContent
     | STRING               #FormTextLabel
     ;
 
+//-----------------------------------------
+//<span class="note" style="color:red;">"هذا نص داخل span"</span>
+htmlSpanTag                                                                 ///////////////
+    : SPAN_TAG_OPEN spanAttribute* GT spanContent? SPAN_TAG_CLOSE
+    ;
+
+spanAttribute
+    : STYLE EQ STRING
+    | CLASS EQ STRING
+    ;
+
+spanContent
+    : STRING
+    ;
+
+//-----------------------------------------
+//<a href="https://example.com" target="_blank" rel="noopener" class="link" style="text-decoration:none;">"اذهب إلى Example"</a>
+htmlAnchorTag                                                               ///////////////
+    : A_TAG_OPEN anchorAttribute* GT anchorContent? A_TAG_CLOSE
+    ;
+
+anchorAttribute
+    : HREF EQ STRING
+    | TARGET EQ STRING
+    | REL EQ STRING
+    | STYLE EQ STRING
+    | CLASS EQ STRING
+    | ROUTER_LINK_BINDING EQ STRING
+    ;
+
+anchorContent
+    : STRING
+    ;
 //-----------------------------------------
 
 routerOutletTag

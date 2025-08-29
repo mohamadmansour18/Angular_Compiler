@@ -94,6 +94,14 @@ PROTECTED  : 'protected';
 STATIC     : 'static';
 ASYNC      : 'async';
 
+SPAN_TAG_OPEN : '<span';
+SPAN_TAG_CLOSE: '</span>';
+A_TAG_OPEN    : '<a';
+A_TAG_CLOSE   : '</a>';
+HREF          : 'href';
+TARGET        : 'target';
+REL           : 'rel';
+ROUTER_LINK_BINDING : '[routerLink]';
 AT_INJECTABLE  : '@Injectable';
 PROVIDEDIN     : 'providedIn';
 USECLASS       : 'useClass';

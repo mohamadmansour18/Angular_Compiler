@@ -66,6 +66,20 @@ public interface FrameParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitHTMLLabel(FrameParser.HTMLLabelContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code HTMLSpanLabel}
+	 * labeled alternative in {@link FrameParser#htmlSection}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitHTMLSpanLabel(FrameParser.HTMLSpanLabelContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code HTMLAnchorLabel}
+	 * labeled alternative in {@link FrameParser#htmlSection}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitHTMLAnchorLabel(FrameParser.HTMLAnchorLabelContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code HTMLRouterOutletLabel}
 	 * labeled alternative in {@link FrameParser#htmlSection}.
 	 * @param ctx the parse tree
@@ -297,6 +311,27 @@ public interface FrameParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDivNestedLabel(FrameParser.DivNestedLabelContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code DivSpanLabel}
+	 * labeled alternative in {@link FrameParser#divContent}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDivSpanLabel(FrameParser.DivSpanLabelContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code DivAnchorLabel}
+	 * labeled alternative in {@link FrameParser#divContent}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDivAnchorLabel(FrameParser.DivAnchorLabelContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code DivLabel}
+	 * labeled alternative in {@link FrameParser#divContent}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDivLabel(FrameParser.DivLabelContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code DivRouterOutletLabel}
 	 * labeled alternative in {@link FrameParser#divContent}.
 	 * @param ctx the parse tree
@@ -371,6 +406,42 @@ public interface FrameParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFormTextLabel(FrameParser.FormTextLabelContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FrameParser#htmlSpanTag}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitHtmlSpanTag(FrameParser.HtmlSpanTagContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FrameParser#spanAttribute}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSpanAttribute(FrameParser.SpanAttributeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FrameParser#spanContent}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSpanContent(FrameParser.SpanContentContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FrameParser#htmlAnchorTag}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitHtmlAnchorTag(FrameParser.HtmlAnchorTagContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FrameParser#anchorAttribute}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAnchorAttribute(FrameParser.AnchorAttributeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FrameParser#anchorContent}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAnchorContent(FrameParser.AnchorContentContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link FrameParser#routerOutletTag}.
 	 * @param ctx the parse tree

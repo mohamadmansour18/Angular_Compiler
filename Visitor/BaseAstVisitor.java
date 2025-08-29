@@ -233,7 +233,17 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(LabelContent content) {
-        System.out.println("[Label Content] " + content.getText());
+        if (content.getText() != null) {
+            System.out.println("[Label Content TEXT] " + content.getText());
+        } else if (content.getSpan() != null) {
+            System.out.println("[Label Content -> SPAN]");
+            content.getSpan().accept(this);
+        } else if (content.getInput() != null) {
+            System.out.println("[Label Content -> INPUT]");
+            content.getInput().accept(this);
+        } else {
+            System.out.println("[Label Content] <empty>");
+        }
     }
 
     @Override
@@ -313,8 +323,10 @@ public class BaseAstVisitor implements AST_Visitor {
         for (LabelAttribute attr : label.getAttributes()) {
             attr.accept(this);
         }
-        if (label.getContent() != null) {
-            label.getContent().accept(this);
+        for (LabelContent c : label.getContents()) {
+            if (c != null) {
+                c.accept(this);
+            }
         }
         System.out.println("========================================");
     }
@@ -322,6 +334,72 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(HTMLRouterOutletLabel routerOutlet) {
         System.out.println("[HTML RouterOutlet Node]");
+    }
+
+
+    @Override
+    public void visit(HTMLSpanLabel span) {
+        System.out.println("========== [HTML SPAN NODE] ==========");
+        for (SpanAttribute attr : span.getAttributes()) {
+            attr.accept(this);
+        }
+        if (span.getContent() != null) {
+            span.getContent().accept(this);
+        }
+        System.out.println("=======================================");
+    }
+
+    @Override
+    public void visit(HTMLAnchorLabel anchor) {
+        System.out.println("========== [HTML ANCHOR NODE] ==========");
+        for (AnchorAttribute attr : anchor.getAttributes()) {
+            attr.accept(this);
+        }
+        if (anchor.getContent() != null) {
+            anchor.getContent().accept(this);
+        }
+        System.out.println("========================================");
+    }
+
+    @Override
+    public void visit(SpanAttribute attr) {
+        System.out.println("SPAN ATTR -> " + attr.getValue());
+    }
+
+    @Override
+    public void visit(SpanContent content) {
+        System.out.println("SPAN CONTENT -> " + content.getValue());
+    }
+
+    @Override
+    public void visit(AnchorAttribute attr) {
+        System.out.println("A ATTR -> " + attr.getValue());
+    }
+
+    @Override
+    public void visit(AnchorContent content) {
+        System.out.println("A CONTENT -> " + content.getValue());
+    }
+
+    @Override
+    public void visit(DivSpanLabel node) {
+        System.out.println("========== [DIV SPAN CONTENT] ==========");
+        if (node.getSpan() != null) node.getSpan().accept(this);
+        System.out.println("========================================");
+    }
+
+    @Override
+    public void visit(DivAnchorLabel node) {
+        System.out.println("========== [DIV ANCHOR CONTENT] ==========");
+        if (node.getAnchor() != null) node.getAnchor().accept(this);
+        System.out.println("==========================================");
+    }
+
+    @Override
+    public void visit(DivLabel node) {
+        System.out.println("========== [DIV LABEL CONTENT] ==========");
+        if (node.getLabel() != null) node.getLabel().accept(this);
+        System.out.println("=========================================");
     }
 
     //------------------------------------{ TS Function }------------------------------------//
