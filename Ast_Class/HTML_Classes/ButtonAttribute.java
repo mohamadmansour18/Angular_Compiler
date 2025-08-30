@@ -29,7 +29,7 @@ public class ButtonAttribute extends Node {
 
     @Override
     public String getValue() {
-        return attributeType + "=\"" + value + "\"";
+        return (value == null) ? attributeType : attributeType + "=\"" + value + "\"";
     }
 
     @Override

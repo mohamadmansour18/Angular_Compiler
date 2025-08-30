@@ -496,9 +496,9 @@ divContent
     | htmlInputTag                 #DivInputLabel
     | htmlParagraphTag             #DivParagraphLabel
     | htmlDivTag                   #DivNestedLabel
-    | htmlSpanTag                  #DivSpanLabel          ///////////////
-    | htmlAnchorTag                #DivAnchorLabel        ///////////////
-    | htmlLabelTag                 #DivLabel              ///////////////
+    | htmlSpanTag                  #DivSpanLabel
+    | htmlAnchorTag                #DivAnchorLabel
+    | htmlLabelTag                 #DivLabel
     | routerOutletTag              #DivRouterOutletLabel
     | ngIfDirective                #DivNgIfLabel
     | ngForDirective               #DivNgForLabel

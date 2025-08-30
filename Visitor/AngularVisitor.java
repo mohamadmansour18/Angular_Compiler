@@ -5,6 +5,7 @@ import Ast_Class.Node.Node;
 import Ast_Class.TS_Classes.*;
 import Parser.FrameParser;
 import Parser.FrameParserBaseVisitor;
+import SemanticErros.ErrorCollector;
 import SymbolTable.Scope;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -12,27 +13,28 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import java.util.ArrayList;
 
 public class AngularVisitor extends FrameParserBaseVisitor<Node> {
+    public ErrorCollector errorCollector = new ErrorCollector();
 
     @Override
-    public Node visitHTMLDivLabel(FrameParser.HTMLDivLabelContext ctx) {
-        HTMLDivLabel divNode = new HTMLDivLabel();
+    public Node visitHtmlDivTag(FrameParser.HtmlDivTagContext ctx) {
+        HTMLDivLabel div = new HTMLDivLabel();
+        div.initializeNode(ctx, false, ""); // لا سكوب ولا رموز هنا
 
-        divNode.initializeNode(ctx, false, "");
-
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            ParseTree child = ctx.getChild(i);
-
-            if (child instanceof FrameParser.DivAttributeContext) {
-                DivAttribute attr = (DivAttribute) visit(child);
-                divNode.getAttributes().add(attr);
-
-            } else if (child instanceof FrameParser.DivContentContext) {
-                DivContentNode content = (DivContentNode) visit(child);
-                divNode.getContent().add(content);
+        if (ctx.divAttribute() != null) {
+            for (FrameParser.DivAttributeContext aCtx : ctx.divAttribute()) {
+                DivAttribute attr = (DivAttribute) visit(aCtx);
+                div.getAttributes().add(attr);
             }
         }
 
-        return divNode;
+        if (ctx.divContent() != null) {
+            for (FrameParser.DivContentContext cCtx : ctx.divContent()) {
+                DivContentNode content = (DivContentNode) visit(cCtx);
+                div.getContent().add(content);
+            }
+        }
+
+        return div;
     }
 
     @Override
@@ -59,24 +61,24 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
 
     @Override
     public Node visitHTMLParagraphLabel(FrameParser.HTMLParagraphLabelContext ctx) {
-        HTMLParagraphLabel paragraphNode = new HTMLParagraphLabel();
+        HTMLParagraphLabel node = new HTMLParagraphLabel();
+        node.initializeNode(ctx, false, "");
 
-        paragraphNode.initializeNode(ctx, false, "");
-
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            ParseTree child = ctx.getChild(i);
-
-            if (child instanceof FrameParser.ParagraphAttributeContext) {
-                ParagraphAttribute attr = (ParagraphAttribute) visit(child);
-                paragraphNode.getAttributes().add(attr);
-
-            } else if (child instanceof FrameParser.ParagraphContentContext) {
-                ParagraphContentNode content = (ParagraphContentNode) visit(child);
-                paragraphNode.setContent(content); // فقط عنصر واحد محتمل
+        FrameParser.HtmlParagraphTagContext tag = ctx.htmlParagraphTag();
+        if (tag != null) {
+            if (tag.paragraphAttribute() != null) {
+                for (FrameParser.ParagraphAttributeContext aCtx : tag.paragraphAttribute()) {
+                    ParagraphAttribute attr = (ParagraphAttribute) visit(aCtx);
+                    node.getAttributes().add(attr);
+                }
+            }
+            if (tag.paragraphContent() != null) {
+                ParagraphContentNode content = (ParagraphContentNode) visit(tag.paragraphContent());
+                node.setContent(content);
             }
         }
 
-        return paragraphNode;
+        return node;
     }
 
     @Override
@@ -170,76 +172,88 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
 
     @Override
     public Node visitDivAttribute(FrameParser.DivAttributeContext ctx) {
-        DivAttribute attribute = new DivAttribute();
+        DivAttribute node = new DivAttribute();
+        node.initializeNode(ctx, false, ""); // لا سكوب هنا
 
-        attribute.initializeNode(ctx, false, "");
+        // نوع الخاصية (واحد من البدائل)
+        String type =
+        (ctx.ID() != null)              ? ctx.ID().getText() :
+        (ctx.CLASS_KW() != null)        ? ctx.CLASS_KW().getText() :
+        (ctx.STYLE() != null)           ? ctx.STYLE().getText() :
+        (ctx.STAR_NG_IF() != null)      ? ctx.STAR_NG_IF().getText() :
+        (ctx.STAR_NG_FOR() != null)     ? ctx.STAR_NG_FOR().getText() :
+        (ctx.CLICK() != null)           ? ctx.CLICK().getText() :
+        (ctx.NG_MODEL() != null)        ? ctx.NG_MODEL().getText() :
+        (ctx.NG_MODEL_TWO_WAY() != null)? ctx.NG_MODEL_TWO_WAY().getText() :
+        null;
 
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            ParseTree child = ctx.getChild(i);
+        node.setAttributeType(type);
 
-            if (child instanceof TerminalNode terminal) {
-                int tokenType = terminal.getSymbol().getType();
+        // القيمة (STRING) — نزيل علامات التنصيص لأن getValue() يضيفها
+        String raw = (ctx.STRING() != null) ? ctx.STRING().getText() : null;
+        if (raw != null && raw.length() >= 2) {
+            raw = raw.substring(1, raw.length() - 1);
+        }
+        node.setAttributeValue(raw);
 
-                switch (tokenType) {
-                    case FrameParser.ID:
-                    case FrameParser.CLASS_KW:
-                    case FrameParser.STYLE:
-                    case FrameParser.STAR_NG_IF:
-                    case FrameParser.STAR_NG_FOR:
-                    case FrameParser.CLICK:
-                    case FrameParser.NG_MODEL:
-                    case FrameParser.NG_MODEL_TWO_WAY:
-                        attribute.setAttributeType(terminal.getText());
-                        break;
+        return node;
+    }
 
-                    case FrameParser.STRING:
-                        attribute.setAttributeValue(terminal.getText().replaceAll("^\"|\"$", ""));
-                        break;
-                }
+    public Node visitDivImageLabel(FrameParser.DivImageLabelContext ctx) {
+        DivImageLabel node = new DivImageLabel();
+        node.initializeNode(ctx, false, "");
+
+        FrameParser.HtmlImageTagContext tag = ctx.htmlImageTag();
+        if (tag != null) {
+            for (FrameParser.ImgAttributeContext aCtx : tag.imgAttribute()) {
+                ImgAttribute attr = (ImgAttribute) visit(aCtx);
+                node.getAttributes().add(attr);
             }
         }
 
-        return attribute;
+        return node;
     }
 
     @Override
-    public Node visitDivImageLabel(FrameParser.DivImageLabelContext ctx) {
-        DivImageLabel imgNode = new DivImageLabel();
+    public Node visitHtmlButtonTag(FrameParser.HtmlButtonTagContext ctx) {
+        DivButtonLabel node = new DivButtonLabel();
+        node.initializeNode(ctx, false, ""); // لا سكوب ولا رموز هنا
 
-        imgNode.initializeNode(ctx, false, "");
-
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            ParseTree child = ctx.getChild(i);
-
-            if (child instanceof FrameParser.ImgAttributeContext) {
-                ImgAttribute attr = (ImgAttribute) visit(child);
-                imgNode.getAttributes().add(attr);
+        if (ctx.buttonAttribute() != null) {
+            for (FrameParser.ButtonAttributeContext aCtx : ctx.buttonAttribute()) {
+                ButtonAttribute attr = (ButtonAttribute) visit(aCtx);
+                node.getAttributes().add(attr);
             }
         }
 
-        return imgNode;
+        if (ctx.buttonContent() != null) {
+            ButtonContent content = (ButtonContent) visit(ctx.buttonContent());
+            node.setContent(content);
+        }
+
+        return node;
     }
 
     @Override
     public Node visitDivButtonLabel(FrameParser.DivButtonLabelContext ctx) {
-        DivButtonLabel buttonNode = new DivButtonLabel();
+        DivButtonLabel node = new DivButtonLabel();
+        node.initializeNode(ctx, false, ""); // لا سكوب ولا رموز هنا
 
-        buttonNode.initializeNode(ctx, false, "");
-
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            ParseTree child = ctx.getChild(i);
-
-            if (child instanceof FrameParser.ButtonAttributeContext) {
-                ButtonAttribute attr = (ButtonAttribute) visit(child);
-                buttonNode.getAttributes().add(attr);
-
-            } else if (child instanceof FrameParser.ButtonContentContext) {
-                ButtonContent content = (ButtonContent) visit(child);
-                buttonNode.setContent(content);
+        FrameParser.HtmlButtonTagContext tag = ctx.htmlButtonTag();
+        if (tag != null) {
+            if (tag.buttonAttribute() != null) {
+                for (FrameParser.ButtonAttributeContext aCtx : tag.buttonAttribute()) {
+                    ButtonAttribute attr = (ButtonAttribute) visit(aCtx);
+                    node.getAttributes().add(attr);
+                }
+            }
+            if (tag.buttonContent() != null) {
+                ButtonContent content = (ButtonContent) visit(tag.buttonContent());
+                node.setContent(content);
             }
         }
 
-        return buttonNode;
+        return node;
     }
 
     @Override
@@ -262,24 +276,23 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
 
     @Override
     public Node visitDivParagraphLabel(FrameParser.DivParagraphLabelContext ctx) {
-        DivParagraphLabel paragraphNode = new DivParagraphLabel();
+        DivParagraphLabel node = new DivParagraphLabel();
+        node.initializeNode(ctx, false, ""); // لا سكوب ولا رموز هنا
 
-        paragraphNode.initializeNode(ctx, false, "");
-
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            ParseTree child = ctx.getChild(i);
-
-            if (child instanceof FrameParser.ParagraphAttributeContext) {
-                ParagraphAttribute attr = (ParagraphAttribute) visit(child);
-                paragraphNode.getAttributes().add(attr);
-
-            } else if (child instanceof FrameParser.ParagraphContentContext) {
-                ParagraphContentNode content = (ParagraphContentNode) visit(child);
-                paragraphNode.setContent(content);
+        FrameParser.HtmlParagraphTagContext tag = ctx.htmlParagraphTag();
+        if (tag != null) {
+            if (tag.paragraphAttribute() != null) {
+                for (FrameParser.ParagraphAttributeContext aCtx : tag.paragraphAttribute()) {
+                    ParagraphAttribute attr = (ParagraphAttribute) visit(aCtx);
+                    node.getAttributes().add(attr);
+                }
+            }
+            if (tag.paragraphContent() != null) {
+                ParagraphContentNode content = (ParagraphContentNode) visit(tag.paragraphContent());
+                node.setContent(content);
             }
         }
-
-        return paragraphNode;
+        return node;
     }
 
     @Override
@@ -602,39 +615,36 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
 
     @Override
     public Node visitButtonAttribute(FrameParser.ButtonAttributeContext ctx) {
-        ButtonAttribute attribute = new ButtonAttribute();
-        attribute.initializeNode(ctx, false, "");
+        ButtonAttribute node = new ButtonAttribute();
+        node.initializeNode(ctx, false, ""); // لا سكوب هنا
 
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            ParseTree child = ctx.getChild(i);
-
-            if (child instanceof TerminalNode terminal) {
-                int tokenType = terminal.getSymbol().getType();
-
-                switch (tokenType) {
-                    case FrameParser.TYPE:
-                    case FrameParser.CLICK:
-                    case FrameParser.STYLE:
-                    case FrameParser.STAR_NG_IF:
-                    case FrameParser.STAR_NG_FOR:
-                    case FrameParser.NG_MODEL:
-                    case FrameParser.NG_MODEL_TWO_WAY:
-                        attribute.setAttributeType(terminal.getText());
-                        break;
-
-                    case FrameParser.STRING:
-                        attribute.setAttributeValue(terminal.getText().replaceAll("^\"|\"$", ""));
-                        break;
-
-                    case FrameParser.DISABLED:
-                        attribute.setAttributeType(terminal.getText());
-                        attribute.setAttributeValue(null);
-                        break;
-                }
-            }
+        if (ctx.DISABLED() != null) {
+            node.setAttributeType(ctx.DISABLED().getText()); // "disabled"
+            node.setAttributeValue(null);                    // بدون قيمة
+            return node;
         }
 
-        return attribute;
+        // نوع الخاصية (أحد البدائل مع قيمة)
+        String type =
+        (ctx.TYPE_DECLARE() != null)        ? ctx.TYPE_DECLARE().getText() :
+        (ctx.STYLE() != null)               ? ctx.STYLE().getText() :
+        (ctx.STAR_NG_IF() != null)          ? ctx.STAR_NG_IF().getText() :
+        (ctx.STAR_NG_FOR() != null)         ? ctx.STAR_NG_FOR().getText() :
+        (ctx.CLICK() != null)               ? ctx.CLICK().getText() :
+        (ctx.NG_MODEL() != null)            ? ctx.NG_MODEL().getText() :
+        (ctx.NG_MODEL_TWO_WAY() != null)    ? ctx.NG_MODEL_TWO_WAY().getText() :
+        null;
+
+        node.setAttributeType(type);
+
+        // القيمة STRING مع إزالة علامات التنصيص لأن getValue() يضيفها
+        String raw = (ctx.STRING() != null) ? ctx.STRING().getText() : null;
+        if (raw != null && raw.length() >= 2) {
+            raw = raw.substring(1, raw.length() - 1);
+        }
+        node.setAttributeValue(raw);
+
+        return node;
     }
 
     public Node visitButtonContent(FrameParser.ButtonContentContext ctx) {

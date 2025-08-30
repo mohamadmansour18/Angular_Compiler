@@ -1,12 +1,14 @@
 package Main;
 
+import Ast_Class.TS_Classes.RootProgram;
+import Parser.*;
 import SymbolTable.Scope;
 import SymbolTable.SymbolTable;
-import Visitor.BaseAstVisitor;
-import Visitor.TypeScriptVisitor;
+
 import SymbolTable.Symbol;
-import gen.FrameLexer;
-import gen.FrameParser;
+
+import Visitor.AngularVisitor;
+import Visitor.BaseAstVisitor;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -30,43 +32,29 @@ public class Main {
             CommonTokenStream token = new CommonTokenStream(lexer);
             FrameParser parser = new FrameParser(token);
             parser.removeErrorListeners();
-            parser.addErrorListener(new Syntex_Error());
             ParseTree tree = parser.rootprogram();
 
             System.out.println();
 
-            if(Syntex_Error.hasError){
-                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
-                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
-                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
-                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
+            System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
+            AngularVisitor visitor = new AngularVisitor();
+            RootProgram startProgram = (RootProgram) visitor.visit(tree);
+            startProgram.accept(new BaseAstVisitor());
 
-            }
-            else{
-                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
-                System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
-                TypeScriptVisitor visitor = new TypeScriptVisitor();
-//                RootProgram startProgram = (RootProgram) visitor.visit(tree);
-//                startProgram.accept(new BaseAstVisitor());
-
-                System.out.println();
-                System.out.println("<<<<<<<<---------[ Symbol Table ]--------->>>>>>>>");
-                System.out.println("Number of Scopes in the program : " + Scope.getContID());
-                for (int i = 0; i < symbolTable.getScopes().size(); i++) {
-                    for (Symbol symbol : symbolTable.getScopes().get(i).getSymbolList()) {
-                        symbol.print();
-                        System.out.println();
-                    }
-                }
-                System.out.println();
-                if (visitor.errorCollector.hasErrors()) {
-                    visitor.errorCollector.printErrors();
-                    System.exit(1);
+            System.out.println();
+            System.out.println("<<<<<<<<---------[ Symbol Table ]--------->>>>>>>>");
+            System.out.println("Number of Scopes in the program : " + Scope.getContID());
+            for (int i = 0; i < symbolTable.getScopes().size(); i++) {
+                for (Symbol symbol : symbolTable.getScopes().get(i).getSymbolList()) {
+                    symbol.print();
+                    System.out.println();
                 }
             }
-
-
-
+            System.out.println();
+            if (visitor.errorCollector.hasErrors()) {
+                visitor.errorCollector.printErrors();
+                System.exit(1);
+            }
 
 
         } catch (IOException e) {

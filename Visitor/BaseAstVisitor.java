@@ -4,6 +4,7 @@ import Ast_Class.HTML_Classes.*;
 import Ast_Class.Node.Node;
 import Ast_Class.TS_Classes.*;
 
+import javax.xml.transform.Source;
 
 
 public class BaseAstVisitor implements AST_Visitor {
@@ -11,7 +12,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(HTMLDivLabel div) {
         System.out.println("========== [DIV NODE] ==========");
-
+        System.out.println("-> Child Count <- : " + div.getChildeCount());
         for (DivAttribute attr : div.getAttributes()) {
             attr.accept(this);
         }
@@ -19,12 +20,13 @@ public class BaseAstVisitor implements AST_Visitor {
         for (DivContentNode contentNode : div.getContent()) {
             contentNode.accept(this);
         }
+
     }
 
     @Override
     public void visit(DivAttribute attribute) {
         System.out.println("========== [Div Attribute] ==========");
-
+        System.out.println("-> Child Count <- : " + attribute.getChildeCount());
         if(attribute.getAttributeType() != null && attribute.getAttributeValue() != null)
         {
             System.out.println("[Div Attribute] " + attribute.getValue());
@@ -34,6 +36,8 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ImgAttribute attribute) {
+        System.out.println("========== [IMG ATTRIBUTE] ==========");
+        System.out.println("-> Child Count <- : " + attribute.getChildeCount());
         if(attribute.getAttributeType() != null && attribute.getAttributeValue() != null)
         {
             System.out.println("[Img Attribute] " + attribute.getValue());
@@ -43,17 +47,20 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(DivImageLabel image) {
         System.out.println("========== [IMG NODE] ==========");
+        System.out.println("-> Child Count <- : " + image.getChildeCount());
         for (ImgAttribute attr : image.getAttributes()) {
             attr.accept(this);
         }
-        System.out.println("DIV INPUT HTML : " + image.getValue());
+
     }
 
     @Override
-    public void visit(ButtonAttribute attribute) {
-        if(attribute.getAttributeType() != null && attribute.getAttributeValue() != null)
-        {
-            System.out.println("[Button Attribute] " + attribute.getValue());
+    public void visit(ButtonAttribute attr) {
+        System.out.println("========== [BUTTON ATTRIBUTE] ==========");
+        if (attr.getAttributeValue() == null) {
+            System.out.println("[Button Attribute] " + attr.getAttributeType());
+        } else {
+            System.out.println("[Button Attribute] " + attr.getAttributeType() + "=\"" + attr.getAttributeValue() + "\"");
         }
     }
 
@@ -66,13 +73,16 @@ public class BaseAstVisitor implements AST_Visitor {
     }
 
     @Override
-    public void visit(DivButtonLabel button) {
+    public void visit(DivButtonLabel node) {
         System.out.println("========== [BUTTON NODE] ==========");
-        for (ButtonAttribute attr : button.getAttributes()) {
+
+        for (ButtonAttribute attr : node.getAttributes()) {
             attr.accept(this);
         }
-        System.out.println("DIV BUTTON HTML : " + button.getValue());
 
+        if (node.getContent() != null) {
+            node.getContent().accept(this);
+        }
     }
 
     @Override
@@ -457,10 +467,10 @@ public class BaseAstVisitor implements AST_Visitor {
             node.getParamList().accept(this);
         }
 
-        if (node.getBlock() != null) {
-            System.out.println("-- Block --");
-            node.getBlock().accept(this);
-        }
+//        if (node.getBlock() != null) {
+//            System.out.println("-- Block --");
+//            node.getBlock().accept(this);
+//        }
     }
 
     @Override
