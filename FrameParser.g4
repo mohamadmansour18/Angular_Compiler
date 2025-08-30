@@ -5,9 +5,7 @@ options { tokenVocab=FrameLexer; }
 
 rootprogram : program* EOF ;
 
-
 program: statements+ ;
-
 
 statements: (
    stetment
@@ -22,7 +20,7 @@ stetment:
        | varDeclareStatement            # VarDeclareStatement1
        | typeAliasStatement             # TypeAliasStatement1
        | exprStatement                  # ExprStatement1
-           ;
+       ;
 
 
 importStatement

@@ -6,10 +6,8 @@ import java.util.ArrayList;
 
 public class HTMLDivLabel extends Node implements HtmlSectionNode {
 
-    // يمثل جميع الخصائص داخل وسم <div>
     private ArrayList<DivAttribute> attributes = new ArrayList<>();
 
-    // يمثل محتويات الوسم <div>...</div>
     private ArrayList<DivContentNode> content = new ArrayList<>();
 
     public ArrayList<DivAttribute> getAttributes() {
