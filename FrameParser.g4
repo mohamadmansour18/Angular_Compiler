@@ -3,9 +3,345 @@ parser grammar FrameParser;
 @parser::package {Parser}
 options { tokenVocab=FrameLexer; }
 
-root
-    : htmlSection* tsSection* EOF
+rootprogram : program* EOF ;
+
+
+program: statements+ ;
+
+
+statements: (
+   stetment
+) SEMICOLON?;
+
+stetment:
+       importStatement                  # ImportStatement1
+       | classStatement                 # ClassStatement1
+       | componentDecorator             # ComponentStatement1
+       | functionDeclaration            # FunctionStatement
+       | constructorDeclaration         # ConstructorStatement
+       | varDeclareStatement            # VarDeclareStatement1
+       | typeAliasStatement             # TypeAliasStatement1
+       | exprStatement                  # ExprStatement1
+           ;
+
+
+importStatement
+    : ImportKW LBRACKETS (IDENTIFIER | ComponentKW | SignalKW | RoutesType) RBRACKETS FromKW STRING
     ;
+
+classStatement
+    : ExportKW? ClassKW IDENTIFIER LBRACKETS classBody RBRACKETS
+    ;
+
+classBody
+    : classMember*
+    ;
+
+classMember
+    : constructorDeclaration
+    | functionDeclaration
+    | propertyDeclaration
+    | exprStatement
+    ;
+
+propertyDeclaration
+    : id=IDENTIFIER typeAnnotationForRoutes[id]? EQUALS assignmentExpr SEMICOLON
+    ;
+
+//component
+ componentDecorator
+     : ATT ComponentKW LPAREN LBRACKETS componentOptions RBRACKETS RPAREN
+     ;
+
+
+componentOptions
+    : selectorProperty (COMMA standaloneProperty)? (COMMA importsProperty)? (COMMA templateProperty)?
+    ;
+
+selectorProperty
+    : SelectorKW COLON STRING
+    ;
+
+standaloneProperty
+    : StandaloneKW COLON BOOLEAN
+    ;
+
+importsProperty
+    : ImportsKW COLON LBRACKET IDENTIFIER (COMMA IDENTIFIER)* RBRACKET
+    ;
+
+templateProperty
+    : TemplateKW COLON AngularQut htmlSection* AngularQut
+    ;
+
+//function & constructors
+constructorDeclaration
+    : ConstructorKW LPAREN constructorParamList? RPAREN block
+    ;
+
+constructorParamList
+    : constructorParam (COMMA constructorParam)*
+    ;
+
+constructorParam
+    : Accessmodifier? IDENTIFIER COLON (IDENTIFIER|Type)
+    ;
+
+functionDeclaration
+    : IDENTIFIER LPAREN paramList? RPAREN block
+    ;
+
+paramList
+    :  param (COMMA param)*
+    ;
+
+param
+    :  Accessmodifier? IDENTIFIER (COLON (IDENTIFIER|Type))?
+    ;
+
+block
+    : LBRACKETS blockContent? RBRACKETS
+    ;
+
+blockContent
+    : statementInBlock*
+    ;
+
+statementInBlock
+    : varDeclareStatement
+    | exprStatement
+    | ifStatement
+    | returnStatement
+    ;
+
+ifStatement
+    : If LPAREN expr RPAREN (block | exprStatement | returnStatement) (Else (block | exprStatement | returnStatement))?
+    ;
+
+returnStatement
+    : Return expr? SEMICOLON
+    ;
+
+// تصريح متغيّر: يسمح بالـ type annotation فقط إذا كان الاسم routes وبالنوع Routes
+varDeclareStatement
+    : ExportKW? (ConstKW | LET) varDecl (COMMA varDecl)* SEMICOLON
+    ;
+
+varDecl
+    : id=IDENTIFIER ( typeAnnotationForRoutes[id] | generalTypeAnnotation )? (EQUALS assignmentExpr)?
+    ;
+
+generalTypeAnnotation
+    : COLON typeRef
+    ;
+
+// يسمح ": Routes" فقط إذا الاسم "routes"
+typeAnnotationForRoutes[Token id]
+    : { $id!=null && $id.getText().equals("routes") }? COLON RoutesType
+    ;
+
+// === Type Alias & Object Type Literals (Plan A) ===
+typeAliasStatement
+    : TypeDeclare IDENTIFIER EQUALS objectType SEMICOLON
+    ;
+
+// { id: string; name?: string; price: number | null; }
+objectType
+    : LBRACKETS objectTypeMembers? RBRACKETS
+    ;
+
+objectTypeMembers
+    : objectTypeMember (SEMICOLON objectTypeMember)* SEMICOLON?
+    ;
+
+// name?: TypeRef
+objectTypeMember
+    : IDENTIFIER QUESTION? COLON typeRef
+    ;
+
+// Basic type references with arrays and unions, allowing NULL as a type
+// Examples: string, number[], Product, Product[], number | null, Product[] | null
+typeRef
+    : (IDENTIFIER | Type | NULL) (LBRACKET RBRACKET)* (PIPE typeRef)*
+    ;
+
+exprStatement
+    : expr SEMICOLON
+    ;
+
+// === Expressions (full simple set) ===
+expr
+    : assignmentExpr
+    ;
+
+// right-assoc: a = b = c
+assignmentExpr
+    : lhs=assignable EQUALS rhs=assignmentExpr
+    | conditionalExpr
+    ;
+
+    // LHS قابل للإسناد: اسم + (وصول عضو/فهرسة) بدون ?. وبدون نداء دوال
+assignable
+    : (IDENTIFIER | LPAREN expr RPAREN)
+      (
+          DOT (IDENTIFIER|SRC|TARGET)
+        | LBRACKET expr RBRACKET
+      )*
+    ;
+
+conditionalExpr
+    : nullishExpr (QUESTION expr COLON expr)?
+    ;
+
+// nullish coalescing (??)
+// ملاحظة: JS ما بيسمح خلط ?? مع ||/&& بدون أقواس.
+// هون ما عم نفرض هالقاعدة سيمنتيكياً؛ إذا بدك تشدّدها لاحقاً منضيف حارس.
+nullishExpr
+    : logicalOrExpr (NULLISH logicalOrExpr)*
+    ;
+
+// || (left-assoc)
+logicalOrExpr
+    : logicalOrExpr OROR logicalAndExpr
+    | logicalAndExpr
+    ;
+
+// && (left-assoc)
+logicalAndExpr
+    : logicalAndExpr ANDAND equalityExpr
+    | equalityExpr
+    ;
+
+// ===, ==, != (left-assoc)
+equalityExpr
+    : equalityExpr (TEQUAL | EQUALEQUAL | NTEQUAL | NOTEQUAL) relationalExpr
+    | relationalExpr
+    ;
+
+
+// <, >, <=, >= (left-assoc)
+relationalExpr
+    : relationalExpr (LT | GT | LTE | GTE) additiveExpr
+    | additiveExpr
+    ;
+
+// +, - (left-assoc)
+additiveExpr
+    : additiveExpr (PLUS | MINUS) multiplicativeExpr
+    | multiplicativeExpr
+    ;
+
+    // *, / (left-assoc)
+multiplicativeExpr
+    : multiplicativeExpr (ASTERISK | DIV) unaryExpr
+    | unaryExpr
+    ;
+
+// !x, +x, -x (right-assoc)
+unaryExpr
+    : (NOT | PLUS | MINUS) unaryExpr
+    | asExpression
+    ;
+
+asExpression
+    : postfixExpr (AS typeRef)*
+    ;
+
+// calls / member access / indexing / optional chaining (left-assoc chain)
+postfixExpr
+    : primary
+      (
+          (DOT | QDOT) (IDENTIFIER|SRC|TARGET)
+        | LPAREN argumentList? RPAREN
+        | QDOT LPAREN argumentList? RPAREN
+        | LBRACKET expr RBRACKET
+        | QDOT LBRACKET expr RBRACKET
+        | NON_NULL_DOT (IDENTIFIER | SRC | TARGET)
+      )*
+    ;
+
+// signal<Product[]>(args)
+signalGenericCallPrimary
+    : SignalKW LT signalGenericArgs GT LPAREN argumentList? RPAREN
+    ;
+
+signalGenericArgs
+    : signalGenericArg (COMMA signalGenericArg)*
+    ;
+
+signalGenericArg
+    : (IDENTIFIER | Type) (LBRACKET RBRACKET)*
+    ;
+
+    // f(a, b, c)
+argumentList
+    : expr (COMMA expr)*
+    ;
+
+// === primary ===
+// ملاحظة: arrowFunction جاية أولاً مع lookahead بسيط لتمييز IDENTIFIER '=>' عن IDENTIFIER العادي
+primary
+    : arrowFunction
+    | NUMBER
+    | STRING
+    | BOOLEAN
+    | NULL
+    | AngularQut htmlSection* AngularQut
+    | arrayLiteral
+    | objectLiteral
+    | signalGenericCallPrimary
+    | importCallPrimary
+    | SignalKW
+    | IDENTIFIER
+    | ImportKW
+    | LPAREN expr RPAREN
+    ;
+
+// import('./path').then(...).catch(...)
+// يسمح بسلسلة .then(...).catch(...) أو حتى استدعاء مباشر بعد import(...)
+importCallPrimary
+    : ImportKW LPAREN STRING RPAREN (DOT IDENTIFIER LPAREN argumentList? RPAREN)*
+    ;
+
+
+// (x) => expr  |  (a,b)=>{...}  |  x => expr
+arrowFunction
+    : IDENTIFIER Arrow (expr | block)                          // single param
+    | LPAREN paramListSimple? RPAREN Arrow (expr | block)      // (a,b)=>...
+    ;
+
+// a, b, c
+paramListSimple
+    : IDENTIFIER (COMMA IDENTIFIER)*
+    ;
+
+// [a, b, ...rest]
+arrayLiteral
+    : LBRACKET ( arrayElement (COMMA arrayElement)* )? COMMA? RBRACKET
+    ;
+
+arrayElement
+    : ELLIPSIS expr
+    | expr
+    ;
+
+// { key: value, "x": y, ...obj }
+objectLiteral
+    : LBRACKETS ( objectProperty (COMMA objectProperty)* )? COMMA? RBRACKETS
+    ;
+
+objectProperty
+    : ELLIPSIS expr
+    | (IDENTIFIER | STRING) COLON expr
+    | IDENTIFIER
+    ;
+
+interpolation
+    : INTERP_OPEN expr INTERP_CLOSE
+    ;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//html
 
 htmlSection
     : htmlDivTag         #HTMLDivLabel
@@ -15,28 +351,10 @@ htmlSection
     | htmlInputTag       #HTMLInputLabel
     | htmlImageTag       #HTMLImageLabel
     | htmlLabelTag       #HTMLLabel
-    | htmlSpanTag        #HTMLSpanLabel         ///////////////
-    | htmlAnchorTag      #HTMLAnchorLabel       ///////////////
+    | htmlSpanTag        #HTMLSpanLabel  ///////////////////////////
+    | htmlAnchorTag      #HTMLAnchorLabel  ////////////////////////
     | routerOutletTag    #HTMLRouterOutletLabel
     ;
-
-tsSection
-    : componentDeclaration     #TSComponentLabel
-    | serviceDeclaration       #TSServiceLabel
-    | classDeclaration         #TSClassLabel
-    | functionDeclaration      #TSFunctionLabel
-    | arrowFunction            #TSArrowFunctionLabel
-    | variableDeclaration      #TSVariableLabel
-    | interfaceDeclaration     #TSInterfaceLabel
-    | enumDeclaration          #TSEnumLabel
-    //---------------<state mangment>---------------//
-    | routingDeclaration         #TSRoutingLabel
-    | ngrxActionDeclaration      #TSActionLabel
-    | ngrxReducerDeclaration     #TSReducerLabel
-    ;
-
-
-//---------------------< HTML >--------------------
 
 //<img src="image.png" alt="description" style="color: red; font-size: 16px;" />
 htmlImageTag
@@ -44,9 +362,9 @@ htmlImageTag
     ;
 
 imgAttribute
-    : SRC EQ STRING
-    | ALT EQ STRING
-    | STYLE EQ STRING
+    : SRC EQUALS STRING
+    | ALT EQUALS STRING
+    | STYLE EQUALS STRING
     ;
 
 //-----------------------------------------
@@ -57,15 +375,14 @@ htmlButtonTag
     ;
 
 buttonAttribute
-    : TYPE EQ STRING
+    : TypeDeclare EQUALS STRING
     | DISABLED
-    | CLICK EQ STRING
-    | STYLE EQ STRING
-    | STAR_NG_IF EQ STRING
-    | STAR_NG_FOR EQ STRING
-    | CLICK EQ STRING
-    | NG_MODEL EQ STRING
-    | NG_MODEL_TWO_WAY EQ STRING
+    | STYLE EQUALS STRING
+    | STAR_NG_IF EQUALS STRING
+    | STAR_NG_FOR EQUALS STRING
+    | CLICK EQUALS STRING
+    | NG_MODEL EQUALS STRING
+    | NG_MODEL_TWO_WAY EQUALS STRING
     ;
 
 buttonContent
@@ -80,14 +397,14 @@ htmlInputTag
     ;
 
 inputAttribute
-    : TYPE EQ STRING
-    | PLACEHOLDER EQ STRING
-    | STYLE EQ STRING
-    | VALUE EQ STRING
-    | NAME EQ STRING
-    | ID EQ STRING
-    | NG_MODEL EQ STRING
-    | NG_MODEL_TWO_WAY EQ STRING
+    : TypeDeclare EQUALS STRING
+    | PLACEHOLDER EQUALS STRING
+    | STYLE EQUALS STRING
+    | VALUE EQUALS STRING
+    | NAME EQUALS STRING
+    | ID EQUALS STRING
+    | NG_MODEL EQUALS STRING
+    | NG_MODEL_TWO_WAY EQUALS STRING
     ;
 
 //-----------------------------------------
@@ -98,21 +415,22 @@ htmlParagraphTag
     ;
 
 paragraphAttribute
-    : ID EQ STRING
-    | CLASS EQ STRING
-    | STYLE EQ STRING
-    | STAR_NG_IF EQ STRING
-    | STAR_NG_FOR EQ STRING
-    | CLICK EQ STRING
-    | NG_MODEL EQ STRING
-    | NG_MODEL_TWO_WAY EQ STRING
+    : ID EQUALS STRING
+    | ClassKW EQUALS STRING
+    | STYLE EQUALS STRING
+    | STAR_NG_IF EQUALS STRING
+    | STAR_NG_FOR EQUALS STRING
+    | CLICK EQUALS STRING
+    | NG_MODEL EQUALS STRING
+    | NG_MODEL_TWO_WAY EQUALS STRING
     ;
 
 paragraphContent
-    : STRING                                      #ParagraphTextLabel
-    | htmlImageTag                                #ParagraphImageLabel
+    : htmlImageTag                                #ParagraphImageLabel
     | htmlButtonTag                               #ParagraphButtonLabel
     | htmlInputTag                                #ParagraphInputLabel
+    | interpolation                               #ParagraphPolationLabel
+    | STRING                                      #ParagraphTextLabel
     ;
 
 //-----------------------------------------
@@ -123,9 +441,9 @@ htmlLabelTag
     ;
 
 labelAttribute
-    : FOR EQ STRING
-    | STYLE EQ STRING
-    | CLASS EQ STRING
+    : FOR EQUALS STRING
+    | STYLE EQUALS STRING
+    | ClassKW EQUALS STRING
     ;
 
 labelContent
@@ -146,14 +464,14 @@ htmlDivTag
     ;
 
 divAttribute
-    : ID EQ STRING
-    | CLASS EQ STRING
-    | STYLE EQ STRING
-    | STAR_NG_IF EQ STRING
-    | STAR_NG_FOR EQ STRING
-    | CLICK EQ STRING
-    | NG_MODEL EQ STRING
-    | NG_MODEL_TWO_WAY EQ STRING
+    : ID EQUALS STRING
+    | ClassKW EQUALS STRING
+    | STYLE EQUALS STRING
+    | STAR_NG_IF EQUALS STRING
+    | STAR_NG_FOR EQUALS STRING
+    | CLICK EQUALS STRING
+    | NG_MODEL EQUALS STRING
+    | NG_MODEL_TWO_WAY EQUALS STRING
     ;
 
 divContent
@@ -162,12 +480,13 @@ divContent
     | htmlInputTag                 #DivInputLabel
     | htmlParagraphTag             #DivParagraphLabel
     | htmlDivTag                   #DivNestedLabel
-        | htmlSpanTag        #DivSpanLabel          ///////////////
-        | htmlAnchorTag      #DivAnchorLabel        ///////////////
-        | htmlLabelTag       #DivLabel              ///////////////
+    | htmlSpanTag        #DivSpanLabel          ///////////////
+    | htmlAnchorTag      #DivAnchorLabel        ///////////////
+    | htmlLabelTag       #DivLabel              ///////////////
     | routerOutletTag              #DivRouterOutletLabel
     | ngIfDirective                #DivNgIfLabel
     | ngForDirective               #DivNgForLabel
+    | interpolation                #DivInterpolationLabel
     | STRING                       #DivPlainTextLabel
     ;
 
@@ -178,10 +497,10 @@ htmlFormTag
     ;
 
 formAttribute
-    : ID EQ STRING
-    | CLASS EQ STRING
-    | STYLE EQ STRING
-    | NG_SUBMIT EQ STRING
+    : ID EQUALS STRING
+    | ClassKW EQUALS STRING
+    | STYLE EQUALS STRING
+    | NG_SUBMIT EQUALS STRING
     ;
 
 formContent
@@ -192,421 +511,49 @@ formContent
     | STRING               #FormTextLabel
     ;
 
-//-----------------------------------------
-//<span class="note" style="color:red;">"هذا نص داخل span"</span>
-htmlSpanTag                                                                 ///////////////
-    : SPAN_TAG_OPEN spanAttribute* GT spanContent? SPAN_TAG_CLOSE
-    ;
-
-spanAttribute
-    : STYLE EQ STRING
-    | CLASS EQ STRING
-    ;
-
-spanContent
-    : STRING
-    ;
-
-//-----------------------------------------
-//<a href="https://example.com" target="_blank" rel="noopener" class="link" style="text-decoration:none;">"اذهب إلى Example"</a>
-htmlAnchorTag                                                               ///////////////
-    : A_TAG_OPEN anchorAttribute* GT anchorContent? A_TAG_CLOSE
-    ;
-
-anchorAttribute
-    : HREF EQ STRING
-    | TARGET EQ STRING
-    | REL EQ STRING
-    | STYLE EQ STRING
-    | CLASS EQ STRING
-    | ROUTER_LINK_BINDING EQ STRING
-    ;
-
-anchorContent
-    : STRING
-    ;
-//-----------------------------------------
-
-routerOutletTag
-    : ROUTER_OUTLET_TAG
-    ;
-
-ngIfDirective
-    : STAR_NG_IF EQ STRING
-    ;
-
-ngForDirective
-    : STAR_NG_FOR EQ STRING
-    ;
-
-
-//--------------------< TS >---------------------
-
-//@Component({
-//  selector: "x",
-//  template: "...",
-//  styleUrls: ["..."]
-//})
-//export class HeaderComponent {}
-componentDeclaration
-    : AT_COMPONENT LPAREN componentBody RPAREN EXPORT CLASS IDENTITY classBlock
-    ;
-
-componentBody
-    : LBRACE componentProperty (COMMA componentProperty)* RBRACE
-    ;
-
-componentProperty
-    : SELECTOR COLON STRING
-    | TEMPLATE COLON STRING
-    | STYLEURLS COLON arrayLiteral
-    ;
-
-//[] , ["X"] , ["a","b","c"] , [1,2,3] , [true , false] , [User , "user" , 1]
-arrayLiteral
-    : LBRACK (expression (COMMA expression)*)? RBRACK
-    ;
-
-//export class TestComponent {
-//  title: string = "Hello";
-//  count: number;
-//  constructor() {}
-//  handleClick(): void {}
-//}
-classBlock
-    : LBRACE classMember* RBRACE
-    ;
-
-classMember
-    : variableDeclaration SEMI         #ClassVariableLabel
-    | constructorDeclaration           #ClassConstructorLabel
-    | methodDeclaration                #ClassMethodLabel
-    ;
-
-//title: string;
-//count: number = 0;
-//name: string = "Angular";
-//data: Product[];
-variableDeclaration
-    : ( LET | CONST | VAR ) IDENTITY COLON type (EQ expression)?
-    ;
-
-type
-    : PRIMITIVE_TYPE
-    | IDENTITY (LBRACK RBRACK)?
-    ;
-
-//10
-//"Hello"
-//true
-//x + 5
-//count > 0
-//arr[0]
-//matrix[i][j]
-//users[index + 1]
-//{ name: "Ali" }
-//{ age: 25, active: true }
-//{ data: user, meta: { count: 2 } }
-expression
-    : expression binaryOp expression   #BinaryExpressionLabel
-    | unaryOp expression               #UnaryExpressionLabel
-    | literal                          #LiteralExpressionLabel
-    | expression arrayAccess           #ArrayAccessExpression
-    | IDENTITY                         #IdentifierExpressionLabel
-    | objectLiteral                    #ObjectLiteralExpressionLabel
-    | LPAREN expression RPAREN         #ParenExpressionLabel
-    | storeSelectExpression            #SelectExpressionLabel
-    ;
-
-binaryOp
-    : PLUS
-    | MINUS
-    | STAR
-    | DIV
-    | GT
-    | LT
-    | AND
-    | OR
-    ;
-
-unaryOp
-    : MINUS
-    | NOT
-    ;
-
-literal
-    : NUMBER
-    | STRING
-    | BOOLEAN
-    ;
-
-arrayAccess
-    : LBRACK expression RBRACK
-    ;
-
-objectLiteral
-    : LBRACE (objectProperty (COMMA objectProperty)*)? RBRACE
-    ;
-
-objectProperty
-    : IDENTITY COLON expression
-    ;
-
-//constructor() {}
-//constructor(private name: string, age: number) {
-//  this.name = name;
-//  this.log();
-//  count = 0;
-//  print("hello", 5);
-//  let x: number = 10;
-//}
-
-constructorDeclaration
-    : CONSTRUCTOR LPAREN parameterList? RPAREN block
-    ;
-
-parameterList
-    : parameter (COMMA parameter)*
-    ;
-
-parameter
-    : ( PUBLIC | PRIVATE | PROTECTED )? IDENTITY COLON type
-    ;
-
-block
-    : LBRACE statement* RBRACE
-    ;
-
-statement
-    : assignmentStatement        #AssignmentStmtLabel
-    | functionCallStatement      #FunctionCallStmtLabel
-    | variableDeclaration SEMI   #VarDeclarationStmtLabel
-    | returnStatement            #ReturnStmtLabel
-    | storeDispatchStatement     #DispatchStmtLabel
-    ;
-
-//this.name = name ;  & x = 5 ;
-assignmentStatement
-    : (THIS DOT)? IDENTITY EQ expression SEMI
-    ;
-
-//this.log(); & sayHello(name);
-functionCallStatement
-    : (THIS DOT)? IDENTITY LPAREN argumentList? RPAREN SEMI
-    ;
-
-argumentList
-    : expression (COMMA expression)*
-    ;
-
-
-//log(): void {
-//  console.log("Hello");
-//}
-//private calculate(a: number, b: number): number {
-//  return a + b;
-//}
-
-methodDeclaration
-    : methodModifier* ASYNC? IDENTITY LPAREN parameterList? RPAREN COLON type block
-    ;
-
-methodModifier
-    : PUBLIC
-    | PRIVATE
-    | PROTECTED
-    | STATIC
-    ;
-
-//return;
-//return 5;
-//return this.value;
-returnStatement
-    : RETURN expression? SEMI
-    ;
-
-
-//-----------------------------------------
-
-//@Injectable({
-//  providedIn: 'root'
-//  useClass: MockService,
-//  useValue: 42
-//})
-//export class MyService {
-//  properties
-//  methods
-//}
-
-serviceDeclaration
-    : AT_INJECTABLE LPAREN injectableBody RPAREN EXPORT CLASS IDENTITY classBlock
-    ;
-
-injectableBody
-    : LBRACE injectableProperty (COMMA injectableProperty)* RBRACE
-    ;
-
-injectableProperty
-    : PROVIDEDIN COLON STRING
-    | USECLASS COLON IDENTITY
-    | USEVALUE COLON expression
-    ;
-
-//-----------------------------------------
-
-//export class MyService { ... }
-//export class MyComponent extends BaseComponent { ... }
-
-classDeclaration
-    : EXPORT CLASS IDENTITY (EXTENDS IDENTITY)? classBlock
-    ;
-
-//-----------------------------------------
-
-//function sayHello(): void {
-//  console.log("Hi");
-//}
-//function sum(a: number, b: number): number {
-//  return a + b;
-//}
-
-functionDeclaration
-    : ASYNC? FUNCTION IDENTITY LPAREN parameterList? RPAREN COLON type block
-    ;
-
-//-----------------------------------------
-
-//كامل
-//(): void => { console.log("hi"); }
-
-//بدون اقواس
-//(a: number, b: number): number => a + b;
-
-// بدون جسم كتلوي
-//(x: number) => x * 2;
-
-arrowFunction
-    : LPAREN parameterList? RPAREN (COLON type)? ARROW (block | expression)
-    ;
-
-//-----------------------------------------
-
-//export interface InterfaceName {
-//  key: type;
-//  key2: type;
-//}
-
-interfaceDeclaration
-    : EXPORT INTERFACE IDENTITY interfaceBody
-    ;
-
-interfaceBody
-    : LBRACE interfaceProperty* RBRACE
-    ;
-
-interfaceProperty
-    : IDENTITY COLON type SEMI
-    ;
-
-//-----------------------------------------
-
-//export enum Direction {
-//  Up,
-//  Down,
-//  Left = 2,
-//  Right
-//}
-
-enumDeclaration
-    : EXPORT ENUM IDENTITY enumBody
-    ;
-
-enumBody
-    : LBRACE enumMember (COMMA enumMember)* COMMA? RBRACE
-    ;
-
-enumMember
-    : IDENTITY (EQ expression)?
-    ;
-
-//--------------------< STATE MANGMENT >---------------------
-
-// عملية التوجيه في أنغولر تستخدم لتجعل المستخدم يتنقل بين الصفحات المختلفة بدون اعادة التحميل
-//const routes: Routes = [
-//  { path: 'home', component: HomeComponent },
-//  { path: 'about', component: AboutComponent }
-//];
-
-routingDeclaration
-    : CONST IDENTITY COLON ROUTES EQ LBRACK routeConfig (COMMA routeConfig)* RBRACK SEMI
-    ;
-
-routeConfig
-    : LBRACE pathProperty COMMA routeComponentProperty RBRACE
-    ;
-
-pathProperty
-    : PATH COLON STRING
-    ;
-
-routeComponentProperty
-    : COMPONENT COLON IDENTITY
-    ;
-
-//-----------------------------------------
-
-// في NgRx ال Action هو كائن يستخدم لاخبار التخزين ان شيئا حدث
-//export const login = createAction('[Auth] Login');
-
-ngrxActionDeclaration
-    : EXPORT CONST IDENTITY EQ CREATEACTION LPAREN actionType RPAREN SEMI
-    ;
-
-actionType
-    : STRING
-    ;
-
-
-//-----------------------------------------
-
-//this.store.dispatch(actionName());
-storeDispatchStatement
-    : THIS DOT STORE DOT DISPATCH LPAREN actionCall RPAREN SEMI
-    ;
-
-actionCall
-    : IDENTITY LPAREN RPAREN
-    ;
-
-//-----------------------------------------
-
-//this.store.select(someSelector);
-storeSelectExpression
-    : THIS DOT STORE DOT SELECT LPAREN selectorCall RPAREN
-    ;
-
-selectorCall
-    : IDENTITY
-    ;
-
-//-----------------------------------------
-
-// نستخدم Reduce للاستماع لل Action وتحديث ال State بناءا على كل Action
-
-//export const myReducer = createReducer(
-//  initialState,
-//  on(toggle, state => { return { ...state, active: !state.active }; }),
-//  on(reset, state => { return initialState; })
-//);
-
-ngrxReducerDeclaration
-    : EXPORT CONST IDENTITY EQ CREATEREDUCER LPAREN reducerConfig RPAREN SEMI
-    ;
-
-reducerConfig
-    : IDENTITY COMMA onReducerBlock+
-    ;
-
-onReducerBlock
-    : COMMA ON LPAREN IDENTITY COMMA ARROW block RPAREN
-    ;
+    //-----------------------------------------
+    //<span class="note" style="color:red;">"هذا نص داخل span"</span>
+    htmlSpanTag                                                                 ///////////////
+        : SPAN_TAG_OPEN spanAttribute* GT spanContent? SPAN_TAG_CLOSE
+        ;
+
+    spanAttribute
+        : STYLE EQUALS STRING
+        | ClassKW EQUALS STRING
+        ;
+
+    spanContent
+        : STRING
+        ;
+
+    //-----------------------------------------
+    //<a href="https://example.com" target="_blank" rel="noopener" class="link" style="text-decoration:none;">"اذهب إلى Example"</a>
+    htmlAnchorTag                                                               ///////////////
+        : A_TAG_OPEN anchorAttribute* GT anchorContent? A_TAG_CLOSE
+        ;
+
+    anchorAttribute
+        : HREF EQUALS STRING
+        | TARGET EQUALS STRING
+        | REL EQUALS STRING
+        | STYLE EQUALS STRING
+        | ClassKW EQUALS STRING
+        | ROUTER_LINK_BINDING EQUALS STRING
+        ;
+
+    anchorContent
+        : STRING
+        ;
+    //-----------------------------------------
+
+    routerOutletTag
+        : ROUTER_OUTLET_TAG
+        ;
+
+    ngIfDirective
+        : STAR_NG_IF EQUALS STRING
+        ;
+
+    ngForDirective
+        : STAR_NG_FOR EQUALS STRING
+        ;

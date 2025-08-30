@@ -1,143 +1,168 @@
 lexer grammar FrameLexer;
 @lexer::package {Parser}
 
-IMG_TAG_OPEN         : '<img';
-TAG_SELF_CLOSE   : '/>';
-SRC                  : 'src';
-ALT                  : 'alt';
+//new tokens
+ExportKW: 'export';
+ComponentKW  : 'Component';
+SelectorKW   : 'selector';
+StandaloneKW : 'standalone';
+ImportsKW    : 'imports';
+ImportKW    : 'import';
+FromKW       : 'from';
+TemplateKW   : 'template';
+RoutesType : 'Routes';
+SignalKW : 'signal';
 
-BUTTON_TAG_OPEN      : '<button';
-BUTTON_TAG_CLOSE     : '</button>';
-TYPE                 : 'type';
-DISABLED             : 'disabled';
-CLICK                : '(click)';
-STYLE                : 'style';
 
 
-INPUT_TAG_OPEN       : '<input';
-PLACEHOLDER          : 'placeholder';
-VALUE                : 'value';
-NAME                 : 'name';
-ID                   : 'id';
+ClassKW: 'class';
+ConstructorKW: 'constructor';
+ConstKW : 'const';
+AS          : 'as';
+LET         : 'let';
+If     : 'if';
+Else   : 'else';
+Return: 'return';
+AngularQut:'`';
+
+
+
+
+//old
+Accessmodifier: 'public' | 'private' | 'protected';
+Type: 'number' | 'string' | 'boolean' | 'any' | 'Array';
+TypeDeclare: 'type';
+Arrow: '=>';
+
+
+//basics
+NON_NULL_DOT : '!.';
+SEMICOLON   : ';';
+ATT         : '@';
+COMMA       : ',';
+COLON       : ':';
+INTERP_OPEN  : '{{';
+INTERP_CLOSE : '}}';
+LBRACKETS   :'{';
+RBRACKETS   :'}';
+LPAREN      : '(';
+RPAREN      : ')';
+LBRACKET    : '[';
+RBRACKET    : ']';
+EQUALS      : '=';
+EQUALEQUAL:'==';
+TEQUAL:'===';
+NTEQUAL     : '!==';
+NOTEQUAL:'!=';
+QUESTION    : '?';
+PIPE        : '|';
+OROR   : '||';
+ANDAND : '&&';
+
+NOT : '!';
+PLUS      : '+';
+MINUS     : '-';
+ASTERISK    : '*';
+DIV       : '/';
+DOT         : '.';
+LT          : '<';
+GT          : '>';
+LTE : '<=';
+GTE : '>=';
+
+
+ELLIPSIS   : '...';
+QDOT       : '?.';
+NULLISH    : '??';
+
+
+///////////////////////////////////////////
+//html
 
 DIV_TAG_OPEN         : '<div';
 DIV_TAG_CLOSE        : '</div>';
-CLASS                : 'class';
-
-P_TAG_OPEN         : '<p';
-P_TAG_CLOSE        : '</p>';
-
-ROUTER_OUTLET_TAG   : '<router-outlet></router-outlet>';
+STYLE                : 'style';
 STAR_NG_IF          : '*ngIf';
 STAR_NG_FOR         : '*ngFor';
+CLICK                : '(click)';
 NG_MODEL           : '[ngModel]';
 NG_MODEL_TWO_WAY   : '[(ngModel)]';
-
 FORM_TAG_OPEN      : '<form';
 FORM_TAG_CLOSE     : '</form>';
-NG_SUBMIT          : '(ngSubmit)';
-
+ID                   : 'id';
+P_TAG_OPEN         : '<p';
+P_TAG_CLOSE        : '</p>';
+BUTTON_TAG_OPEN      : '<button';
+BUTTON_TAG_CLOSE     : '</button>';
+DISABLED             : 'disabled';
+INPUT_TAG_OPEN       : '<input';
+TAG_SELF_CLOSE   : '/>';
+PLACEHOLDER          : 'placeholder';
+VALUE                : 'value';
+NAME                 : 'name';
+IMG_TAG_OPEN         : '<img';
+SRC                  : 'src';
+ALT                  : 'alt';
 LABEL_TAG_OPEN     : '<label';
 LABEL_TAG_CLOSE    : '</label>';
 FOR                : 'for';
-
-AT_COMPONENT  : '@Component';
-SELECTOR      : 'selector';
-TEMPLATE      : 'template';
-STYLEURLS     : 'styleUrls';
-EXPORT        : 'export';
-PRIMITIVE_TYPE
-    : 'string'
-    | 'number'
-    | 'boolean'
-    | 'void'
-    | 'any'
-    ;
-
-PLUS       : '+';
-MINUS      : '-';
-STAR       : '*';
-DIV        : '/';
-GT         : '>';
-LT         : '<';
-AND        : '&&';
-OR         : '||';
-NOT        : '!';
-
-BOOLEAN    : 'true' | 'false';
-
-LBRACE        : '{';
-RBRACE        : '}';
-LPAREN        : '(';
-RPAREN        : ')';
-COLON         : ':';
-COMMA         : ',';
-LBRACK       : '[';
-RBRACK       : ']';
-
-
-
-CONSTRUCTOR       : 'constructor';
-
-THIS         : 'this';
-DOT          : '.';
-SEMI         : ';';
-
-LET    : 'let';
-CONST  : 'const';
-VAR    : 'var';
-RETURN : 'return';
-
-PUBLIC     : 'public';
-PRIVATE    : 'private';
-PROTECTED  : 'protected';
-STATIC     : 'static';
-ASYNC      : 'async';
-
 SPAN_TAG_OPEN : '<span';
 SPAN_TAG_CLOSE: '</span>';
-A_TAG_OPEN    : '<a';
+A_TAG_OPEN    :  '<a';
 A_TAG_CLOSE   : '</a>';
 HREF          : 'href';
 TARGET        : 'target';
 REL           : 'rel';
 ROUTER_LINK_BINDING : '[routerLink]';
-AT_INJECTABLE  : '@Injectable';
-PROVIDEDIN     : 'providedIn';
-USECLASS       : 'useClass';
-USEVALUE       : 'useValue';
-EXTENDS  : 'extends';
-FUNCTION : 'function';
-ARROW : '=>';
-INTERFACE : 'interface';
-ENUM : 'enum';
-SELECT : 'select';
-ROUTES    : 'Routes';
-PATH      : 'path';
-COMPONENT : 'component';
-CREATEACTION : 'createAction';
-STORE    : 'store';
-DISPATCH : 'dispatch';
-CREATEREDUCER : 'createReducer';
-ON            : 'on';
-
-EQ                   : '=';
-
-IDENTITY            : [a-zA-Z_][a-zA-Z0-9_]*;
-STRING               : '"' (~["\r\n])* '"';
-NUMBER               : [0-9]+;
-WS                   : [ \t\r\n]+ -> skip;
+ROUTER_OUTLET_TAG   : '<router-outlet></router-outlet>';
+NG_SUBMIT          : '(ngSubmit)';
 
 
-//// ====== Literals ======
-//STRING          : ('"' ~["]* '"') | ('\'' ~[']* '\'');
-//NUMBER          : '-'? DIGIT+ ('.' DIGIT+)?;
-//IDENTIFIER      : LETTER (LETTER | DIGIT | '_' | '$' | '-')*;
-//IDENT           : IDENTIFIER;
+
+
+
+
+
+
+STRING: ('"' ~["]* '"') | ('\'' ~[']* '\'');
+NUMBER      : '-'? DIGIT+ ('.' DIGIT+)?;
+BOOLEAN     : 'true' | 'false';
+NULL        : 'null';
+
+IDENTIFIER  : LETTER (LETTER | DIGIT | '_' | '$' | '-')*;
+IDENT:IDENTIFIER;
+
+ESCAPE      : '\\\\' [btnfr"\\'];
+
+
+WS          : [ \t\r\n]+ -> skip;
+
+fragment LETTER : [a-zA-Z#];
+fragment DIGIT : [0-9];
+
+
+///////////
+//trash
+/*
+
+// Tokens from TypeScriptLexer
+//COMPARISON: (LT  |GT | '<=' | '>=');
+//Void: 'void';
+//SLASH_GT    : '</';
+//SLASH_LT    : '/>';
+//Async: 'async';
+//Await: 'await';
+//ReadOnly: 'readonly';
+//SetGet: 'set' | 'get';
+//LBRACKET_PAREN : '[(';
+//RBRACKET_PAREN : ')]';
 //
-//// ====== Escapes & Whitespace ======
-//ESCAPE          : '\\\\' [btnfr"\\'];
 //
-//// ====== Fragments ======
-//fragment LETTER : [a-zA-Z#];
-//fragment DIGIT  : [0-9];
+//OF          : 'of';
+//
+TEMPLATE_STRING
+    : '`' ( ~'`' )* '`'
+    ;
+
+
+*/
