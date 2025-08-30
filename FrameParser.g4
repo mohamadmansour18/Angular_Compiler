@@ -45,8 +45,18 @@ classMember
     ;
 
 propertyDeclaration
-    : id=IDENTIFIER typeAnnotationForRoutes[id]? EQUALS assignmentExpr SEMICOLON
+    : routesPropertyDeclaration
+    | normalPropertyDeclaration
     ;
+
+routesPropertyDeclaration
+    : RoutesType COLON RoutesType EQUALS assignmentExpr SEMICOLON
+    ;
+
+normalPropertyDeclaration
+    : IDENTIFIER generalTypeAnnotation? EQUALS assignmentExpr SEMICOLON
+    ;
+
 
 //component
  componentDecorator
@@ -128,17 +138,17 @@ varDeclareStatement
     ;
 
 varDecl
-    : id=IDENTIFIER ( typeAnnotationForRoutes[id] | generalTypeAnnotation )? (EQUALS assignmentExpr)?
-    ;
+  : ROUTES_ID (COLON RoutesType)? (EQUALS assignmentExpr)?
+  | IDENTIFIER generalTypeAnnotation? (EQUALS assignmentExpr)?
+  ;
+
 
 generalTypeAnnotation
     : COLON typeRef
     ;
 
-// يسمح ": Routes" فقط إذا الاسم "routes"
-typeAnnotationForRoutes[Token id]
-    : { $id!=null && $id.getText().equals("routes") }? COLON RoutesType
-    ;
+
+
 
 // === Type Alias & Object Type Literals (Plan A) ===
 typeAliasStatement
@@ -175,10 +185,12 @@ expr
     ;
 
 // right-assoc: a = b = c
+
 assignmentExpr
-    : lhs=assignable EQUALS rhs=assignmentExpr
-    | conditionalExpr
-    ;
+        : assignable EQUALS assignmentExpr
+        | conditionalExpr
+        ;
+
 
     // LHS قابل للإسناد: اسم + (وصول عضو/فهرسة) بدون ?. وبدون نداء دوال
 assignable
@@ -280,22 +292,25 @@ argumentList
 
 // === primary ===
 // ملاحظة: arrowFunction جاية أولاً مع lookahead بسيط لتمييز IDENTIFIER '=>' عن IDENTIFIER العادي
+
 primary
-    : arrowFunction
-    | NUMBER
-    | STRING
-    | BOOLEAN
-    | NULL
-    | AngularQut htmlSection* AngularQut
-    | arrayLiteral
-    | objectLiteral
-    | signalGenericCallPrimary
-    | importCallPrimary
-    | SignalKW
-    | IDENTIFIER
-    | ImportKW
-    | LPAREN expr RPAREN
-    ;
+        : arrowFunction
+        | NUMBER
+        | ROUTES_ID
+        | STRING
+        | BOOLEAN
+        | NULL
+        | AngularQut htmlSection* AngularQut
+        | arrayLiteral
+        | objectLiteral
+        | signalGenericCallPrimary
+        | importCallPrimary
+        | SignalKW
+        | IDENTIFIER
+        | ImportKW
+        | LPAREN expr RPAREN
+        ;
+
 
 // import('./path').then(...).catch(...)
 // يسمح بسلسلة .then(...).catch(...) أو حتى استدعاء مباشر بعد import(...)
@@ -336,9 +351,12 @@ objectProperty
     | IDENTIFIER
     ;
 
+
 interpolation
-    : INTERP_OPEN expr INTERP_CLOSE
+    : DOLAR? INTERP_OPEN expr INTERP_CLOSE
     ;
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //html

@@ -11,6 +11,7 @@ ImportKW    : 'import';
 FromKW       : 'from';
 TemplateKW   : 'template';
 RoutesType : 'Routes';
+ROUTES_ID : 'routes';
 SignalKW : 'signal';
 
 
@@ -38,6 +39,7 @@ Arrow: '=>';
 //basics
 NON_NULL_DOT : '!.';
 SEMICOLON   : ';';
+DOLAR : '$';
 ATT         : '@';
 COMMA       : ',';
 COLON       : ':';
