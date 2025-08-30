@@ -1,349 +1,575 @@
-// Main parser grammar for TypeScript-like input with Angular support
 parser grammar FrameParser;
 
-// This parser uses tokens defined in FrameLexer.g4
+@parser::package {Parser}
 options { tokenVocab=FrameLexer; }
 
-// Entry point of the TypeScript program: can be multiple programs or just EOF
-rootprogram: (program)* | EOF;
+rootprogram : program* EOF ;
 
-// A single program consists of one or more statements
-program: statements+;
+program: statements+ ;
 
-// A statement can optionally start with 'export' or 'await', followed by a core statement
-statements: Export? Await? (
+statements: (
    stetment
 ) SEMICOLON?;
 
-// Core statement types in the language (variable declaration, function, class, etc.)
 stetment:
-    services                         # ServicesStatement
-  | component                        # ComponentStatement
-  | print                            # PrintStatement
-  | vardeclare                       # VarDeclareStatement
-  | function                         # FunctionStatement
-  | cullfunction                     # CallFunctionStatement
-  | access                           # AccessStatement
-  | typedeclare                      # TypeDeclareStatement
-  | enum                             # EnumStatement
-  | interface                        # InterfaceStatement
-  | class                            # ClassStatement
-  | operations                       # OperationsStatement
-  | import_rule                      # ImportStatement
-  | template                         # TemplateStatement
-  | if_statement                     # IfStatement
-  | loop_statement                   # LoopStatement
-  | prefix                           # PrefixStatement;
+       importStatement                  # ImportStatement1
+       | classStatement                 # ClassStatement1
+       | componentDecorator             # ComponentStatement1
+       | functionDeclaration            # FunctionStatement
+       | constructorDeclaration         # ConstructorStatement
+       | varDeclareStatement            # VarDeclareStatement1
+       | typeAliasStatement             # TypeAliasStatement1
+       | exprStatement                  # ExprStatement1
+       ;
+
+
+importStatement
+    : IMPORT_KW LBRACKETS (IDENTIFIER | COMPONENT_KW | SIGNAL_KW | ROUTES_TYPE) RBRACKETS FROM_KW STRING
+    ;
+
+classStatement
+    : EXPORT_KW? CLASS_KW IDENTIFIER LBRACKETS classBody RBRACKETS
+    ;
+
+classBody
+    : classMember*
+    ;
+
+classMember
+    : constructorDeclaration
+    | functionDeclaration
+    | propertyDeclaration
+    | exprStatement
+    ;
+
+propertyDeclaration
+    : routesPropertyDeclaration
+    | normalPropertyDeclaration
+    ;
+
+routesPropertyDeclaration
+    : ROUTES_TYPE COLON ROUTES_TYPE EQUALS assignmentExpr SEMICOLON
+    ;
 
-// TypeScript prefix increment/decrement syntax: x++ or x--
-prefix :IDENTIFIER (PLUS PLUS|MINUS MINUS);
+normalPropertyDeclaration
+    : IDENTIFIER generalTypeAnnotation? EQUALS assignmentExpr SEMICOLON
+    ;
 
-// TypeScript component decorator syntax: @Component({...}) or @Component(template)
-component: ATT Component LPAREN  objects RPAREN 
-         | ATT Component LPAREN  template RPAREN ;
 
-// TypeScript service decorator syntax: @Injectable({...})
-services: ATT Injectable LPAREN  objects RPAREN ;
+//component
+ componentDecorator
+     : ATT COMPONENT_KW LPAREN LBRACKETS componentOptions RBRACKETS RPAREN
+     ;
 
-// TypeScript import syntax: import { Component | IDENTIFIER } from "STRING";
-import_rule: Import LBRACKETS (Component | IDENTIFIER)(COMMA  (Component | IDENTIFIER))* RBRACKETS From STRING SEMICOLON?;
+
+componentOptions
+    : selectorProperty (COMMA standaloneProperty)? (COMMA importsProperty)? (COMMA templateProperty)?
+    ;
+
+selectorProperty
+    : SELECTOR_KW COLON STRING
+    ;
+
+standaloneProperty
+    : STANDALONE_KW COLON BOOLEAN
+    ;
+
+importsProperty
+    : IMPORTS_KW COLON LBRACKET IDENTIFIER (COMMA IDENTIFIER)* RBRACKET
+    ;
+
+templateProperty
+    : TEMPLATE_KW COLON ANGULAR_QUT htmlSection* ANGULAR_QUT
+    ;
+
+//function & constructors
+constructorDeclaration
+    : CONSTRUCTOR_KW LPAREN constructorParamList? RPAREN block
+    ;
+
+constructorParamList
+    : constructorParam (COMMA constructorParam)*
+    ;
 
-// TypeScript operation syntax: access = value
-operations: access equal;
-
-// TypeScript class syntax: class IDENTIFIER { ... } with optional 'implements'
-class: Class IDENTIFIER (Implements IDENT )? LBRACKETS (Accessmodifier? classbody )* RBRACKETS;
-
-// TypeScript variable inside class: readonly? IDENTIFIER followed by type or value assignment
-var: ReadOnly? ((IDENTIFIER) ((type | equal) | (type equal)));
-
-// TypeScript class body: can include variables, constructors, or functions (with optional getter/setter)
-classbody: (var | constructor | (((SetGet)? class_function)))SEMICOLON?;
-
-// TypeScript constructor syntax: constructor(parameters) { statements }
-constructor: Constructor LPAREN   prameters? RPAREN  LBRACKETS (statements)* RBRACKETS;
-
-// TypeScript interface declaration: interface IDENTIFIER { ... }
-interface: Interface IDENTIFIER LBRACKETS (interfacebody)* RBRACKETS;
-
-// Interface body can include method declarations or variable declarations
-interfacebody: interfacefun | interfacevar;
-
-// TypeScript method inside interface: IDENTIFIER(parameters): Type;
-interfacefun: IDENTIFIER LPAREN  prameters? RPAREN  COLON  Type;
-
-// TypeScript variable inside interface: readonly? IDENTIFIER?: Type;
-interfacevar: ReadOnly? IDENTIFIER PIPE ? COLON  Type;
-
-// TypeScript enum syntax: enum IDENTIFIER { key = value, ... }
-enum: Enum IDENTIFIER LBRACKETS enumassignable? RBRACKETS;
-
-// TypeScript enum assignments: key = value, ...
-enumassignable: enumAssin (COMMA  enumAssin)* COMMA ?;
-
-// TypeScript enum assignment syntax: key = number|STRING|BOOLEAN or just key
-enumAssin: (IDENTIFIER EQUALS number_STRING_BOOLEAN) | (IDENTIFIER);
-
-// TypeScript basic data types: number, STRING, BOOLEAN
-number_STRING_BOOLEAN : NUMBER | STRING | BOOLEAN;
-
-// TypeScript function syntax inside class or interface: IDENTIFIER(parameters): Type { ... }
-class_function: IDENTIFIER header body;
-
-// TypeScript standalone function syntax: function IDENTIFIER(parameters): Type { ... }
-function: Function class_function;
-
-// TypeScript body without curly braces: optional statements or return
-body_with_out_curly: (statements? (return)?);
-
-// TypeScript body with curly braces: { statements return }
-body: LBRACKETS (statements* (return)?) RBRACKETS;
-
-// Base data types: primitives, objects, function calls, access, arrays, templates
-basedata:
-    info
-  | IDENTIFIER;
-
-// Wrapper for multiple data types and calls
-info: number_STRING_BOOLEAN                #Variable
-    | objects                              #Objectss
-    | cullfunction                         #CallFunction
-    | access                               #Accesss
-    | array                                #Arrays
-    | template                             #AngularTemplet
-    | (AngularQut template AngularQut)     #QuitAngulat;
-
-// TypeScript array syntax: [element, ...]
-array: LBRACKET (basedata (COMMA  basedata)* COMMA ?)? RBRACKET;
-
-// TypeScript data expression: either arrow function or base data
-data: (arrowfunction | basedata);
-
-// TypeScript type assignment syntax: = value or structure
-typeequal: EQUALS (number_STRING_BOOLEAN | cullfunction | access | typecurles);
-
-// TypeScript return statement: return value;
-return: Return basedata SEMICOLON?;
-
-// TypeScript type declaration syntax: type IDENTIFIER = value;
-typedeclare: TypeDeclare IDENTIFIER typeequal;
-
-// TypeScript function parameters syntax: one or more parameters with optional access modifiers
-prameters: (Accessmodifier? prameter (COMMA Accessmodifier? prameter)*);
-
-// TypeScript function header syntax: (parameters): Type
-header: LPAREN prameters? RPAREN type?;
-
-// TypeScript arrow function syntax: async? (parameters) => { body }
-arrowfunction: Async? header Arrow (body | body_with_out_curly);
-
-// TypeScript console log syntax: console.log(value);
-print: Console DOT IDENTIFIER LPAREN (arguments) RPAREN;
-
-// TypeScript parameter syntax: IDENTIFIER: Type = value | { object }
-prameter: IDENTIFIER ((type? equal?) | (objects));
-
-// TypeScript function arguments syntax: argument, ...
-arguments: (argument) (COMMA argument)*;
-
-// TypeScript argument syntax: IDENTIFIER = value | object | value
-argument: (IDENTIFIER equalbasedata?) | objects | basedata | arrowfunction;
-
-// TypeScript variable declaration: const/let/var IDENTIFIER: Type = value;
-vardeclare: keyword prameter;
-
-// TypeScript variable declaration keyword: const or let
-keyword: Const | LET;
-
-// TypeScript equal syntax: = or === followed by data and optional casting
-equal: ((EQUALS | TEQUAL) data (AS IDENTIFIER)?);
-
-equalbasedata: EQUALS basedata;
-
-// TypeScript types: Type, IDENTIFIER, void, never, object types, optionally with array brackets
-types: (Type | IDENTIFIER | Void | Never | objectstype) ((LBRACKET RBRACKET)? (LBRACKET RBRACKET)?);
-
-// TypeScript type annotation: : Type [& Type | or Type]
-type: (COLON types ((And | Or) types)*);
-
-// TypeScript access syntax: obj.property.subproperty
-access: culls (DOT culls)+;
-
-// TypeScript chained calls or identifiers: identifier, function call, or identifier with array access
-culls: ((IDENTIFIER | cullfunction | (IDENTIFIER array)) PIPE ?);
-
-// TypeScript function call syntax: IDENTIFIER(arguments)
-cullfunction: IDENTIFIER LPAREN arguments? RPAREN;
-
-// TypeScript object syntax: { key: value, ... }
-objects: LBRACKETS (object (COMMA object)* COMMA ?)? RBRACKETS;
-
-// TypeScript object key-value pair: key: value
-object: IDENTIFIER (COLON data)?;
-
-// TypeScript object type syntax: { key: Type, ... }
-objectstype: LBRACKETS (objecttype (COMMA objecttype)*)? RBRACKETS;
-
-// TypeScript object type key-value pair: key: Type
-objecttype: IDENTIFIER COLON Type;
-
-// TypeScript type curly braces: { key?: Type, ... }
-typecurles: LBRACKETS (typecurle ((COMMA | SEMICOLONColon) typecurle)*)? RBRACKETS;
-
-typecurle: ReadOnly? IDENTIFIER PIPE ? COLON (Type | data);
-
-// Angular template: collection of HTML or Angular elements or text
-template : (element | text)+;
-
-// Angular template elements: standard HTML or Angular component
-element :
-    htmlElement
-  | angularComponent;
-
-// Angular template content: can be a character, text, or any element
-content:
-    character          #Characters
-  | text               #Texts
-  | htmlElement        #Html
-  | angularComponent   #AngularComponents
-  | directiveElement   #Directive;
-
-// Container for multiple content elements
-elementContent : (content)*;
-
-// HTML element structure with optional content or empty tag
-htmlElement : (tagOpen elementContent tagClose) | (tagOpenEmpty);
-
-// Special characters allowed in template
-character:(PLUS | MINUS);
-
-// HTML empty tag syntax: <tag .../>
-tagOpenEmpty : LT IDENTIFIER ((elementContent)|attribute)(attribute)* SLASH_LT;
-
-// HTML opening tag syntax: <tag ...>
-tagOpen : LT IDENTIFIER ((elementContent)|attribute)(attribute*) GT;
-
-// HTML closing tag syntax: </tag>
-tagClose : SLASH_GT IDENTIFIER GT;
-
-// HTML or Angular attribute syntax: key="value" or key={expression}
-attribute : (IDENTIFIER|(LPAREN expression RPAREN)|Class) ( EQUALS (STRING | NUMBER | BOOLEAN  | NULL) )?;
-
-// Angular component as custom element
-angularComponent : LT IDENTIFIER (attribute)* GT;
-
-// Angular directive: structural, attribute, or two-way binding
-directiveElement :
-    structuralDirective            #Structural
-  | attributeDirective             #Attributes
-  | twoWayDirective                #TwoWay;
-
-// Structural directive syntax: *ngIf="condition"
-structuralDirective : STRUCTURAL_DIRECTIVE EQUALS expression ;
-
-// Attribute directive syntax: [attr]="expression"
-attributeDirective : LBRACKET expression RBRACKET EQUALS expression;
-
-// Two-way binding syntax: [(ngModel)]="value"
-twoWayDirective : LBRACKET_PAREN expression RBRACKET_PAREN EQUALS expression;
-
-// Top-level expression
-expression
-    : logicalOrExpression;
-
-// Logical OR expression: a && b && c
-logicalOrExpression
-    : logicalAndExpression ( ANDAND logicalAndExpression )*;
-
-// Logical AND expression: a || b || c
-logicalAndExpression
-    : equalityExpression ( OROR equalityExpression )*;
-
-// Equality expression: a == b or a != b
-equalityExpression
-    : relationalExpression ( ( EQUALEQUAL | NOTEQUAL ) relationalExpression )*;
-
-// Relational expression: a > b, a <= b, etc.
-relationalExpression
-    : additiveExpression ((LT|GT|(LT EQUALS)|(GT EQUALS))  additiveExpression )*;
-
-// Additive expression: a + b, a - b
-additiveExpression
-    : multiplicativeExpression ( ( PLUS | MINUS ) multiplicativeExpression )*;
-
-// Multiplicative expression: a / b
-multiplicativeExpression
-    : unaryExpression ( ( DIV ) unaryExpression )*;
-
-// Unary expression: -x or !x
-unaryExpression
-    : ( NOT | MINUS ) unaryExpression
-    | primaryExpression;
-
-// Primary expression: literals, identifiers, grouped expressions, function/array/object access
-primaryExpression
-    : literal
+constructorParam
+    : ACCESS_MODIFIER? IDENTIFIER COLON (IDENTIFIER|TYPE)
+    ;
+
+functionDeclaration
+    : IDENTIFIER LPAREN paramList? RPAREN block
+    ;
+
+paramList
+    :  param (COMMA param)*
+    ;
+
+param
+    :  ACCESS_MODIFIER? IDENTIFIER (COLON (IDENTIFIER|Type))?
+    ;
+
+block
+    : LBRACKETS blockContent? RBRACKETS
+    ;
+
+blockContent
+    : statementInBlock*
+    ;
+
+statementInBlock
+    : varDeclareStatement
+    | exprStatement
+    | ifStatement
+    | returnStatement
+    ;
+
+ifStatement
+    : IF LPAREN expr RPAREN (block | exprStatement | returnStatement) (ELSE (block | exprStatement | returnStatement))?
+    ;
+
+returnStatement
+    : RETURN expr? SEMICOLON
+    ;
+
+// تصريح متغيّر: يسمح بالـ type annotation فقط إذا كان الاسم routes وبالنوع Routes
+varDeclareStatement
+    : EXPORT_KW? (CONST_KW | LET) varDecl (COMMA varDecl)* SEMICOLON
+    ;
+
+varDecl
+  : ROUTES_ID (COLON ROUTES_TYPE)? (EQUALS assignmentExpr)?
+  | IDENTIFIER generalTypeAnnotation? (EQUALS assignmentExpr)?
+  ;
+
+
+generalTypeAnnotation
+    : COLON typeRef
+    ;
+
+
+
+
+// === Type Alias & Object Type Literals (Plan A) ===
+typeAliasStatement
+    : TYPE_DECLARE IDENTIFIER EQUALS objectType SEMICOLON
+    ;
+
+// { id: string; name?: string; price: number | null; }
+objectType
+    : LBRACKETS objectTypeMembers? RBRACKETS
+    ;
+
+objectTypeMembers
+    : objectTypeMember (SEMICOLON objectTypeMember)* SEMICOLON?
+    ;
+
+// name?: TypeRef
+objectTypeMember
+    : IDENTIFIER QUESTION? COLON typeRef
+    ;
+
+// Basic type references with arrays and unions, allowing NULL as a type
+// Examples: string, number[], Product, Product[], number | null, Product[] | null
+typeRef
+    : (IDENTIFIER | TYPE | NULL) (LBRACKET RBRACKET)* (PIPE typeRef)*
+    ;
+
+exprStatement
+    : expr SEMICOLON
+    ;
+
+// === Expressions (full simple set) ===
+expr
+    : assignmentExpr
+    ;
+
+// right-assoc: a = b = c
+
+assignmentExpr
+        : assignable EQUALS assignmentExpr
+        | conditionalExpr
+        ;
+
+
+    // LHS قابل للإسناد: اسم + (وصول عضو/فهرسة) بدون ?. وبدون نداء دوال
+assignable
+    : (IDENTIFIER | LPAREN expr RPAREN)
+      (
+          DOT (IDENTIFIER|SRC|TARGET)
+        | LBRACKET expr RBRACKET
+      )*
+    ;
+
+conditionalExpr
+    : nullishExpr (QUESTION expr COLON expr)?
+    ;
+
+// nullish coalescing (??)
+// ملاحظة: JS ما بيسمح خلط ?? مع ||/&& بدون أقواس.
+// هون ما عم نفرض هالقاعدة سيمنتيكياً؛ إذا بدك تشدّدها لاحقاً منضيف حارس.
+nullishExpr
+    : logicalOrExpr (NULLISH logicalOrExpr)*
+    ;
+
+// || (left-assoc)
+logicalOrExpr
+    : logicalOrExpr OROR logicalAndExpr
+    | logicalAndExpr
+    ;
+
+// && (left-assoc)
+logicalAndExpr
+    : logicalAndExpr ANDAND equalityExpr
+    | equalityExpr
+    ;
+
+// ===, ==, != (left-assoc)
+equalityExpr
+    : equalityExpr (TEQUAL | EQUALEQUAL | NTEQUAL | NOTEQUAL) relationalExpr
+    | relationalExpr
+    ;
+
+
+// <, >, <=, >= (left-assoc)
+relationalExpr
+    : relationalExpr (LT | GT | LTE | GTE) additiveExpr
+    | additiveExpr
+    ;
+
+// +, - (left-assoc)
+additiveExpr
+    : additiveExpr (PLUS | MINUS) multiplicativeExpr
+    | multiplicativeExpr
+    ;
+
+    // *, / (left-assoc)
+multiplicativeExpr
+    : multiplicativeExpr (ASTERISK | DIV) unaryExpr
+    | unaryExpr
+    ;
+
+// !x, +x, -x (right-assoc)
+unaryExpr
+    : (NOT | PLUS | MINUS) unaryExpr
+    | asExpression
+    ;
+
+asExpression
+    : postfixExpr (AS typeRef)*
+    ;
+
+// calls / member access / indexing / optional chaining (left-assoc chain)
+postfixExpr
+    : primary
+      (
+          (DOT | QDOT) (IDENTIFIER|SRC|TARGET)
+        | LPAREN argumentList? RPAREN
+        | QDOT LPAREN argumentList? RPAREN
+        | LBRACKET expr RBRACKET
+        | QDOT LBRACKET expr RBRACKET
+        | NON_NULL_DOT (IDENTIFIER | SRC | TARGET)
+      )*
+    ;
+
+// signal<Product[]>(args)
+signalGenericCallPrimary
+    : SIGNAL_KW LT signalGenericArgs GT LPAREN argumentList? RPAREN
+    ;
+
+signalGenericArgs
+    : signalGenericArg (COMMA signalGenericArg)*
+    ;
+
+signalGenericArg
+    : (IDENTIFIER | Type) (LBRACKET RBRACKET)*
+    ;
+
+    // f(a, b, c)
+argumentList
+    : expr (COMMA expr)*
+    ;
+
+// === primary ===
+// ملاحظة: arrowFunction جاية أولاً مع lookahead بسيط لتمييز IDENTIFIER '=>' عن IDENTIFIER العادي
+
+primary
+        : arrowFunction
+        | NUMBER
+        | ROUTES_ID
+        | STRING
+        | BOOLEAN
+        | NULL
+        | ANGULAR_QUT htmlSection* ANGULAR_QUT
+        | arrayLiteral
+        | objectLiteral
+        | signalGenericCallPrimary
+        | importCallPrimary
+        | SIGNAL_KW
+        | IDENTIFIER
+        | IMPORT_KW
+        | LPAREN expr RPAREN
+        ;
+
+
+// import('./path').then(...).catch(...)
+// يسمح بسلسلة .then(...).catch(...) أو حتى استدعاء مباشر بعد import(...)
+importCallPrimary
+    : IMPORT_KW LPAREN STRING RPAREN (DOT IDENTIFIER LPAREN argumentList? RPAREN)*
+    ;
+
+
+// (x) => expr  |  (a,b)=>{...}  |  x => expr
+arrowFunction
+    : IDENTIFIER ARROW (expr | block)                          // single param
+    | LPAREN paramListSimple? RPAREN ARROW (expr | block)      // (a,b)=>...
+    ;
+
+// a, b, c
+paramListSimple
+    : IDENTIFIER (COMMA IDENTIFIER)*
+    ;
+
+// [a, b, ...rest]
+arrayLiteral
+    : LBRACKET ( arrayElement (COMMA arrayElement)* )? COMMA? RBRACKET
+    ;
+
+arrayElement
+    : ELLIPSIS expr
+    | expr
+    ;
+
+// { key: value, "x": y, ...obj }
+objectLiteral
+    : LBRACKETS ( objectProperty (COMMA objectProperty)* )? COMMA? RBRACKETS
+    ;
+
+objectProperty
+    : ELLIPSIS expr
+    | (IDENTIFIER | STRING) COLON expr
     | IDENTIFIER
-    | LPAREN expression RPAREN
-    | functionCall
-    | arrayLiteral
-    | objectLiteral
-    | pipeExpression
-    | propLitiral;
+    ;
 
-// Angular pipe syntax: value | pipe[:arg]
-pipeExpression
-    : baseExpression ( PIPE IDENTIFIER ( COLON expression )? )*;
 
-// Base values for pipes and other expressions
-baseExpression
-    : literal
-    | IDENTIFIER
-    | functionCall
-    | arrayLiteral
-    | objectLiteral;
+interpolation
+    : DOLAR? INTERP_OPEN expr INTERP_CLOSE
+    ;
 
-// Literal values in expressions
-literal : STRING | NUMBER | BOOLEAN | NULL;
 
-// Function call expression: identifier(arguments)
-functionCall : IDENTIFIER LPAREN (baseExpression (COMMA  expression)*)? RPAREN;
 
-// Array literal: [value1, value2, ...]
-arrayLiteral : LBRACKET (baseExpression (COMMA  expression)*)? RBRACKET;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//html
 
-// Object literal: { key: value, ... }
-objectLiteral : LBRACE (IDENTIFIER COLON expression (COMMA  IDENTIFIER COLON expression)*)? RBRACE;
+htmlSection
+    : htmlDivTag         #HTMLDivLabel
+    | htmlFormTag        #HTMLFormLabel
+    | htmlParagraphTag   #HTMLParagraphLabel
+    | htmlButtonTag      #HTMLButtonLabel
+    | htmlInputTag       #HTMLInputLabel
+    | htmlImageTag       #HTMLImageLabel
+    | htmlLabelTag       #HTMLLabel
+    | htmlSpanTag        #HTMLSpanLabel  ///////////////////////////
+    | htmlAnchorTag      #HTMLAnchorLabel  ////////////////////////
+    | routerOutletTag    #HTMLRouterOutletLabel
+    ;
 
-// Property access chain: obj.prop.subprop
-propLitiral: (baseExpression DOT expression)*;
+//<img src="image.png" alt="description" style="color: red; font-size: 16px;" />
+htmlImageTag
+    : IMG_TAG_OPEN imgAttribute* TAG_SELF_CLOSE
+    ;
 
-// Angular interpolation: {{ expression }}
-interpolation : LBRACE expression RBRACE;
+imgAttribute
+    : LBRACKET SRC RBRACKET EQUALS STRING
+    | ALT EQUALS STRING
+    | STYLE EQUALS STRING
+    ;
 
-// Text content in Angular templates
-text : ( IDENTIFIER|STRING|interpolation)+;
+//-----------------------------------------
 
-// If statement: if (condition) { statements } else { statements }
-if_statement
-    : If LPAREN expression RPAREN LBRACKETS statements* RBRACKETS
-     (Else LBRACKETS statements* RBRACKETS)?;
+//<button type="submit" disabled (click)="handleClick()" style="color: red; font-size: 16px;"> Click Me</button>
+htmlButtonTag
+    : BUTTON_TAG_OPEN buttonAttribute* GT buttonContent? BUTTON_TAG_CLOSE
+    ;
 
-// Loop statement: while or for block
-loop_statement
-    : (while |for)
-      LBRACKETS statements* RBRACKETS;
+buttonAttribute
+    : TYPE_DECLARE EQUALS STRING
+    | DISABLED
+    | STYLE EQUALS STRING
+    | STAR_NG_IF EQUALS STRING
+    | STAR_NG_FOR EQUALS STRING
+    | CLICK EQUALS STRING
+    | NG_MODEL EQUALS STRING
+    | NG_MODEL_TWO_WAY EQUALS STRING
+    ;
 
-// While loop: while (condition)
-while:While LPAREN expression RPAREN;
+buttonContent
+    : STRING
+    ;
 
-// For loop: for(init; condition; step)
-for: For LPAREN loop_init? SEMICOLON expression? SEMICOLON loop_step? RPAREN;
+//-----------------------------------------
 
-// Initialization part of for loop
-loop_init
-    : vardeclare | expression (COMMA expression)*;
+//<input id="username" name="username" [(ngModel)]="user.name" value="Ali"  type="text" placeholder="Your name" style="color: blue;" />
+htmlInputTag
+    : INPUT_TAG_OPEN inputAttribute* TAG_SELF_CLOSE
+    ;
 
-// Step (increment/decrement) part of for loop
-loop_step
-    : expression (COMMA expression)*;
+inputAttribute
+    : TYPE_DECLARE EQUALS STRING
+    | PLACEHOLDER EQUALS STRING
+    | STYLE EQUALS STRING
+    | VALUE EQUALS STRING
+    | NAME EQUALS STRING
+    | ID EQUALS STRING
+    | NG_MODEL EQUALS STRING
+    | NG_MODEL_TWO_WAY EQUALS STRING
+    ;
+
+//-----------------------------------------
+
+//<p id="msg" style="color: red;">Welcome to Angular!</p>
+htmlParagraphTag
+    : P_TAG_OPEN paragraphAttribute* GT paragraphContent? P_TAG_CLOSE
+    ;
+
+paragraphAttribute
+    : ID EQUALS STRING
+    | CLASS_KW EQUALS STRING
+    | STYLE EQUALS STRING
+    | STAR_NG_IF EQUALS STRING
+    | STAR_NG_FOR EQUALS STRING
+    | CLICK EQUALS STRING
+    | NG_MODEL EQUALS STRING
+    | NG_MODEL_TWO_WAY EQUALS STRING
+    ;
+
+paragraphContent
+    : htmlImageTag                                #ParagraphImageLabel
+    | htmlButtonTag                               #ParagraphButtonLabel
+    | htmlInputTag                                #ParagraphInputLabel
+    | interpolation                               #ParagraphPolationLabel
+    | STRING                                      #ParagraphTextLabel
+    ;
+
+//-----------------------------------------
+
+//<label for="username">Username:</label>
+htmlLabelTag
+    : LABEL_TAG_OPEN labelAttribute* GT labelContent* LABEL_TAG_CLOSE       ///////////////
+    ;
+
+labelAttribute
+    : FOR EQUALS STRING
+    | STYLE EQUALS STRING
+    | CLASS_KW EQUALS STRING
+    ;
+
+labelContent
+    : STRING
+    | htmlSpanTag               ///////////////
+    | htmlInputTag              ///////////////
+    ;
+
+//-----------------------------------------
+
+//<div id="container" style="margin: 10px;">
+//    <p>Hello</p>
+//    <button>Click</button>
+//</div>
+
+htmlDivTag
+    : DIV_TAG_OPEN divAttribute* GT divContent* DIV_TAG_CLOSE
+    ;
+
+divAttribute
+    : ID EQUALS STRING
+    | CLASS_KW EQUALS STRING
+    | STYLE EQUALS STRING
+    | STAR_NG_IF EQUALS STRING
+    | STAR_NG_FOR EQUALS STRING
+    | CLICK EQUALS STRING
+    | NG_MODEL EQUALS STRING
+    | NG_MODEL_TWO_WAY EQUALS STRING
+    ;
+
+divContent
+    : htmlImageTag                 #DivImageLabel
+    | htmlButtonTag                #DivButtonLabel
+    | htmlInputTag                 #DivInputLabel
+    | htmlParagraphTag             #DivParagraphLabel
+    | htmlDivTag                   #DivNestedLabel
+    | htmlSpanTag                  #DivSpanLabel
+    | htmlAnchorTag                #DivAnchorLabel
+    | htmlLabelTag                 #DivLabel
+    | routerOutletTag              #DivRouterOutletLabel
+    | ngIfDirective                #DivNgIfLabel
+    | ngForDirective               #DivNgForLabel
+    | interpolation                #DivInterpolationLabel
+    | STRING                       #DivPlainTextLabel
+    ;
+
+//-----------------------------------------
+//<form id="userForm" (ngSubmit)="submitForm()" style="margin: 10px;"></form>
+htmlFormTag
+    : FORM_TAG_OPEN formAttribute* GT formContent* FORM_TAG_CLOSE
+    ;
+
+formAttribute
+    : ID EQUALS STRING
+    | CLASS_KW EQUALS STRING
+    | STYLE EQUALS STRING
+    | NG_SUBMIT EQUALS STRING
+    ;
+
+formContent
+    : htmlInputTag         #FormInputLabel
+    | htmlButtonTag        #FormButtonLabel
+    | htmlLabelTag         #FormLabel
+    | htmlDivTag           #FormDivLabel
+    | STRING               #FormTextLabel
+    ;
+
+    //-----------------------------------------
+    //<span class="note" style="color:red;">"هذا نص داخل span"</span>
+    htmlSpanTag                                                                 ///////////////
+        : SPAN_TAG_OPEN spanAttribute* GT spanContent? SPAN_TAG_CLOSE
+        ;
+
+    spanAttribute
+        : STYLE EQUALS STRING
+        | CLASS_KW EQUALS STRING
+        ;
+
+    spanContent
+        : STRING
+        ;
+
+    //-----------------------------------------
+    //<a href="https://example.com" target="_blank" rel="noopener" class="link" style="text-decoration:none;">"اذهب إلى Example"</a>
+    htmlAnchorTag                                                               ///////////////
+        : A_TAG_OPEN anchorAttribute* GT anchorContent? A_TAG_CLOSE
+        ;
+
+    anchorAttribute
+        : HREF EQUALS STRING
+        | TARGET EQUALS STRING
+        | REL EQUALS STRING
+        | STYLE EQUALS STRING
+        | CLASS_KW EQUALS STRING
+        | ROUTER_LINK_BINDING EQUALS STRING
+        ;
+
+    anchorContent
+        : STRING
+        ;
+    //-----------------------------------------
+
+    routerOutletTag
+        : ROUTER_OUTLET_TAG
+        ;
+
+    ngIfDirective
+        : STAR_NG_IF EQUALS STRING
+        ;
+
+    ngForDirective
+        : STAR_NG_FOR EQUALS STRING
+        ;

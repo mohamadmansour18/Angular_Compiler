@@ -1,5 +1,0 @@
-<main class="app-container">
-    <router-outlet></router-outlet>
-    <p style="font-size: 14px;">Welcome to the Angular Application</p>
-    <button (click)="onClick()">Click Me</button>
-</main>
