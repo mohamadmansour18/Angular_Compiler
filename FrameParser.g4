@@ -24,11 +24,11 @@ stetment:
 
 
 importStatement
-    : ImportKW LBRACKETS (IDENTIFIER | ComponentKW | SignalKW | RoutesType) RBRACKETS FromKW STRING
+    : IMPORT_KW LBRACKETS (IDENTIFIER | COMPONENT_KW | SIGNAL_KW | ROUTES_TYPE) RBRACKETS FROM_KW STRING
     ;
 
 classStatement
-    : ExportKW? ClassKW IDENTIFIER LBRACKETS classBody RBRACKETS
+    : EXPORT_KW? CLASS_KW IDENTIFIER LBRACKETS classBody RBRACKETS
     ;
 
 classBody
@@ -48,7 +48,7 @@ propertyDeclaration
     ;
 
 routesPropertyDeclaration
-    : RoutesType COLON RoutesType EQUALS assignmentExpr SEMICOLON
+    : ROUTES_TYPE COLON ROUTES_TYPE EQUALS assignmentExpr SEMICOLON
     ;
 
 normalPropertyDeclaration
@@ -58,7 +58,7 @@ normalPropertyDeclaration
 
 //component
  componentDecorator
-     : ATT ComponentKW LPAREN LBRACKETS componentOptions RBRACKETS RPAREN
+     : ATT COMPONENT_KW LPAREN LBRACKETS componentOptions RBRACKETS RPAREN
      ;
 
 
@@ -67,24 +67,24 @@ componentOptions
     ;
 
 selectorProperty
-    : SelectorKW COLON STRING
+    : SELECTOR_KW COLON STRING
     ;
 
 standaloneProperty
-    : StandaloneKW COLON BOOLEAN
+    : STANDALONE_KW COLON BOOLEAN
     ;
 
 importsProperty
-    : ImportsKW COLON LBRACKET IDENTIFIER (COMMA IDENTIFIER)* RBRACKET
+    : IMPORTS_KW COLON LBRACKET IDENTIFIER (COMMA IDENTIFIER)* RBRACKET
     ;
 
 templateProperty
-    : TemplateKW COLON AngularQut htmlSection* AngularQut
+    : TEMPLATE_KW COLON ANGULAR_QUT htmlSection* ANGULAR_QUT
     ;
 
 //function & constructors
 constructorDeclaration
-    : ConstructorKW LPAREN constructorParamList? RPAREN block
+    : CONSTRUCTOR_KW LPAREN constructorParamList? RPAREN block
     ;
 
 constructorParamList
@@ -92,7 +92,7 @@ constructorParamList
     ;
 
 constructorParam
-    : Accessmodifier? IDENTIFIER COLON (IDENTIFIER|Type)
+    : ACCESS_MODIFIER? IDENTIFIER COLON (IDENTIFIER|Type)
     ;
 
 functionDeclaration
@@ -104,7 +104,7 @@ paramList
     ;
 
 param
-    :  Accessmodifier? IDENTIFIER (COLON (IDENTIFIER|Type))?
+    :  ACCESS_MODIFIER? IDENTIFIER (COLON (IDENTIFIER|Type))?
     ;
 
 block
@@ -123,20 +123,20 @@ statementInBlock
     ;
 
 ifStatement
-    : If LPAREN expr RPAREN (block | exprStatement | returnStatement) (Else (block | exprStatement | returnStatement))?
+    : IF LPAREN expr RPAREN (block | exprStatement | returnStatement) (ELSE (block | exprStatement | returnStatement))?
     ;
 
 returnStatement
-    : Return expr? SEMICOLON
+    : RETURN expr? SEMICOLON
     ;
 
 // تصريح متغيّر: يسمح بالـ type annotation فقط إذا كان الاسم routes وبالنوع Routes
 varDeclareStatement
-    : ExportKW? (ConstKW | LET) varDecl (COMMA varDecl)* SEMICOLON
+    : EXPORT_KW? (CONST_KW | LET) varDecl (COMMA varDecl)* SEMICOLON
     ;
 
 varDecl
-  : ROUTES_ID (COLON RoutesType)? (EQUALS assignmentExpr)?
+  : ROUTES_ID (COLON ROUTES_TYPE)? (EQUALS assignmentExpr)?
   | IDENTIFIER generalTypeAnnotation? (EQUALS assignmentExpr)?
   ;
 
@@ -150,7 +150,7 @@ generalTypeAnnotation
 
 // === Type Alias & Object Type Literals (Plan A) ===
 typeAliasStatement
-    : TypeDeclare IDENTIFIER EQUALS objectType SEMICOLON
+    : TYPE_DECLARE IDENTIFIER EQUALS objectType SEMICOLON
     ;
 
 // { id: string; name?: string; price: number | null; }
@@ -170,7 +170,7 @@ objectTypeMember
 // Basic type references with arrays and unions, allowing NULL as a type
 // Examples: string, number[], Product, Product[], number | null, Product[] | null
 typeRef
-    : (IDENTIFIER | Type | NULL) (LBRACKET RBRACKET)* (PIPE typeRef)*
+    : (IDENTIFIER | TYPE | NULL) (LBRACKET RBRACKET)* (PIPE typeRef)*
     ;
 
 exprStatement
@@ -272,7 +272,7 @@ postfixExpr
 
 // signal<Product[]>(args)
 signalGenericCallPrimary
-    : SignalKW LT signalGenericArgs GT LPAREN argumentList? RPAREN
+    : SIGNAL_KW LT signalGenericArgs GT LPAREN argumentList? RPAREN
     ;
 
 signalGenericArgs
@@ -298,14 +298,14 @@ primary
         | STRING
         | BOOLEAN
         | NULL
-        | AngularQut htmlSection* AngularQut
+        | ANGULAR_QUT htmlSection* ANGULAR_QUT
         | arrayLiteral
         | objectLiteral
         | signalGenericCallPrimary
         | importCallPrimary
-        | SignalKW
+        | SIGNAL_KW
         | IDENTIFIER
-        | ImportKW
+        | IMPORT_KW
         | LPAREN expr RPAREN
         ;
 
@@ -313,14 +313,14 @@ primary
 // import('./path').then(...).catch(...)
 // يسمح بسلسلة .then(...).catch(...) أو حتى استدعاء مباشر بعد import(...)
 importCallPrimary
-    : ImportKW LPAREN STRING RPAREN (DOT IDENTIFIER LPAREN argumentList? RPAREN)*
+    : IMPORT_KW LPAREN STRING RPAREN (DOT IDENTIFIER LPAREN argumentList? RPAREN)*
     ;
 
 
 // (x) => expr  |  (a,b)=>{...}  |  x => expr
 arrowFunction
-    : IDENTIFIER Arrow (expr | block)                          // single param
-    | LPAREN paramListSimple? RPAREN Arrow (expr | block)      // (a,b)=>...
+    : IDENTIFIER ARROW (expr | block)                          // single param
+    | LPAREN paramListSimple? RPAREN ARROW (expr | block)      // (a,b)=>...
     ;
 
 // a, b, c
@@ -391,7 +391,7 @@ htmlButtonTag
     ;
 
 buttonAttribute
-    : TypeDeclare EQUALS STRING
+    : TYPE_DECLARE EQUALS STRING
     | DISABLED
     | STYLE EQUALS STRING
     | STAR_NG_IF EQUALS STRING
@@ -413,7 +413,7 @@ htmlInputTag
     ;
 
 inputAttribute
-    : TypeDeclare EQUALS STRING
+    : TYPE_DECLARE EQUALS STRING
     | PLACEHOLDER EQUALS STRING
     | STYLE EQUALS STRING
     | VALUE EQUALS STRING
@@ -432,7 +432,7 @@ htmlParagraphTag
 
 paragraphAttribute
     : ID EQUALS STRING
-    | ClassKW EQUALS STRING
+    | CLASS_KW EQUALS STRING
     | STYLE EQUALS STRING
     | STAR_NG_IF EQUALS STRING
     | STAR_NG_FOR EQUALS STRING
@@ -459,7 +459,7 @@ htmlLabelTag
 labelAttribute
     : FOR EQUALS STRING
     | STYLE EQUALS STRING
-    | ClassKW EQUALS STRING
+    | CLASS_KW EQUALS STRING
     ;
 
 labelContent
@@ -481,7 +481,7 @@ htmlDivTag
 
 divAttribute
     : ID EQUALS STRING
-    | ClassKW EQUALS STRING
+    | CLASS_KW EQUALS STRING
     | STYLE EQUALS STRING
     | STAR_NG_IF EQUALS STRING
     | STAR_NG_FOR EQUALS STRING
@@ -514,7 +514,7 @@ htmlFormTag
 
 formAttribute
     : ID EQUALS STRING
-    | ClassKW EQUALS STRING
+    | CLASS_KW EQUALS STRING
     | STYLE EQUALS STRING
     | NG_SUBMIT EQUALS STRING
     ;
@@ -535,7 +535,7 @@ formContent
 
     spanAttribute
         : STYLE EQUALS STRING
-        | ClassKW EQUALS STRING
+        | CLASS_KW EQUALS STRING
         ;
 
     spanContent
@@ -553,7 +553,7 @@ formContent
         | TARGET EQUALS STRING
         | REL EQUALS STRING
         | STYLE EQUALS STRING
-        | ClassKW EQUALS STRING
+        | CLASS_KW EQUALS STRING
         | ROUTER_LINK_BINDING EQUALS STRING
         ;
 

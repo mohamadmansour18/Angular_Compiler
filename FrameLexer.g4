@@ -2,37 +2,49 @@ lexer grammar FrameLexer;
 @lexer::package {Parser}
 
 //new tokens
-ExportKW: 'export';
-ComponentKW  : 'Component';
-SelectorKW   : 'selector';
-StandaloneKW : 'standalone';
-ImportsKW    : 'imports';
-ImportKW    : 'import';
-FromKW       : 'from';
-TemplateKW   : 'template';
-RoutesType : 'Routes';
-ROUTES_ID : 'routes';
-SignalKW : 'signal';
+EXPORT_KW      : 'export';
+COMPONENT_KW   : 'Component';
+SELECTOR_KW    : 'selector';
+STANDALONE_KW  : 'standalone';
+IMPORTS_KW     : 'imports';
+IMPORT_KW      : 'import';
+FROM_KW        : 'from';
+TEMPLATE_KW    : 'template';
+ROUTES_TYPE    : 'Routes';
+ROUTES_ID      : 'routes';
+SIGNAL_KW      : 'signal';
 
 
-ClassKW: 'class';
-ConstructorKW: 'constructor';
-ConstKW : 'const';
-AS          : 'as';
-LET         : 'let';
-If     : 'if';
-Else   : 'else';
-Return: 'return';
-AngularQut:'`';
+CLASS_KW        : 'class';
+CONSTRUCTOR_KW  : 'constructor';
+CONST_KW        : 'const';
+AS              : 'as';
+LET             : 'let';
+IF              : 'if';
+ELSE            : 'else';
+RETURN          : 'return';
+ANGULAR_QUT     : '`';
 
 
 
 
 //old
-Accessmodifier: 'public' | 'private' | 'protected';
-Type: 'number' | 'string' | 'boolean' | 'any' | 'Array';
-TypeDeclare: 'type';
-Arrow: '=>';
+ACCESS_MODIFIER : 'public' | 'private' | 'protected';
+TYPE            : 'number' | 'string' | 'boolean' | 'any' | 'Array';
+TYPE_DECLARE    : 'type';
+ARROW           : '=>';
+
+
+
+
+/*
+
+
+
+*/
+
+
+
 
 
 //basics
