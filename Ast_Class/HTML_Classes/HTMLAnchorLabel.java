@@ -3,6 +3,8 @@ package Ast_Class.HTML_Classes;
 import Ast_Class.Node.Node;
 import Visitor.AST_Visitor;
 
+import java.util.ArrayList;
+
 public class HTMLAnchorLabel extends Node implements HtmlSectionNode{
     private ArrayList<AnchorAttribute> attributes = new ArrayList<>();
     private AnchorContent content;

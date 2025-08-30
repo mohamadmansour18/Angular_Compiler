@@ -17,11 +17,11 @@ public class FrameLexer extends Lexer {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		ExportKW=1, ComponentKW=2, SelectorKW=3, StandaloneKW=4, ImportsKW=5, 
-		ImportKW=6, FromKW=7, TemplateKW=8, RoutesType=9, ROUTES_ID=10, SignalKW=11, 
-		ClassKW=12, ConstructorKW=13, ConstKW=14, AS=15, LET=16, If=17, Else=18, 
-		Return=19, AngularQut=20, Accessmodifier=21, Type=22, TypeDeclare=23, 
-		Arrow=24, NON_NULL_DOT=25, SEMICOLON=26, DOLAR=27, ATT=28, COMMA=29, COLON=30, 
+		EXPORT_KW=1, COMPONENT_KW=2, SELECTOR_KW=3, STANDALONE_KW=4, IMPORTS_KW=5, 
+		IMPORT_KW=6, FROM_KW=7, TEMPLATE_KW=8, ROUTES_TYPE=9, ROUTES_ID=10, SIGNAL_KW=11, 
+		CLASS_KW=12, CONSTRUCTOR_KW=13, CONST_KW=14, AS=15, LET=16, IF=17, ELSE=18, 
+		RETURN=19, ANGULAR_QUT=20, ACCESS_MODIFIER=21, TYPE=22, TYPE_DECLARE=23, 
+		ARROW=24, NON_NULL_DOT=25, SEMICOLON=26, DOLAR=27, ATT=28, COMMA=29, COLON=30, 
 		INTERP_OPEN=31, INTERP_CLOSE=32, LBRACKETS=33, RBRACKETS=34, LPAREN=35, 
 		RPAREN=36, LBRACKET=37, RBRACKET=38, EQUALS=39, EQUALEQUAL=40, TEQUAL=41, 
 		NTEQUAL=42, NOTEQUAL=43, QUESTION=44, PIPE=45, OROR=46, ANDAND=47, NOT=48, 
@@ -46,23 +46,24 @@ public class FrameLexer extends Lexer {
 
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"ExportKW", "ComponentKW", "SelectorKW", "StandaloneKW", "ImportsKW", 
-			"ImportKW", "FromKW", "TemplateKW", "RoutesType", "ROUTES_ID", "SignalKW", 
-			"ClassKW", "ConstructorKW", "ConstKW", "AS", "LET", "If", "Else", "Return", 
-			"AngularQut", "Accessmodifier", "Type", "TypeDeclare", "Arrow", "NON_NULL_DOT", 
-			"SEMICOLON", "DOLAR", "ATT", "COMMA", "COLON", "INTERP_OPEN", "INTERP_CLOSE", 
-			"LBRACKETS", "RBRACKETS", "LPAREN", "RPAREN", "LBRACKET", "RBRACKET", 
-			"EQUALS", "EQUALEQUAL", "TEQUAL", "NTEQUAL", "NOTEQUAL", "QUESTION", 
-			"PIPE", "OROR", "ANDAND", "NOT", "PLUS", "MINUS", "ASTERISK", "DIV", 
-			"DOT", "LT", "GT", "LTE", "GTE", "ELLIPSIS", "QDOT", "NULLISH", "DIV_TAG_OPEN", 
-			"DIV_TAG_CLOSE", "STYLE", "STAR_NG_IF", "STAR_NG_FOR", "CLICK", "NG_MODEL", 
-			"NG_MODEL_TWO_WAY", "FORM_TAG_OPEN", "FORM_TAG_CLOSE", "ID", "P_TAG_OPEN", 
-			"P_TAG_CLOSE", "BUTTON_TAG_OPEN", "BUTTON_TAG_CLOSE", "DISABLED", "INPUT_TAG_OPEN", 
-			"TAG_SELF_CLOSE", "PLACEHOLDER", "VALUE", "NAME", "IMG_TAG_OPEN", "SRC", 
-			"ALT", "LABEL_TAG_OPEN", "LABEL_TAG_CLOSE", "FOR", "SPAN_TAG_OPEN", "SPAN_TAG_CLOSE", 
-			"A_TAG_OPEN", "A_TAG_CLOSE", "HREF", "TARGET", "REL", "ROUTER_LINK_BINDING", 
-			"ROUTER_OUTLET_TAG", "NG_SUBMIT", "STRING", "NUMBER", "BOOLEAN", "NULL", 
-			"IDENTIFIER", "IDENT", "ESCAPE", "WS", "LETTER", "DIGIT"
+			"EXPORT_KW", "COMPONENT_KW", "SELECTOR_KW", "STANDALONE_KW", "IMPORTS_KW", 
+			"IMPORT_KW", "FROM_KW", "TEMPLATE_KW", "ROUTES_TYPE", "ROUTES_ID", "SIGNAL_KW", 
+			"CLASS_KW", "CONSTRUCTOR_KW", "CONST_KW", "AS", "LET", "IF", "ELSE", 
+			"RETURN", "ANGULAR_QUT", "ACCESS_MODIFIER", "TYPE", "TYPE_DECLARE", "ARROW", 
+			"NON_NULL_DOT", "SEMICOLON", "DOLAR", "ATT", "COMMA", "COLON", "INTERP_OPEN", 
+			"INTERP_CLOSE", "LBRACKETS", "RBRACKETS", "LPAREN", "RPAREN", "LBRACKET", 
+			"RBRACKET", "EQUALS", "EQUALEQUAL", "TEQUAL", "NTEQUAL", "NOTEQUAL", 
+			"QUESTION", "PIPE", "OROR", "ANDAND", "NOT", "PLUS", "MINUS", "ASTERISK", 
+			"DIV", "DOT", "LT", "GT", "LTE", "GTE", "ELLIPSIS", "QDOT", "NULLISH", 
+			"DIV_TAG_OPEN", "DIV_TAG_CLOSE", "STYLE", "STAR_NG_IF", "STAR_NG_FOR", 
+			"CLICK", "NG_MODEL", "NG_MODEL_TWO_WAY", "FORM_TAG_OPEN", "FORM_TAG_CLOSE", 
+			"ID", "P_TAG_OPEN", "P_TAG_CLOSE", "BUTTON_TAG_OPEN", "BUTTON_TAG_CLOSE", 
+			"DISABLED", "INPUT_TAG_OPEN", "TAG_SELF_CLOSE", "PLACEHOLDER", "VALUE", 
+			"NAME", "IMG_TAG_OPEN", "SRC", "ALT", "LABEL_TAG_OPEN", "LABEL_TAG_CLOSE", 
+			"FOR", "SPAN_TAG_OPEN", "SPAN_TAG_CLOSE", "A_TAG_OPEN", "A_TAG_CLOSE", 
+			"HREF", "TARGET", "REL", "ROUTER_LINK_BINDING", "ROUTER_OUTLET_TAG", 
+			"NG_SUBMIT", "STRING", "NUMBER", "BOOLEAN", "NULL", "IDENTIFIER", "IDENT", 
+			"ESCAPE", "WS", "LETTER", "DIGIT"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -88,23 +89,24 @@ public class FrameLexer extends Lexer {
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "ExportKW", "ComponentKW", "SelectorKW", "StandaloneKW", "ImportsKW", 
-			"ImportKW", "FromKW", "TemplateKW", "RoutesType", "ROUTES_ID", "SignalKW", 
-			"ClassKW", "ConstructorKW", "ConstKW", "AS", "LET", "If", "Else", "Return", 
-			"AngularQut", "Accessmodifier", "Type", "TypeDeclare", "Arrow", "NON_NULL_DOT", 
-			"SEMICOLON", "DOLAR", "ATT", "COMMA", "COLON", "INTERP_OPEN", "INTERP_CLOSE", 
-			"LBRACKETS", "RBRACKETS", "LPAREN", "RPAREN", "LBRACKET", "RBRACKET", 
-			"EQUALS", "EQUALEQUAL", "TEQUAL", "NTEQUAL", "NOTEQUAL", "QUESTION", 
-			"PIPE", "OROR", "ANDAND", "NOT", "PLUS", "MINUS", "ASTERISK", "DIV", 
-			"DOT", "LT", "GT", "LTE", "GTE", "ELLIPSIS", "QDOT", "NULLISH", "DIV_TAG_OPEN", 
-			"DIV_TAG_CLOSE", "STYLE", "STAR_NG_IF", "STAR_NG_FOR", "CLICK", "NG_MODEL", 
-			"NG_MODEL_TWO_WAY", "FORM_TAG_OPEN", "FORM_TAG_CLOSE", "ID", "P_TAG_OPEN", 
-			"P_TAG_CLOSE", "BUTTON_TAG_OPEN", "BUTTON_TAG_CLOSE", "DISABLED", "INPUT_TAG_OPEN", 
-			"TAG_SELF_CLOSE", "PLACEHOLDER", "VALUE", "NAME", "IMG_TAG_OPEN", "SRC", 
-			"ALT", "LABEL_TAG_OPEN", "LABEL_TAG_CLOSE", "FOR", "SPAN_TAG_OPEN", "SPAN_TAG_CLOSE", 
-			"A_TAG_OPEN", "A_TAG_CLOSE", "HREF", "TARGET", "REL", "ROUTER_LINK_BINDING", 
-			"ROUTER_OUTLET_TAG", "NG_SUBMIT", "STRING", "NUMBER", "BOOLEAN", "NULL", 
-			"IDENTIFIER", "IDENT", "ESCAPE", "WS"
+			null, "EXPORT_KW", "COMPONENT_KW", "SELECTOR_KW", "STANDALONE_KW", "IMPORTS_KW", 
+			"IMPORT_KW", "FROM_KW", "TEMPLATE_KW", "ROUTES_TYPE", "ROUTES_ID", "SIGNAL_KW", 
+			"CLASS_KW", "CONSTRUCTOR_KW", "CONST_KW", "AS", "LET", "IF", "ELSE", 
+			"RETURN", "ANGULAR_QUT", "ACCESS_MODIFIER", "TYPE", "TYPE_DECLARE", "ARROW", 
+			"NON_NULL_DOT", "SEMICOLON", "DOLAR", "ATT", "COMMA", "COLON", "INTERP_OPEN", 
+			"INTERP_CLOSE", "LBRACKETS", "RBRACKETS", "LPAREN", "RPAREN", "LBRACKET", 
+			"RBRACKET", "EQUALS", "EQUALEQUAL", "TEQUAL", "NTEQUAL", "NOTEQUAL", 
+			"QUESTION", "PIPE", "OROR", "ANDAND", "NOT", "PLUS", "MINUS", "ASTERISK", 
+			"DIV", "DOT", "LT", "GT", "LTE", "GTE", "ELLIPSIS", "QDOT", "NULLISH", 
+			"DIV_TAG_OPEN", "DIV_TAG_CLOSE", "STYLE", "STAR_NG_IF", "STAR_NG_FOR", 
+			"CLICK", "NG_MODEL", "NG_MODEL_TWO_WAY", "FORM_TAG_OPEN", "FORM_TAG_CLOSE", 
+			"ID", "P_TAG_OPEN", "P_TAG_CLOSE", "BUTTON_TAG_OPEN", "BUTTON_TAG_CLOSE", 
+			"DISABLED", "INPUT_TAG_OPEN", "TAG_SELF_CLOSE", "PLACEHOLDER", "VALUE", 
+			"NAME", "IMG_TAG_OPEN", "SRC", "ALT", "LABEL_TAG_OPEN", "LABEL_TAG_CLOSE", 
+			"FOR", "SPAN_TAG_OPEN", "SPAN_TAG_CLOSE", "A_TAG_OPEN", "A_TAG_CLOSE", 
+			"HREF", "TARGET", "REL", "ROUTER_LINK_BINDING", "ROUTER_OUTLET_TAG", 
+			"NG_SUBMIT", "STRING", "NUMBER", "BOOLEAN", "NULL", "IDENTIFIER", "IDENT", 
+			"ESCAPE", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();

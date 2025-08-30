@@ -40,9 +40,8 @@ public class Node {
         Main.symbolTable.getScopes().add(scope);
     }
 
-    public  static void removeScope() {
+    public void removeScope() {
         Main.symbolTable.getScopeStack().pop();
-
     }
 
     public  Scope getCurrentScope() {

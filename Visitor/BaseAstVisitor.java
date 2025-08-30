@@ -1,6 +1,7 @@
 package Visitor;
 
 import Ast_Class.HTML_Classes.*;
+import Ast_Class.Node.Node;
 import Ast_Class.TS_Classes.*;
 
 
@@ -394,6 +395,133 @@ public class BaseAstVisitor implements AST_Visitor {
         }
     }
 
+    @Override
+    public void visit(ProgramNode program) {
+        System.out.println("========== [PROGRAM NODE] ==========");
 
+        for (StatementsNode st : program.getStatements()) {
+            st.accept(this);
+        }
+    }
 
+    @Override
+    public void visit(StatementsNode node) {
+        System.out.println("========== [STATEMENTS NODE] ==========");
+        System.out.println("Has Semicolon: " + node.isHasSemicolon());
+
+        if (node.getStatement() != null) {
+            node.getStatement().accept(this);
+        }
+    }
+
+    @Override
+    public void visit(ImportStatement1 node) {
+        System.out.println("========== [IMPORT STATEMENT] ==========");
+        System.out.println("Imported Name : " + node.getImportedName());
+        System.out.println("From Module   : " + node.getModuleLiteral());
+    }
+
+    @Override
+    public void visit(ClassStatement1 node) {
+        System.out.println("========== [CLASS STATEMENT] ==========");
+        System.out.println("Name     : " + node.getName());
+        System.out.println("Exported : " + node.isExported());
+
+        if (node.getBody() != null) {
+            node.getBody().accept(this);
+        }
+    }
+
+    @Override
+    public void visit(ClassBodyNode body) {
+        System.out.println("========== [CLASS BODY] ==========");
+        for (Node member : body.getMembers()) {
+            member.accept(this);
+        }
+    }
+
+    @Override
+    public void visit(ClassMemberNode node) {
+        System.out.println("========== [CLASS MEMBER] ==========");
+        if (node.getMember() != null) {
+            node.getMember().accept(this);
+        }
+    }
+
+    @Override
+    public void visit(ConstructorDeclarationNode node) {
+        System.out.println("========== [CONSTRUCTOR DECLARATION] ==========");
+
+        if (node.getParamList() != null) {
+            System.out.println("-- Parameters --");
+            node.getParamList().accept(this);
+        }
+
+        if (node.getBlock() != null) {
+            System.out.println("-- Block --");
+            node.getBlock().accept(this);
+        }
+    }
+
+    @Override
+    public void visit(ConstructorParamListNode node) {
+        System.out.println("========== [CONSTRUCTOR PARAM LIST] ==========");
+        for (ConstructorParamNode p : node.getParams()) {
+            p.accept(this);
+        }
+    }
+
+    @Override
+    public void visit(ConstructorParamNode node) {
+        System.out.println("========== [CONSTRUCTOR PARAM] ==========");
+        System.out.println("Access Modifier : " + node.getAccessModifier());
+        System.out.println("Name            : " + node.getName());
+        System.out.println("Type            : " + node.getTypeName());
+    }
+
+    @Override
+    public void visit(ComponentStatement1 node) {
+        System.out.println("========== [@Component DECORATOR] ==========");
+        if (node.getOptions() != null) {
+            node.getOptions().accept(this);
+        }
+    }
+
+    @Override
+    public void visit(ComponentOptionsNode node) {
+        System.out.println("========== [COMPONENT OPTIONS] ==========");
+
+        if (node.getSelector() != null)   node.getSelector().accept(this);
+        if (node.getStandalone() != null) node.getStandalone().accept(this);
+        if (node.getImportsProp() != null)node.getImportsProp().accept(this);
+        if (node.getTemplate() != null)   node.getTemplate().accept(this);
+    }
+
+    @Override
+    public void visit(SelectorPropertyNode node) {
+        System.out.println("========== [SELECTOR PROPERTY] ==========");
+        System.out.println("Selector : " + node.getSelectorLiteral());
+    }
+
+    @Override
+    public void visit(StandalonePropertyNode node) {
+        System.out.println("========== [STANDALONE PROPERTY] ==========");
+        System.out.println("Standalone : " + node.isStandalone());
+    }
+
+    @Override
+    public void visit(ImportsPropertyNode node) {
+        System.out.println("========== [IMPORTS PROPERTY] ==========");
+        for (String imp : node.getImports()) {
+            System.out.println(" - " + imp);
+        }
+    }
+
+    @Override
+    public void visit(TemplatePropertyNode node) {
+        System.out.println("========== [TEMPLATE PROPERTY] ==========");
+        for (HtmlSectionNode sec : node.getSections()) {
+            sec.accept(this);
+        }
+    }
 }

@@ -51,4 +51,19 @@ public interface AST_Visitor {
     void visit(DivLabel node);
     //------------------{ TS Function }------------------//
     void visit(RootProgram root);
+    void visit(ProgramNode program);
+    void visit(StatementsNode node);
+    void visit(ImportStatement1 node);
+    void visit(ClassStatement1 node);
+    void visit(ClassBodyNode body);
+    void visit(ClassMemberNode node);
+    void visit(ConstructorDeclarationNode node);
+    void visit(ConstructorParamListNode node);
+    void visit(ConstructorParamNode node);
+    void visit(ComponentStatement1 node);
+    void visit(ComponentOptionsNode node);
+    void visit(SelectorPropertyNode node);
+    void visit(StandalonePropertyNode node);
+    void visit(ImportsPropertyNode node);
+    void visit(TemplatePropertyNode node);
 }

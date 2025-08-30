@@ -5,12 +5,13 @@ import Ast_Class.Node.Node;
 import Ast_Class.TS_Classes.*;
 import Parser.FrameParser;
 import Parser.FrameParserBaseVisitor;
+import SymbolTable.Scope;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.ArrayList;
 
-public class AngularVisitor extends FrameParserBaseVisitor<Node>{
+public class AngularVisitor extends FrameParserBaseVisitor<Node> {
 
     @Override
     public Node visitHTMLDivLabel(FrameParser.HTMLDivLabelContext ctx) {
@@ -137,25 +138,25 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
     }
 
     @Override
-    public Node visitHTMLLabel(FrameParser.HTMLLabelContext ctx) {
-        HTMLLabel labelNode = new HTMLLabel();
+    public Node visitHtmlLabelTag(FrameParser.HtmlLabelTagContext ctx) {
+        HTMLLabel node = new HTMLLabel();
+        node.initializeNode(ctx, false, ""); // لا سكوب ولا رموز هنا
 
-        labelNode.initializeNode(ctx, false, "");
-
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            ParseTree child = ctx.getChild(i);
-
-            if (child instanceof FrameParser.LabelAttributeContext) {
-                LabelAttribute attr = (LabelAttribute) visit(child);
-                labelNode.getAttributes().add(attr);
-
-            } else if (child instanceof FrameParser.LabelContentContext) {
-                LabelContent content = (LabelContent) visit(child);
-                labelNode.setContent(content);
+        if (ctx.labelAttribute() != null) {
+            for (FrameParser.LabelAttributeContext aCtx : ctx.labelAttribute()) {
+                LabelAttribute attr = (LabelAttribute) visit(aCtx);
+                node.getAttributes().add(attr);
             }
         }
 
-        return labelNode;
+        if (ctx.labelContent() != null) {
+            for (FrameParser.LabelContentContext cCtx : ctx.labelContent()) {
+                LabelContent content = (LabelContent) visit(cCtx);
+                node.getContents().add(content);
+            }
+        }
+
+        return node;
     }
 
     @Override
@@ -181,7 +182,7 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
 
                 switch (tokenType) {
                     case FrameParser.ID:
-                    case FrameParser.CLASS:
+                    case FrameParser.CLASS_KW:
                     case FrameParser.STYLE:
                     case FrameParser.STAR_NG_IF:
                     case FrameParser.STAR_NG_FOR:
@@ -330,7 +331,7 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
     }
 
     @Override
-    public Node visitDivNgForLabel(FrameParser.DivNgForLabelContext ctx){
+    public Node visitDivNgForLabel(FrameParser.DivNgForLabelContext ctx) {
         DivNgForLabel divNgForLabel = new DivNgForLabel();
 
         divNgForLabel.initializeNode(ctx, false, "");
@@ -380,7 +381,7 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
 
                 switch (tokenType) {
                     case FrameParser.ID:
-                    case FrameParser.CLASS:
+                    case FrameParser.CLASS_KW:
                     case FrameParser.STYLE:
                     case FrameParser.NG_SUBMIT:
                         attribute.setAttributeType(terminal.getText());
@@ -506,7 +507,7 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
 
                 switch (tokenType) {
                     case FrameParser.ID:
-                    case FrameParser.CLASS:
+                    case FrameParser.CLASS_KW:
                     case FrameParser.STYLE:
                     case FrameParser.STAR_NG_IF:
                     case FrameParser.STAR_NG_FOR:
@@ -727,7 +728,7 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
 
                 switch (tokenType) {
                     case FrameParser.FOR:
-                    case FrameParser.CLASS:
+                    case FrameParser.CLASS_KW:
                     case FrameParser.STYLE:
                         attribute.setAttributeType(terminal.getText());
                         break;
@@ -744,23 +745,24 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
 
     @Override
     public Node visitLabelContent(FrameParser.LabelContentContext ctx) {
-        LabelContent labelContent = new LabelContent();
-        labelContent.initializeNode(ctx, false, "");
+        LabelContent node = new LabelContent();
+        node.initializeNode(ctx, false, ""); // لا سكوب ولا رموز هنا
 
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            ParseTree child = ctx.getChild(i);
-
-            if (child instanceof TerminalNode terminal &&
-                    terminal.getSymbol().getType() == FrameParser.STRING) {
-                String rawText = terminal.getText().replaceAll("^\"|\"$", "");
-                labelContent.setText(rawText);
-            }
+        if (ctx.STRING() != null) {
+            String raw = ctx.STRING().getText();              // "text"
+            node.setText(raw.length() >= 2 ? raw.substring(1, raw.length() - 1) : raw);
+        } else if (ctx.htmlSpanTag() != null) {
+            HTMLSpanLabel span = (HTMLSpanLabel) visit(ctx.htmlSpanTag());
+            node.setSpan(span);
+        } else if (ctx.htmlInputTag() != null) {
+            HTMLInputLabel input = (HTMLInputLabel) visit(ctx.htmlInputTag());
+            node.setInput(input);
         }
 
-        return labelContent;
+        return node;
     }
 
-////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
     @Override
     public Node visitRootprogram(FrameParser.RootprogramContext ctx) {
         RootProgram rootNode = new RootProgram();
@@ -776,9 +778,451 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node>{
             }
 
         }
-
+        rootNode.removeScope();
         return rootNode;
     }
+
+    @Override
+    public Node visitProgram(FrameParser.ProgramContext ctx) {
+        ProgramNode programNode = new ProgramNode();
+
+        programNode.initializeNode(ctx, true, "Program");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.StatementsContext) {
+                StatementsNode st = (StatementsNode) visit(child);
+                programNode.getStatements().add(st);
+            }
+        }
+
+        programNode.removeScope();
+        return programNode;
+    }
+
+    @Override
+    public Node visitStatements(FrameParser.StatementsContext ctx) {
+        StatementsNode stmtsNode = new StatementsNode();
+
+        stmtsNode.initializeNode(ctx, false, "");
+
+        stmtsNode.setHasSemicolon(ctx.SEMICOLON() != null);
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.StetmentContext) {
+                Stetment st = (Stetment) visit(child);
+                stmtsNode.setStatement(st);
+            }
+        }
+
+        return stmtsNode;
+    }
+
+    public Node visitImportStatement1(FrameParser.ImportStatement1Context ctx) {
+        ImportStatement1 importNode = new ImportStatement1();
+
+        importNode.initializeNode(ctx, false, "");
+        FrameParser.ImportStatementContext imp = ctx.importStatement();
+
+        String name = null;
+        if (imp.IDENTIFIER() != null) {
+            name = imp.IDENTIFIER().getText();
+        } else if (imp.COMPONENT_KW() != null) {
+            name = imp.COMPONENT_KW().getText();
+        } else if (imp.SIGNAL_KW() != null) {
+            name = imp.SIGNAL_KW().getText();
+        } else if (imp.ROUTES_TYPE() != null) {
+            name = imp.ROUTES_TYPE().getText();
+        }
+
+        String moduleLiteral = (imp.STRING() != null) ? imp.STRING().getText() : null;
+        importNode.setImportedName(name);
+        importNode.setModuleLiteral(moduleLiteral);
+
+
+        if (name != null) {
+            importNode.createSymbol(importNode.getScopeID(), name, "Import");
+        }
+
+        return importNode;
+    }
+
+    @Override
+    public Node visitClassStatement1(FrameParser.ClassStatement1Context ctx) {
+        ClassStatement1 node = new ClassStatement1();
+        FrameParser.ClassStatementContext cs = ctx.classStatement();
+
+        String name = (cs.IDENTIFIER() != null) ? cs.IDENTIFIER().getText() : null;
+        node.setName(name);
+        node.setExported(cs.EXPORT_KW() != null);
+
+        int parentScopeId = (node.getCurrentScope() != null) ? node.getCurrentScope().getId() : -1;
+
+        node.initializeNode(cs, true, (name != null ? name : "ClassScope"));
+
+        if (cs.classBody() != null) {
+            node.setBody((ClassBodyNode) visit(cs.classBody()));
+        }
+
+        if (name != null && parentScopeId != -1) {
+            node.createSymbol(parentScopeId, name, "Class");
+        }
+
+        node.removeScope();
+        return node;
+    }
+
+    @Override
+    public Node visitClassBody(FrameParser.ClassBodyContext ctx) {
+        ClassBodyNode bodyNode = new ClassBodyNode();
+        bodyNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.ClassMemberContext) {
+                Node member = (Node) visit(child);
+                bodyNode.getMembers().add(member);
+            }
+        }
+
+        return bodyNode;
+    }
+
+    public Node visitClassMember(FrameParser.ClassMemberContext ctx) {
+        ClassMemberNode node = new ClassMemberNode();
+
+        node.initializeNode(ctx, false, "");
+
+        if (ctx.constructorDeclaration() != null) {
+            Node m = (Node) visit(ctx.constructorDeclaration());
+            node.setMember(m);
+
+        } else if (ctx.functionDeclaration() != null) {
+            Node m = (Node) visit(ctx.functionDeclaration());
+            node.setMember(m);
+
+        } else if (ctx.propertyDeclaration() != null) {
+            Node m = (Node) visit(ctx.propertyDeclaration());
+            node.setMember(m);
+
+        } else if (ctx.exprStatement() != null) {
+            Node m = (Node) visit(ctx.exprStatement());
+            node.setMember(m);
+        }
+
+        return node;
+    }
+
+    @Override
+    public Node visitConstructorDeclaration(FrameParser.ConstructorDeclarationContext ctx) {
+        ConstructorDeclarationNode node = new ConstructorDeclarationNode();
+        int parentScopeId = (node.getCurrentScope() != null) ? node.getCurrentScope().getId() : -1;
+
+        node.initializeNode(ctx, true, "Constructor");
+
+
+        if (ctx.constructorParamList() != null) {
+            Node params = (Node) visit(ctx.constructorParamList());
+            node.setParamList(params);
+        }
+
+        if (parentScopeId != -1) {
+            node.createSymbol(parentScopeId, "constructor", "Constructor");
+        }
+
+        node.removeScope();
+        return node;
+    }
+
+    @Override
+    public Node visitConstructorParamList(FrameParser.ConstructorParamListContext ctx) {
+        ConstructorParamListNode listNode = new ConstructorParamListNode();
+
+        listNode.initializeNode(ctx, false, "");
+
+        for (FrameParser.ConstructorParamContext pctx : ctx.constructorParam()) {
+            ConstructorParamNode param = (ConstructorParamNode) visit(pctx);
+            listNode.getParams().add(param);
+        }
+
+        return listNode;
+    }
+
+    @Override
+    public Node visitConstructorParam(FrameParser.ConstructorParamContext ctx) {
+        ConstructorParamNode node = new ConstructorParamNode();
+
+        // لا سكوب جديد هنا — نلتقط السكوب الحالي (سكوب الـ constructor)
+        node.initializeNode(ctx, false, "");
+
+        // 1) ACCESS_MODIFIER (توكن اختياري)
+        String am = (ctx.ACCESS_MODIFIER() != null) ? ctx.ACCESS_MODIFIER().getText() : null;
+        node.setAccessModifier(am);
+
+        // 2) الاسم: أول IDENTIFIER
+        String name = null;
+        if (ctx.IDENTIFIER() != null && !ctx.IDENTIFIER().isEmpty()) {
+            name = ctx.IDENTIFIER(0).getText();
+        }
+        node.setName(name);
+
+        // 3) النوع بعد النقطتين: إمّا IDENTIFIER ثانٍ أو توكن TYPE
+        String typeName = null;
+        if (ctx.IDENTIFIER() != null && ctx.IDENTIFIER().size() > 1) {
+            typeName = ctx.IDENTIFIER(1).getText();
+        } else if (ctx.TYPE() != null) {
+            typeName = ctx.TYPE().getText();
+        }
+        node.setTypeName(typeName);
+
+        // 4) الرموز:
+        //    - المعامل داخل سكوب الـ constructor (السكوب الحالي)
+        if (name != null && node.getScopeID() != -1) {
+            node.createSymbol(node.getScopeID(), name, "Parameter");
+        }
+
+        //    - إن وُجد ACCESS_MODIFIER: أنشئ خاصية كلاس في سكوب الأب (سكوب الكلاس)
+        Scope current = node.getCurrentScope();
+        if (am != null && current != null && current.getParent() != null) {
+            int classScopeId = current.getParent().getId();
+            node.createSymbol(classScopeId, name, "ClassVariable");
+        }
+        return node;
+    }
+
+    public Node visitComponentStatement1(FrameParser.ComponentStatement1Context ctx) {
+        ComponentStatement1 node = new ComponentStatement1();
+
+        // لا نفتح سكوب
+        node.initializeNode(ctx, false, "");
+
+        // القاعدة الداخلية الفعلية: componentDecorator
+        FrameParser.ComponentDecoratorContext dec = ctx.componentDecorator();
+
+        // داخل الأقواس: LPAREN LBRACKETS componentOptions RBRACKETS RPAREN
+        if (dec != null && dec.componentOptions() != null) {
+            ComponentOptionsNode opts = (ComponentOptionsNode) visit(dec.componentOptions());
+            node.setOptions(opts);
+        }
+
+        // لا createSymbol هنا
+        return node;
+
+    }
+
+    @Override
+    public Node visitComponentOptions(FrameParser.ComponentOptionsContext ctx) {
+        ComponentOptionsNode node = new ComponentOptionsNode();
+
+        // لا سكوب جديد هنا
+        node.initializeNode(ctx, false, "");
+
+        // الخصائص وفق الترتيب في القاعدة
+        if (ctx.selectorProperty() != null) {
+            SelectorPropertyNode sel = (SelectorPropertyNode) visit(ctx.selectorProperty());
+            node.setSelector(sel);
+        }
+
+        if (ctx.standaloneProperty() != null) {
+            StandalonePropertyNode st = (StandalonePropertyNode) visit(ctx.standaloneProperty());
+            node.setStandalone(st);
+        }
+
+        if (ctx.importsProperty() != null) {
+            ImportsPropertyNode imp = (ImportsPropertyNode) visit(ctx.importsProperty());
+            node.setImportsProp(imp);
+        }
+
+        if (ctx.templateProperty() != null) {
+            TemplatePropertyNode tmp = (TemplatePropertyNode) visit(ctx.templateProperty());
+            node.setTemplate(tmp);
+        }
+
+        // لا createSymbol ولا removeScope هنا
+        return node;
+    }
+
+    @Override
+    public Node visitSelectorProperty(FrameParser.SelectorPropertyContext ctx) {
+        SelectorPropertyNode node = new SelectorPropertyNode();
+
+        // لا نفتح سكوب هنا
+        node.initializeNode(ctx, false, "");
+
+        // STRING هو التوكن الحامل للقيمة النصية بين علامتي التنصيص
+        if (ctx.STRING() != null) {
+            node.setSelectorLiteral(ctx.STRING().getText());
+        }
+
+        // لا createSymbol ولا removeScope هنا
+        return node;
+    }
+
+    @Override
+    public Node visitStandaloneProperty(FrameParser.StandalonePropertyContext ctx) {
+        StandalonePropertyNode node = new StandalonePropertyNode();
+
+        // لا سكوب جديد
+        node.initializeNode(ctx, false, "");
+
+        if (ctx.BOOLEAN() != null) {
+            String boolText = ctx.BOOLEAN().getText();
+            node.setStandalone("true".equalsIgnoreCase(boolText));
+        }
+
+        // لا createSymbol ولا removeScope
+        return node;
+    }
+
+    @Override
+    public Node visitImportsProperty(FrameParser.ImportsPropertyContext ctx) {
+        ImportsPropertyNode node = new ImportsPropertyNode();
+
+        node.initializeNode(ctx, false, "");
+
+        if (ctx.IDENTIFIER() != null) {
+            for (TerminalNode id : ctx.IDENTIFIER()) {
+                node.getImports().add(id.getText());
+            }
+        }
+
+        return node;
+    }
+
+    @Override
+    public Node visitTemplateProperty(FrameParser.TemplatePropertyContext ctx) {
+        TemplatePropertyNode node = new TemplatePropertyNode();
+
+        // لا سكوب جديد
+        node.initializeNode(ctx, false, "");
+
+        // اجمع كل أقسام الـ HTML داخل القالب
+        if (ctx.htmlSection() != null) {
+            for (FrameParser.HtmlSectionContext hctx : ctx.htmlSection()) {
+                HtmlSectionNode sec = (HtmlSectionNode) visit(hctx);
+                node.getSections().add(sec);
+            }
+        }
+
+        // لا createSymbol ولا removeScope هنا
+        return node;
+    }
+
+    @Override
+    public Node visitHTMLSpanLabel(FrameParser.HTMLSpanLabelContext ctx) {
+        HTMLSpanLabel spanNode = new HTMLSpanLabel();
+
+        // لا سكوب جديد
+        spanNode.initializeNode(ctx, false, "");
+
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+
+            if (child instanceof FrameParser.SpanAttributeContext) {
+                SpanAttribute attr = (SpanAttribute) visit(child);
+                spanNode.getAttributes().add(attr);
+
+            } else if (child instanceof FrameParser.SpanContentContext) {
+                SpanContent content = (SpanContent) visit(child);
+                spanNode.setContent(content);
+            }
+        }
+
+        return spanNode;
+    }
+
+    @Override
+    public Node visitSpanAttribute(FrameParser.SpanAttributeContext ctx) {
+        SpanAttribute node = new SpanAttribute();
+        node.initializeNode(ctx, false, "");
+
+        // STYLE أو CLASS_KW مباشرة
+        String type = (ctx.STYLE() != null) ? ctx.STYLE().getText() : ctx.CLASS_KW().getText();
+        String raw  = ctx.STRING().getText(); // "value" مع علامات التنصيص
+
+        node.setAttributeType(type);
+        node.setValue(raw.substring(1, raw.length() - 1)); // شِيل علامتي التنصيص لأن getValue() يضيفهما
+
+        return node;
+    }
+
+    @Override
+    public Node visitSpanContent(FrameParser.SpanContentContext ctx) {
+        SpanContent node = new SpanContent();
+        node.initializeNode(ctx, false, "");
+
+        String raw = ctx.STRING().getText();          // "text"
+        node.setValue(raw.substring(1, raw.length()-1)); // إزالة علامتي التنصيص
+
+        return node;
+    }
+
+    @Override
+    public Node visitHTMLAnchorLabel(FrameParser.HTMLAnchorLabelContext ctx) {
+        HTMLAnchorLabel node = new HTMLAnchorLabel();
+        node.initializeNode(ctx, false, "");
+
+        FrameParser.HtmlAnchorTagContext tag = ctx.htmlAnchorTag();
+        if (tag != null) {
+            if (tag.anchorAttribute() != null) {
+                for (FrameParser.AnchorAttributeContext aCtx : tag.anchorAttribute()) {
+                    AnchorAttribute attr = (AnchorAttribute) visit(aCtx);
+                    node.getAttributes().add(attr);
+                }
+            }
+            if (tag.anchorContent() != null) {
+                AnchorContent content = (AnchorContent) visit(tag.anchorContent());
+                node.setContent(content);
+            }
+        }
+
+        return node;
+    }
+
+    @Override
+    public Node visitDivSpanLabel(FrameParser.DivSpanLabelContext ctx) {
+        DivSpanLabel node = new DivSpanLabel();
+        node.initializeNode(ctx, false, ""); // لا سكوب ولا رموز هنا
+
+        if (ctx.htmlSpanTag() != null) {
+            // أعِد استخدام بنّاء الـ <span> الموجود لديك
+            HTMLSpanLabel span = (HTMLSpanLabel) visit(ctx.htmlSpanTag());
+            node.setSpan(span);
+        }
+
+        return node;
+    }
+
+    @Override
+    public Node visitDivAnchorLabel(FrameParser.DivAnchorLabelContext ctx) {
+        DivAnchorLabel node = new DivAnchorLabel();
+        node.initializeNode(ctx, false, ""); // لا سكوب ولا رموز هنا
+
+        if (ctx.htmlAnchorTag() != null) {
+            HTMLAnchorLabel anchor = (HTMLAnchorLabel) visit(ctx.htmlAnchorTag());
+            node.setAnchor(anchor);
+        }
+
+        return node;
+    }
+
+    @Override
+    public Node visitDivLabel(FrameParser.DivLabelContext ctx) {
+        DivLabel node = new DivLabel();
+        node.initializeNode(ctx, false, "");
+
+        if (ctx.htmlLabelTag() != null) {
+            HTMLLabel label = (HTMLLabel) visit(ctx.htmlLabelTag());
+            node.setLabel(label);
+        }
+
+        return node;
+    }
+
 
 }
 

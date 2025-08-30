@@ -92,7 +92,7 @@ constructorParamList
     ;
 
 constructorParam
-    : ACCESS_MODIFIER? IDENTIFIER COLON (IDENTIFIER|Type)
+    : ACCESS_MODIFIER? IDENTIFIER COLON (IDENTIFIER|TYPE)
     ;
 
 functionDeclaration
@@ -378,7 +378,7 @@ htmlImageTag
     ;
 
 imgAttribute
-    : SRC EQUALS STRING
+    : LBRACKET SRC RBRACKET EQUALS STRING
     | ALT EQUALS STRING
     | STYLE EQUALS STRING
     ;
@@ -496,9 +496,9 @@ divContent
     | htmlInputTag                 #DivInputLabel
     | htmlParagraphTag             #DivParagraphLabel
     | htmlDivTag                   #DivNestedLabel
-    | htmlSpanTag        #DivSpanLabel          ///////////////
-    | htmlAnchorTag      #DivAnchorLabel        ///////////////
-    | htmlLabelTag       #DivLabel              ///////////////
+    | htmlSpanTag                  #DivSpanLabel          ///////////////
+    | htmlAnchorTag                #DivAnchorLabel        ///////////////
+    | htmlLabelTag                 #DivLabel              ///////////////
     | routerOutletTag              #DivRouterOutletLabel
     | ngIfDirective                #DivNgIfLabel
     | ngForDirective               #DivNgForLabel
