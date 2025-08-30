@@ -50,5 +50,5 @@ public interface AST_Visitor {
     void visit(DivAnchorLabel node);
     void visit(DivLabel node);
     //------------------{ TS Function }------------------//
-
+    void visit(RootProgram root);
 }

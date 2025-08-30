@@ -7,7 +7,6 @@ import Ast_Class.TS_Classes.*;
 
 public class BaseAstVisitor implements AST_Visitor {
 
-
     @Override
     public void visit(HTMLDivLabel div) {
         System.out.println("========== [DIV NODE] ==========");
@@ -386,7 +385,14 @@ public class BaseAstVisitor implements AST_Visitor {
     }
 
     //------------------------------------{ TS Function }------------------------------------//
+    @Override
+    public void visit(RootProgram root) {
+        System.out.println("========== [ROOT PROGRAM] ==========");
 
+        for (ProgramNode p : root.getPrograms()) {
+            p.accept(this);
+        }
+    }
 
 
 
