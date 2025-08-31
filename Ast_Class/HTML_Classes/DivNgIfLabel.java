@@ -1,6 +1,7 @@
 package Ast_Class.HTML_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class DivNgIfLabel extends Node implements DivContentNode {
@@ -24,5 +25,12 @@ public class DivNgIfLabel extends Node implements DivContentNode {
     @Override
     public String getValue() {
         return "*ngIf=\"" + condition + "\"";
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+
+        String cond = (condition == null) ? "" : condition.replace("\"", "&quot;");
+        return "*ngIf=\"" + cond + "\"";
     }
 }

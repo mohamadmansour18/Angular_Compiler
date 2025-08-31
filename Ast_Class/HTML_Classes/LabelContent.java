@@ -1,6 +1,7 @@
 package Ast_Class.HTML_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class LabelContent extends Node {
@@ -47,6 +48,31 @@ public class LabelContent extends Node {
         } else if (input != null) {
             return input.getValue();
         }
+        return "";
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        if (text != null) {
+            String s = text;
+            s = s.replace("&", "&amp;")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;");
+            return s;
+        }
+
+        // 2) <span> داخلي
+        if (span != null) {
+            String out = span.generate(ctx);
+            return (out != null) ? out : "";
+        }
+
+        // 3) <input> داخلي
+        if (input != null) {
+            String out = input.generate(ctx);
+            return (out != null) ? out : "";
+        }
+
         return "";
     }
 }

@@ -614,6 +614,7 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
         return inputNode;
     }
 
+
     @Override
     public Node visitButtonAttribute(FrameParser.ButtonAttributeContext ctx) {
         ButtonAttribute node = new ButtonAttribute();
@@ -1158,6 +1159,35 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
     }
 
     @Override
+    public Node visitAnchorAttribute(FrameParser.AnchorAttributeContext ctx) {
+        AnchorAttribute node = new AnchorAttribute();
+        node.initializeNode(ctx, false, "");
+
+        String type = null;
+
+        if (ctx.HREF() != null) {
+            type = ctx.HREF().getText();
+        } else if (ctx.TARGET() != null) {
+            type = ctx.TARGET().getText();
+        } else if (ctx.REL() != null) {
+            type = ctx.REL().getText();
+        } else if (ctx.STYLE() != null) {
+            type = ctx.STYLE().getText();
+        } else if (ctx.CLASS_KW() != null) {
+            type = ctx.CLASS_KW().getText();
+        } else if (ctx.ROUTER_LINK_BINDING() != null) {
+            type = ctx.ROUTER_LINK_BINDING().getText();
+        }
+
+        String raw = ctx.STRING().getText(); // القيمة مع علامات التنصيص
+
+        node.setAttributeType(type);
+        node.setValue(raw.substring(1, raw.length() - 1)); // إزالة علامتي التنصيص
+
+        return node;
+    }
+
+    @Override
     public Node visitSpanAttribute(FrameParser.SpanAttributeContext ctx) {
         SpanAttribute node = new SpanAttribute();
         node.initializeNode(ctx, false, "");
@@ -1201,6 +1231,18 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
                 node.setContent(content);
             }
         }
+
+        return node;
+    }
+    ////////////////////////////////////
+
+    @Override
+    public Node visitAnchorContent(FrameParser.AnchorContentContext ctx) {
+        AnchorContent node = new AnchorContent();
+        node.initializeNode(ctx, false, "");
+
+        String raw = ctx.STRING().getText();
+        node.setValue(raw.substring(1, raw.length() - 1));
 
         return node;
     }

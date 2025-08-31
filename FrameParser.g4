@@ -367,8 +367,8 @@ htmlSection
     | htmlInputTag       #HTMLInputLabel
     | htmlImageTag       #HTMLImageLabel
     | htmlLabelTag       #HTMLLabel
-    | htmlSpanTag        #HTMLSpanLabel  ///////////////////////////
-    | htmlAnchorTag      #HTMLAnchorLabel  ////////////////////////
+    | htmlSpanTag        #HTMLSpanLabel
+    | htmlAnchorTag      #HTMLAnchorLabel
     | routerOutletTag    #HTMLRouterOutletLabel
     ;
 
@@ -453,7 +453,7 @@ paragraphContent
 
 //<label for="username">Username:</label>
 htmlLabelTag
-    : LABEL_TAG_OPEN labelAttribute* GT labelContent* LABEL_TAG_CLOSE       ///////////////
+    : LABEL_TAG_OPEN labelAttribute* GT labelContent* LABEL_TAG_CLOSE
     ;
 
 labelAttribute
@@ -464,8 +464,8 @@ labelAttribute
 
 labelContent
     : STRING
-    | htmlSpanTag               ///////////////
-    | htmlInputTag              ///////////////
+    | htmlSpanTag
+    | htmlInputTag
     ;
 
 //-----------------------------------------
@@ -529,7 +529,7 @@ formContent
 
     //-----------------------------------------
     //<span class="note" style="color:red;">"هذا نص داخل span"</span>
-    htmlSpanTag                                                                 ///////////////
+    htmlSpanTag
         : SPAN_TAG_OPEN spanAttribute* GT spanContent? SPAN_TAG_CLOSE
         ;
 
@@ -544,7 +544,7 @@ formContent
 
     //-----------------------------------------
     //<a href="https://example.com" target="_blank" rel="noopener" class="link" style="text-decoration:none;">"اذهب إلى Example"</a>
-    htmlAnchorTag                                                               ///////////////
+    htmlAnchorTag
         : A_TAG_OPEN anchorAttribute* GT anchorContent? A_TAG_CLOSE
         ;
 

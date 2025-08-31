@@ -1,6 +1,7 @@
 package Ast_Class.HTML_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class ButtonContent extends Node {
@@ -21,4 +22,17 @@ public class ButtonContent extends Node {
         visitor.visit(this);
     }
 
+    @Override
+    public String generate(GenContext ctx) {
+
+        if (content == null || content.isEmpty()) return "";
+
+        String s = content;
+
+        s = s.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;");
+
+        return s;
+    }
 }

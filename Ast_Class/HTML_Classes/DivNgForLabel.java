@@ -1,6 +1,7 @@
 package Ast_Class.HTML_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class DivNgForLabel extends Node implements DivContentNode {
@@ -26,4 +27,11 @@ public class DivNgForLabel extends Node implements DivContentNode {
     public String getValue() {
         return "*ngFor=\"" + loopExpression + "\"";
     }
+
+    @Override
+    public String generate(GenContext ctx) {
+        String expr = (loopExpression == null) ? "" : loopExpression.replace("\"", "&quot;");
+        return "*ngFor=\"" + expr + "\"";
+    }
+
 }

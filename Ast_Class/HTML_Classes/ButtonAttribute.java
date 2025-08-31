@@ -1,6 +1,7 @@
 package Ast_Class.HTML_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class ButtonAttribute extends Node {
@@ -35,5 +36,20 @@ public class ButtonAttribute extends Node {
     @Override
     public void accept(AST_Visitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+
+        String name = (attributeType != null) ? attributeType.trim() : "";
+        if (name.isEmpty()) return "";
+
+        if (value == null) {
+            return name;
+        }
+
+        String val = value.replace("\"", "&quot;");
+
+        return name + "=\"" + val + "\"";
     }
 }

@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class PropertyDeclarationNode extends Node {
@@ -22,5 +23,10 @@ public class PropertyDeclarationNode extends Node {
     @Override
     public String getValue() {
         return (property != null) ? property.getValue() : "";
+    }
+
+    public String generate(GenContext ctx) {
+        if (property == null) return "";
+        return property.generate(ctx);
     }
 }

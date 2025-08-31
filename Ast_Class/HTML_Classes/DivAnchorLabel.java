@@ -1,6 +1,7 @@
 package Ast_Class.HTML_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class DivAnchorLabel extends Node implements HtmlSectionNode{
@@ -23,4 +24,13 @@ public class DivAnchorLabel extends Node implements HtmlSectionNode{
     public String getValue() {
         return (anchor != null) ? anchor.getValue() : "";
     }
+
+    @Override
+    public String generate(GenContext ctx) {
+        // غلاف لـ <a> الحقيقي (HTMLAnchorLabel)
+        if (anchor == null) return "";
+        String out = anchor.generate(ctx);
+        return (out != null) ? out : "";
+    }
+
 }

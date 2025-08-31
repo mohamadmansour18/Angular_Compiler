@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class RoutesPropertyDeclarationNode extends Node {
@@ -30,5 +31,22 @@ public class RoutesPropertyDeclarationNode extends Node {
         if (initializer != null) sb.append(initializer.getValue());
         sb.append(";");
         return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+
+        String propName = (name != null && !name.isBlank()) ? name : "_routes";
+
+        java.util.function.Function<String, String> clean = s -> {
+            if (s == null) return "";
+            s = s.trim();
+            if (s.endsWith(";")) s = s.substring(0, s.length() - 1).trim();
+            return s;
+        };
+
+        String init = (initializer != null) ? clean.apply(initializer.generate(ctx)) : "undefined";
+
+        return propName + " = " + init + ";";
     }
 }

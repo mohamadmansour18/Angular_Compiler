@@ -1,6 +1,7 @@
 package Ast_Class.HTML_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class DivAttribute extends Node {
@@ -35,5 +36,17 @@ public class DivAttribute extends Node {
     @Override
     public void accept(AST_Visitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+
+        String name = (attributeType != null) ? attributeType : "";
+
+        String val = (value != null) ? value : "";
+        val = val.replace("\"", "&quot;"); // احتياط حتى لا تكسر HTML attribute
+
+        if (name.isEmpty()) return "";
+        return name + "=\"" + val + "\"";
     }
 }

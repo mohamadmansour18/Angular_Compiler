@@ -1,6 +1,7 @@
 package Ast_Class.HTML_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class InputAttribute extends Node {
@@ -35,5 +36,15 @@ public class InputAttribute extends Node {
     @Override
     public void accept(AST_Visitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+
+        String name = (attributeType != null) ? attributeType.trim() : "";
+        if (name.isEmpty()) return "";
+
+        String val = (value != null) ? value.replace("\"", "&quot;") : "";
+        return name + "=\"" + val + "\"";
     }
 }
