@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class ObjectTypeMemberNode extends Node {
@@ -28,5 +29,10 @@ public class ObjectTypeMemberNode extends Node {
         sb.append(": ");
         if (typeRef != null) sb.append(typeRef.getValue());
         return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        return " ";
     }
 }

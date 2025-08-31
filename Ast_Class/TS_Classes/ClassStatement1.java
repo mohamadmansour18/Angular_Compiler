@@ -60,20 +60,17 @@ public class ClassStatement1 extends Node implements Stetment{
 
     @Override
     public String generate(GenContext ctx) {
-        // نحافظ على نطاق منفصل أثناء توليد أعضاء الكلاس
         ctx.pushScope();
 
         String className = (name == null || name.isEmpty()) ? "_AnonymousClass" : name;
 
         String bodyJs = (body != null) ? body.generate(ctx) : "";
 
-
         StringBuilder sb = new StringBuilder();
         sb.append("class ").append(className).append(" {\n");
 
         ctx.in();
         if (bodyJs != null && !bodyJs.trim().isEmpty()) {
-            // أضف كل سطر من body مع الإزاحة الحالية
             String[] lines = bodyJs.split("\\R");
             for (String line : lines) {
                 if (!line.isEmpty()) {
@@ -87,7 +84,20 @@ public class ClassStatement1 extends Node implements Stetment{
         sb.append("}");
         ctx.popScope();
 
-        return sb.toString();
+        String classExpr = sb.toString();
+
+        // ---------------------------
+        // هل هناك @Component قبل هذا الكلاس؟
+        // إذا نعم: استهلك الخيارات ولفّ الكلاس بتعريف المكوّن.
+        // ---------------------------
+        String pendingOpts = ctx.consumePendingComponentOptions();
+        if (pendingOpts != null) {
+
+            ctx.requireComponentRuntime();
+            return "__rt.defineComponent(" + classExpr + ", " + pendingOpts + ")";
+        }
+
+        return classExpr;
     }
 
 }

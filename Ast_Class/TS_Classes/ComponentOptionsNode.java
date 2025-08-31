@@ -1,7 +1,11 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ComponentOptionsNode extends Node {
     private SelectorPropertyNode selector;        // لازم وجوده
@@ -72,5 +76,40 @@ public class ComponentOptionsNode extends Node {
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        // helper: إزالة ';' النهائية وتنظيف الفراغات
+        java.util.function.Function<String, String> clean = s -> {
+            if (s == null) return "";
+            s = s.trim();
+            if (s.endsWith(";")) s = s.substring(0, s.length() - 1).trim();
+            return s;
+        };
+
+        List<String> parts = new ArrayList<>();
+
+        if (selector != null) {
+            String v = clean.apply(selector.generate(ctx));
+            if (!v.isEmpty()) parts.add(v);
+        }
+
+        if (standalone != null) {
+            String v = clean.apply(standalone.generate(ctx));
+            if (!v.isEmpty()) parts.add(v);
+        }
+
+        if (importsProp != null) {
+            String v = clean.apply(importsProp.generate(ctx));
+            if (!v.isEmpty()) parts.add(v);
+        }
+
+        if (template != null) {
+            String v = clean.apply(template.generate(ctx));
+            if (!v.isEmpty()) parts.add(v);
+        }
+
+        return String.join(", ", parts);
     }
 }

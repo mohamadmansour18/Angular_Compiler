@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class SelectorPropertyNode extends Node {
@@ -29,6 +30,12 @@ public class SelectorPropertyNode extends Node {
             sb.append(selectorLiteral); // تتضمن علامات التنصيص كما هي
         }
         return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        String lit = (selectorLiteral != null) ? selectorLiteral : "''";
+        return "selector: " + lit;
     }
 }
 

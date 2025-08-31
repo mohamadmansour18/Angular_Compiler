@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class SignalGenericArgNode extends Node {
@@ -22,5 +23,10 @@ public class SignalGenericArgNode extends Node {
         if (baseType != null) sb.append(baseType);
         for (int i = 0; i < arrayDims; i++) sb.append("[]");
         return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        return " ";
     }
 }

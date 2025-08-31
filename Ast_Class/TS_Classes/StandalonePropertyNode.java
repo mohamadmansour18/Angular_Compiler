@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class StandalonePropertyNode extends Node {
@@ -22,5 +23,10 @@ public class StandalonePropertyNode extends Node {
     @Override
     public String getValue() {
         return "standalone: " + standalone;
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        return "standalone: " + (standalone ? "true" : "false");
     }
 }

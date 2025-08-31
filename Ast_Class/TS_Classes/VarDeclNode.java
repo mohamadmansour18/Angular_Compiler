@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class VarDeclNode extends Node {
@@ -32,7 +33,6 @@ public class VarDeclNode extends Node {
     public String getValue() {
         StringBuilder sb = new StringBuilder();
         if (name != null) sb.append(name);
-        // النوع
         if (routesType != null) {
             sb.append(": ").append(routesType);
         } else if (typeAnnotation != null) {
@@ -46,5 +46,25 @@ public class VarDeclNode extends Node {
             sb.append(" = ").append(initializer.getValue());
         }
         return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+
+        String n = (name != null && !name.isBlank()) ? name : "_var";
+
+        String init = null;
+        if (initializer != null) {
+            String initJs = initializer.generate(ctx);
+            if (initJs != null && !initJs.trim().isEmpty()) {
+                init = initJs.trim();
+            }
+        }
+
+        if (init == null && "const".equalsIgnoreCase(String.valueOf(varKind))) {
+            init = "undefined";
+        }
+
+        return (init == null) ? n : (n + " = " + init);
     }
 }

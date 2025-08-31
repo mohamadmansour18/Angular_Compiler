@@ -190,7 +190,7 @@ assignmentExpr
         ;
 
 
-    // LHS قابل للإسناد: اسم + (وصول عضو/فهرسة) بدون ?. وبدون نداء دوال
+// LHS قابل للإسناد: اسم + (وصول عضو/فهرسة) بدون ?. وبدون نداء دوال
 assignable
     : (IDENTIFIER | LPAREN expr RPAREN)
       (

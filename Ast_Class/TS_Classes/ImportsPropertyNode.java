@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 import java.util.ArrayList;
@@ -31,5 +32,25 @@ public class ImportsPropertyNode extends Node {
         }
         sb.append("]");
         return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+
+        if (imports == null || imports.isEmpty()) {
+            return "imports: []";
+        }
+
+        java.util.List<String> resolved = new java.util.ArrayList<>();
+        for (String name : imports) {
+            if (name == null || name.isBlank()) continue;
+            resolved.add(ctx.resolve(name));
+        }
+
+        if (resolved.isEmpty()) {
+            return "imports: []";
+        }
+
+        return "imports: [" + String.join(", ", resolved) + "]";
     }
 }

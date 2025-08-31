@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 import java.util.ArrayList;
@@ -29,5 +30,10 @@ public class SignalGenericArgsNode extends Node {
             if (i < args.size() - 1) sb.append(", ");
         }
         return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        return " ";
     }
 }

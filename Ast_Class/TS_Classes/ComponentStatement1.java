@@ -32,4 +32,14 @@ public class ComponentStatement1 extends Node implements Stetment{
         sb.append(")");
         return sb.toString();
     }
+
+    public String generate(GenContext ctx) {
+
+        String inner = (options != null) ? options.generate(ctx) : "";
+        String optionsJs = "{" + (inner == null ? "" : inner.trim()) + "}";
+
+        ctx.setPendingComponentOptions(optionsJs);
+
+        return "";
+    }
 }

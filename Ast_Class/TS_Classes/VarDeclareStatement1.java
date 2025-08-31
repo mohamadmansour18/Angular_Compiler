@@ -1,9 +1,11 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VarDeclareStatement1 extends Node implements Stetment{
     private boolean exported;                 // وجود EXPORT_KW
@@ -33,5 +35,26 @@ public class VarDeclareStatement1 extends Node implements Stetment{
         }
         sb.append(";");
         return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+
+        String k = (kind != null && !kind.isBlank()) ? kind : "let";
+
+        List<String> parts = new ArrayList<>();
+        if (decls != null) {
+            for (VarDeclNode d : decls) {
+                if (d == null) continue;
+                String piece = d.generate(ctx);
+                if (piece == null) continue;
+                piece = piece.trim();
+                if (!piece.isEmpty()) parts.add(piece);
+            }
+        }
+
+        String joined = String.join(", ", parts);
+
+        return k + (joined.isEmpty() ? "" : " " + joined) + ";";
     }
 }

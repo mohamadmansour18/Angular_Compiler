@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 import java.util.ArrayList;
@@ -28,6 +29,45 @@ public class EqualityExprNode extends Node {
             sb.append(" ").append(ops.get(i)).append(" ");
             sb.append(operands.get(i + 1).getValue());
         }
+        return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        // تنظيف بسيط لإزالة ';' النهائية إن وُجدت
+        java.util.function.Function<String, String> clean = s -> {
+            if (s == null) return "";
+            s = s.trim();
+            if (s.endsWith(";")) s = s.substring(0, s.length() - 1).trim();
+            return s;
+        };
+
+        if (operands == null || operands.isEmpty()) return "";
+
+        StringBuilder sb = new StringBuilder();
+        String first = clean.apply(operands.get(0) != null ? operands.get(0).generate(ctx) : "");
+        if (first.isEmpty()) first = "undefined";
+        sb.append(first);
+
+        for (int i = 0; i < ops.size(); i++) {
+            String op = ops.get(i);
+            // خرائط التوكنات إلى JS
+            String jsOp =
+            "TEQUAL".equals(op)      ? "===" :
+            "EQUALEQUAL".equals(op)  ? "=="  :
+            "NTEQUAL".equals(op)     ? "!==" :
+            "NOTEQUAL".equals(op)    ? "!="  :
+            op;
+
+            String rhs = "";
+            if (i + 1 < operands.size() && operands.get(i + 1) != null) {
+                rhs = clean.apply(operands.get(i + 1).generate(ctx));
+            }
+            if (rhs.isEmpty()) rhs = "undefined";
+
+            sb.append(" ").append(jsOp).append(" ").append(rhs);
+        }
+
         return sb.toString();
     }
 }

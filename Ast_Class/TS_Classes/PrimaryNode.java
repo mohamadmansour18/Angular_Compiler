@@ -2,6 +2,7 @@ package Ast_Class.TS_Classes;
 
 import Ast_Class.HTML_Classes.HtmlSectionNode;
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 import java.util.ArrayList;
@@ -104,5 +105,79 @@ public class PrimaryNode extends Node {
         if (importKw != null)                return importKw;
         if (parenthesized != null)           return "(" + parenthesized.getValue() + ")";
         return "";
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+
+        if (arrowFunction != null) {
+            return safe(arrowFunction.generate(ctx));
+        }
+        if (arrayLiteral != null) {
+            return safe(arrayLiteral.generate(ctx));
+        }
+        if (objectLiteral != null) {
+            return safe(objectLiteral.generate(ctx));
+        }
+        if (signalGenericCallPrimary != null) {
+            // signal<T>(...)  →  __rt.signal(...)
+            return safe(signalGenericCallPrimary.generate(ctx));
+        }
+        if (importCallPrimary != null) {
+            // import('...')  → تُولدها العقدة الفرعية كما تريد (إن كنت تدعمها)
+            return safe(importCallPrimary.generate(ctx));
+        }
+        if (parenthesized != null) {
+            String inner = safe(parenthesized.generate(ctx));
+            return "(" + inner + ")";
+        }
+
+        if (angularSections != null && !angularSections.isEmpty()) {
+            StringBuilder content = new StringBuilder();
+            for (int i = 0; i < angularSections.size(); i++) {
+                String part = safe(angularSections.get(i).generate(ctx));
+                if (i > 0) content.append("\n");
+
+                content.append(part.replace("`", "\\`"));
+            }
+            return "`" + content + "`";
+        }
+
+        // 3) بدائل التوكنات الخام
+        if (numberLiteral != null) {
+            return numberLiteral;
+        }
+        if (routesId != null) {
+            return ctx.resolve(routesId);
+        }
+        if (stringLiteral != null) {
+            return stringLiteral;
+        }
+        if (booleanLiteral != null) {
+            return booleanLiteral;
+        }
+        if (isNull) {
+            return "null";
+        }
+        if (signalKw != null) {
+            ctx.requireSignal();
+            return "__rt.signal";
+        }
+        if (identifier != null) {
+            return ctx.resolve(identifier);
+        }
+        if (importKw != null) {
+            return "import";
+        }
+
+        return "";
+    }
+
+    /** Helper: تنظيف بسيط لإزالة ';' النهائية إن رجعت بالخطأ من عقدة فرعية. */
+    private static String safe(String s) {
+        if (s == null) return "";
+        s = s.trim();
+        if (s.endsWith(";")) s = s.substring(0, s.length() - 1).trim();
+        return s;
     }
 }

@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class ExprNode extends Node {
@@ -15,5 +16,12 @@ public class ExprNode extends Node {
     @Override
     public String getValue() {
         return (assignment != null) ? assignment.getValue() : "";
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        if (assignment == null) return "";
+        String code = assignment.generate(ctx);
+        return (code == null) ? "" : code.trim();
     }
 }

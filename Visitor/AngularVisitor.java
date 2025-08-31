@@ -1025,6 +1025,7 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
         return node;
     }
 
+    @Override
     public Node visitComponentStatement1(FrameParser.ComponentStatement1Context ctx) {
         ComponentStatement1 node = new ComponentStatement1();
 
@@ -1044,7 +1045,6 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
     public Node visitComponentOptions(FrameParser.ComponentOptionsContext ctx) {
         ComponentOptionsNode node = new ComponentOptionsNode();
 
-        // لا سكوب جديد هنا
         node.initializeNode(ctx, false, "");
 
         // الخصائص وفق الترتيب في القاعدة
@@ -1068,7 +1068,6 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
             node.setTemplate(tmp);
         }
 
-        // لا createSymbol ولا removeScope هنا
         return node;
     }
 
@@ -1123,10 +1122,8 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
     public Node visitTemplateProperty(FrameParser.TemplatePropertyContext ctx) {
         TemplatePropertyNode node = new TemplatePropertyNode();
 
-        // لا سكوب جديد
         node.initializeNode(ctx, false, "");
 
-        // اجمع كل أقسام الـ HTML داخل القالب
         if (ctx.htmlSection() != null) {
             for (FrameParser.HtmlSectionContext hctx : ctx.htmlSection()) {
                 HtmlSectionNode sec = (HtmlSectionNode) visit(hctx);
@@ -1134,7 +1131,6 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
             }
         }
 
-        // لا createSymbol ولا removeScope هنا
         return node;
     }
 
@@ -1470,7 +1466,6 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
     public Node visitVarDecl(FrameParser.VarDeclContext ctx) {
         VarDeclNode node = new VarDeclNode();
 
-        // لا سكوب جديد
         node.initializeNode(ctx, false, "");
 
         // بديل 1: ROUTES_ID ...

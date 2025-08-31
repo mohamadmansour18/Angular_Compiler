@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 import java.util.ArrayList;
@@ -55,6 +56,90 @@ public class PostfixExprNode extends Node {
                     break;
             }
         }
+        return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        // helper لتنظيف أي ';' زائدة.
+        java.util.function.Function<String, String> clean = s -> {
+            if (s == null) return "";
+            s = s.trim();
+            if (s.endsWith(";")) s = s.substring(0, s.length() - 1).trim();
+            return s;
+        };
+
+        // 1) الأساس (primary)
+        String baseJs = (base != null) ? clean.apply(base.generate(ctx)) : "";
+        if (baseJs.isEmpty()) baseJs = "undefined"; // احتياط
+        StringBuilder sb = new StringBuilder(baseJs);
+
+        // 2) تتبّع مؤشرات القوائم
+        int p = 0; // propNames
+        int c = 0; // callArgs
+        int i = 0; // indexExprs
+
+        // 3) طبّق السلسلة حسب order
+        for (char k : order) {
+            switch (k) {
+                case 'p': { // .prop
+                    String name = (p < propNames.size()) ? propNames.get(p++) : "";
+                    sb.append(".").append(name);
+                    break;
+                }
+                case 'P': { // ?.prop
+                    String name = (p < propNames.size()) ? propNames.get(p++) : "";
+                    sb.append("?.").append(name);
+                    break;
+                }
+                case 'n': { // !.prop  => نحذف non-null assertion ونولّد وصولًا عاديًا
+                    String name = (p < propNames.size()) ? propNames.get(p++) : "";
+                    sb.append(".").append(name);
+                    break;
+                }
+                case 'c': { // (args)
+                    String args = "";
+                    if (c < callArgs.size() && callArgs.get(c) != null) {
+                        args = clean.apply(callArgs.get(c).generate(ctx));
+                    }
+                    sb.append("(").append(args).append(")");
+                    c++;
+                    break;
+                }
+                case 'C': { // ?.(args)
+                    String args = "";
+                    if (c < callArgs.size() && callArgs.get(c) != null) {
+                        args = clean.apply(callArgs.get(c).generate(ctx));
+                    }
+                    sb.append("?.(").append(args).append(")");
+                    c++;
+                    break;
+                }
+                case 'i': { // [expr]
+                    String idx = "";
+                    if (i < indexExprs.size() && indexExprs.get(i) != null) {
+                        idx = clean.apply(indexExprs.get(i).generate(ctx));
+                    }
+                    if (idx.isEmpty()) idx = "0"; // احتياط
+                    sb.append("[").append(idx).append("]");
+                    i++;
+                    break;
+                }
+                case 'I': { // ?.[expr]
+                    String idx = "";
+                    if (i < indexExprs.size() && indexExprs.get(i) != null) {
+                        idx = clean.apply(indexExprs.get(i).generate(ctx));
+                    }
+                    if (idx.isEmpty()) idx = "0"; // احتياط
+                    sb.append("?.[").append(idx).append("]");
+                    i++;
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
         return sb.toString();
     }
 }

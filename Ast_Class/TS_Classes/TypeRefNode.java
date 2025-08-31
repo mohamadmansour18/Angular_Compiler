@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 import java.util.ArrayList;
@@ -40,5 +41,10 @@ public class TypeRefNode extends Node {
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        return " ";
     }
 }

@@ -15,6 +15,8 @@ public class GenContext {
     private int label = 0;
     private int indent = 0;
 
+    private String pendingComponentOptions = null;
+
     private final Deque<Map<String, String>> scopes = new ArrayDeque<>();
 
     // نجمع هنا كل مقاطع الـ prelude (JS) التي سنحقنها أعلى الملف
@@ -25,6 +27,21 @@ public class GenContext {
 
     public GenContext() {
         pushScope();
+    }
+
+    public void setPendingComponentOptions(String optionsJs) {
+        // مثال لقيمة optionsJs: "{ selector: 'app-x', standalone: true, template: `...` }"
+        this.pendingComponentOptions = optionsJs;
+    }
+
+    public boolean hasPendingComponentOptions() {
+        return this.pendingComponentOptions != null;
+    }
+
+    public String consumePendingComponentOptions() {
+        String tmp = this.pendingComponentOptions;
+        this.pendingComponentOptions = null;
+        return tmp;
     }
 
     // ---------- Scopes ----------
@@ -373,5 +390,27 @@ public class GenContext {
                     "})();"
             ));
         }
+    }
+
+    private boolean componentRuntimeInjected = false;
+
+    /**
+     * يضمن وجود دالة __rt.defineComponent في الـ prelude مرة واحدة فقط.
+     * هذه الدالة تُرفق خيارات المكوّن على الكلاس وتعيده كما هو.
+     */
+    public void requireComponentRuntime() {
+        if (componentRuntimeInjected) return;
+        componentRuntimeInjected = true;
+
+        // ملاحظة: نمدّد/ننشئ __rt إن لم يكن موجودًا مسبقًا (قد تكون أضفته من signals/router إلخ).
+        this.addPrelude(String.join("\n",
+                "// -- runtime: component registration (defineComponent) --",
+                "var __rt = (typeof __rt !== 'undefined') ? __rt : {};",
+                "__rt.defineComponent = __rt.defineComponent || function(Cls, opts){",
+                "  // خزّن الخيارات على الكلاس (يمكن قراءتها لاحقًا للـ bootstrap/render)",
+                "  Cls.__cmp = opts || {};",
+                "  return Cls;",
+                "};"
+        ));
     }
 }

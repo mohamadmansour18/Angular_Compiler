@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 import java.util.ArrayList;
@@ -23,5 +24,29 @@ public class LogicalAndExprNode extends Node {
             sb.append(operands.get(i).getValue());
         }
         return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        // تنظيف: إزالة ';' النهائية إن وُجدت
+        java.util.function.Function<String, String> clean = s -> {
+            if (s == null) return "";
+            s = s.trim();
+            if (s.endsWith(";")) s = s.substring(0, s.length() - 1).trim();
+            return s;
+        };
+
+        if (operands == null || operands.isEmpty()) return "";
+
+        java.util.List<String> parts = new java.util.ArrayList<>();
+        for (Node op : operands) {
+            String v = (op != null) ? clean.apply(op.generate(ctx)) : "";
+            if (v.isEmpty()) v = "true";
+            parts.add(v);
+        }
+
+        if (parts.size() == 1) return parts.get(0);
+
+        return String.join(" && ", parts);
     }
 }

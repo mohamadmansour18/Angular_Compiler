@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 import java.util.ArrayList;
@@ -29,6 +30,32 @@ public class BlockNode extends Node {
             sb.append("  ").append(n.getValue()).append("\n");
         }
         sb.append("}");
+        return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        ctx.pushScope();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\n");
+
+        ctx.in();
+        for (Node n : items) {
+            if (n == null) continue;
+
+            String code = n.generate(ctx);
+            if (code == null) continue;
+            code = code.trim();
+            if (code.isEmpty()) continue;
+
+            sb.append(ctx.ind()).append(code).append("\n");
+        }
+        ctx.out();
+
+        sb.append(ctx.ind()).append("}");
+
+        ctx.popScope();
         return sb.toString();
     }
 }

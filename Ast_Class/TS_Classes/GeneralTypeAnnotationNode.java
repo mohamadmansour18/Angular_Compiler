@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class GeneralTypeAnnotationNode extends Node {
@@ -22,5 +23,10 @@ public class GeneralTypeAnnotationNode extends Node {
     @Override
     public String getValue() {
         return (typeRef != null) ? typeRef.getValue() : "";
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        return " ";
     }
 }
