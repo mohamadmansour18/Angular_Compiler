@@ -12,18 +12,6 @@ public class CodeGeneration {
     private ArrayList<Page> pages = new ArrayList<>();
     private static Class currentClass;
 
-    // ---- helper runtime to inject at top of generated JS ----
-    private static final String HELPER_RUNTIME = String.join("\n",
-            "// ---- Helper runtime (generate once at top) ----",
-            "class SimpleSubject {",
-            "  constructor(initial = []) { this.value = initial; this.subs = []; }",
-            "  asObservable() { return this; }",
-            "  next(v) { this.value = v; this.subs.forEach(s => s(v)); }",
-            "  subscribe(fn) { this.subs.push(fn); fn(this.value); return { unsubscribe: () => {} }; }",
-            "}",
-            "function safeGet(obj, prop, fallback=null){ try { return obj[prop]; } catch(e){ return fallback; } }",
-            ""
-    );
 
     public void createHTMLPage(String name) {
         Page page = new Page(name + ".html");
@@ -39,37 +27,35 @@ public class CodeGeneration {
     }
 
     public void startGenerate(RootProgram program) {
-
-        // 1. توليد كود JavaScript في ملف global.js مع حقن الـ helper في الأعلى
+        // 1) أنشئ صفحة JS
         this.createJSPage("global");
 
-        String jsBody = program.getPrograms()
-                .stream()
-                .map(Ast_Class.Node.Node::generate)
-                .collect(Collectors.joining("\n"));
+        // 2) أنشئ سياق التوليد
+        GenContext ctx = new GenContext();
 
-        String fullJs = HELPER_RUNTIME + "\n\n" + jsBody;
+        // 3) اطلب من الجذر توليد الكود كاملاً (prelude + body)
+        String fullJs = program.generate(ctx);
 
-        System.out.println("Generated JS Code:\n");
+        // 4) اكتب ملف JS
         currentPage.writeOnFile(fullJs);
         currentPage.closeFile();
 
-        // 2. توليد كود HTML صحيح
-        this.createHTMLPage("WELCOME_PAGE");
-        String htmlCode = "<!DOCTYPE html>\n" +
-                "<html lang=\"en\">\n" +
-                "<head>\n" +
-                "    <meta charset=\"UTF-8\">\n" +
-                "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
-                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-                "    <title>Welcome Page</title>\n" +
-                "</head>\n" +
-                "<body>\n" +
-                "    \n" +
-                "    <div id=\"app\"></div>\n" +
-                "    <script src=\"global.js\"></script>\n" +
-                "</body>\n" +
-                "</html>";
+        // 5) أنشئ صفحة HTML
+        this.createHTMLPage("welcomePage");
+        String htmlCode =
+                "<!DOCTYPE html>\n" +
+                        "<html lang=\"en\">\n" +
+                        "<head>\n" +
+                        "  <meta charset=\"UTF-8\">\n" +
+                        "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                        "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                        "  <title>Welcome Page</title>\n" +
+                        "</head>\n" +
+                        "<body>\n" +
+                        "  <div id=\"app\"></div>\n" +
+                        "  <script src=\"global.js\"></script>\n" +
+                        "</body>\n" +
+                        "</html>";
 
         currentPage.writeOnFile(htmlCode);
         currentPage.closeFile();

@@ -36,7 +36,7 @@ public class Main {
 
             System.out.println();
 
-            System.out.println("<<<<<<<<---------[ Type Script Ast ]--------->>>>>>>>");
+            System.out.println("<<<<<<<<---------[ AST ]--------->>>>>>>>");
             AngularVisitor visitor = new AngularVisitor();
             RootProgram startProgram = (RootProgram) visitor.visit(tree);
             startProgram.accept(new BaseAstVisitor());

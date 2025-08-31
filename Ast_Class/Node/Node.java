@@ -1,5 +1,6 @@
 package Ast_Class.Node;
 
+import Code_Generation.GenContext;
 import Main.Main;
 import SymbolTable.Scope;
 import SymbolTable.Symbol;
@@ -81,5 +82,7 @@ public class Node {
         return " ";
     }
 
-    public String generate(){return " " ;}
+    public String generate(GenContext ctx) {
+        return "";
+    }
 }

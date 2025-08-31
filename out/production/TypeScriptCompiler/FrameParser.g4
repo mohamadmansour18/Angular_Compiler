@@ -104,7 +104,7 @@ paramList
     ;
 
 param
-    :  ACCESS_MODIFIER? IDENTIFIER (COLON (IDENTIFIER|Type))?
+    :  ACCESS_MODIFIER? IDENTIFIER (COLON (IDENTIFIER|TYPE))?
     ;
 
 block
@@ -241,7 +241,7 @@ additiveExpr
     | multiplicativeExpr
     ;
 
-    // *, / (left-assoc)
+// *, / (left-assoc)
 multiplicativeExpr
     : multiplicativeExpr (ASTERISK | DIV) unaryExpr
     | unaryExpr
@@ -280,7 +280,7 @@ signalGenericArgs
     ;
 
 signalGenericArg
-    : (IDENTIFIER | Type) (LBRACKET RBRACKET)*
+    : (IDENTIFIER | TYPE) (LBRACKET RBRACKET)*
     ;
 
     // f(a, b, c)
