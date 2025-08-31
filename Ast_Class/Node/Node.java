@@ -81,5 +81,5 @@ public class Node {
         return " ";
     }
 
-
+    public String generate(){return " " ;}
 }

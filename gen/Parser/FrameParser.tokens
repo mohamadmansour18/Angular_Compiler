@@ -103,7 +103,6 @@ IDENTIFIER=102
 IDENT=103
 ESCAPE=104
 WS=105
-Type=106
 'export'=1
 'Component'=2
 'selector'=3
