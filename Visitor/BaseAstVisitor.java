@@ -55,6 +55,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(ButtonAttribute attr) {
         System.out.println("========== [BUTTON ATTRIBUTE] ==========");
+        System.out.println("-> Child Count <- : " + attr.getChildeCount());
         if (attr.getAttributeValue() == null) {
             System.out.println("[Button Attribute] " + attr.getAttributeType());
         } else {
@@ -64,6 +65,8 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ButtonContent content) {
+        System.out.println("========== [BUTTON CONTENT] ==========");
+        System.out.println("-> Child Count <- : " + content.getChildeCount());
         if(content.getRawContent() != null)
         {
             System.out.println("[Button Content] " + content.getRawContent());
@@ -73,6 +76,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(DivButtonLabel node) {
         System.out.println("========== [BUTTON NODE] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
 
         for (ButtonAttribute attr : node.getAttributes()) {
             attr.accept(this);
@@ -86,11 +90,13 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(InputAttribute attribute) {
         System.out.println("[Input Attribute] " + attribute.getValue());
+        System.out.println("-> Child Count <- : " + attribute.getChildeCount());
     }
 
     @Override
     public void visit(DivInputLabel input) {
         System.out.println("========== [INPUT NODE] ==========");
+        System.out.println("-> Child Count <- : " + input.getChildeCount());
         for (InputAttribute attr : input.getAttributes()) {
             attr.accept(this);
         }
@@ -101,16 +107,19 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(ParagraphAttribute attribute) {
         System.out.println("[Paragraph Attribute] " + attribute.getValue());
+        System.out.println("-> Child Count <- : " + attribute.getChildeCount());
     }
 
     @Override
     public void visit(ParagraphTextLabel text) {
         System.out.println("[Paragraph Text] " + text.getText());
+        System.out.println("-> Child Count <- : " + text.getChildeCount());
     }
 
     @Override
     public void visit(DivParagraphLabel paragraph) {
         System.out.println("========== [PARAGRAPH NODE] ==========");
+        System.out.println("-> Child Count <- : " + paragraph.getChildeCount());
         for (ParagraphAttribute attr : paragraph.getAttributes()) {
             attr.accept(this);
         }
@@ -123,6 +132,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(ParagraphImageLabel image) {
         System.out.println("========== [PARAGRAPH IMG NODE] ==========");
+        System.out.println("-> Child Count <- : " + image.getChildeCount());
         for (ImgAttribute attr : image.getAttributes()) {
             attr.accept(this);
         }
@@ -131,6 +141,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(ParagraphButtonLabel button) {
         System.out.println("========== [PARAGRAPH BUTTON NODE] ==========");
+        System.out.println("-> Child Count <- : " + button.getChildeCount());
         for (ButtonAttribute attr : button.getAttributes()) {
             attr.accept(this);
         }
@@ -143,6 +154,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(ParagraphInputLabel input) {
         System.out.println("========== [PARAGRAPH INPUT NODE] ==========");
+        System.out.println("-> Child Count <- : " + input.getChildeCount());
         for (InputAttribute attr : input.getAttributes()) {
             attr.accept(this);
         }
@@ -150,7 +162,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(DivNestedLabel nestedDiv) {
+
         System.out.println("========== [NESTED DIV NODE] ==========");
+        System.out.println("-> Child Count <- : " + nestedDiv.getChildeCount());
         for (DivAttribute attr : nestedDiv.getAttributes()) {
             attr.accept(this);
         }
@@ -162,32 +176,43 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(DivRouterOutletLabel outlet) {
+
         System.out.println("[Router Outlet]");
+        System.out.println("-> Child Count <- : " + outlet.getChildeCount());
     }
 
     @Override
     public void visit(DivNgIfLabel ngIf) {
+
         System.out.println("[ngIf Directive] condition = " + ngIf.getCondition());
+        System.out.println("-> Child Count <- : " + ngIf.getChildeCount());
     }
 
     @Override
     public void visit(DivNgForLabel ngFor) {
+        System.out.println("-> Child Count <- : " + ngFor.getChildeCount());
         System.out.println("[ngFor Directive] loop = " + ngFor.getLoopExpression());
     }
 
     @Override
     public void visit(DivPlainTextLabel text){
+
         System.out.println("[Div text Directive] = " + text.getText());
+        System.out.println("-> Child Count <- : " + text.getChildeCount());
     };
 
     @Override
     public void visit(FormAttribute attribute) {
+
         System.out.println("[Form Attribute] " + attribute.getValue());
+        System.out.println("-> Child Count <- : " + attribute.getChildeCount());
     }
 
     @Override
     public void visit(HTMLFormLabel form) {
+
         System.out.println("========== [FORM NODE] ==========");
+        System.out.println("-> Child Count <- : " + form.getChildeCount());
         for (FormAttribute attr : form.getAttributes()) {
             attr.accept(this);
         }
@@ -199,7 +224,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(FormInputLabel input) {
+
         System.out.println("========== [FORM INPUT NODE] ==========");
+        System.out.println("-> Child Count <- : " + input.getChildeCount());
         for (InputAttribute attr : input.getAttributes()) {
             attr.accept(this);
         }
@@ -207,7 +234,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(FormButtonLabel button) {
+
         System.out.println("========== [FORM BUTTON NODE] ==========");
+        System.out.println("-> Child Count <- : " + button.getChildeCount());
         for (ButtonAttribute attr : button.getAttributes()) {
             attr.accept(this);
         }
@@ -219,11 +248,17 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(LabelAttribute attr) {
+
         System.out.println("[Label Attribute] " + attr.getAttributeType() + " = " + attr.getAttributeValue());
+        System.out.println("-> Child Count <- : " + attr.getChildeCount());
     }
 
     @Override
     public void visit(LabelContent content) {
+
+        System.out.println("========== [LABEL CONTENT] ==========");
+        System.out.println("-> Child Count <- : " + content.getChildeCount());
+
         if (content.getText() != null) {
             System.out.println("[Label Content TEXT] " + content.getText());
         } else if (content.getSpan() != null) {
@@ -239,7 +274,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(FormLabel label) {
+
         System.out.println("========== [FORM LABEL NODE] ==========");
+        System.out.println("-> Child Count <- : " + label.getChildeCount());
         for (LabelAttribute attr : label.getAttributes()) {
             attr.accept(this);
         }
@@ -251,7 +288,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(FormDivLabel formDiv) {
+
         System.out.println("========== [FORM DIV NODE] ==========");
+        System.out.println("-> Child Count <- : " + formDiv.getChildeCount());
         for (DivAttribute attr : formDiv.getAttributes()) {
             attr.accept(this);
         }
@@ -263,12 +302,16 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(FormTextLabel text) {
+
         System.out.println("[Form Text] " + text.getText());
+        System.out.println("-> Child Count <- : " + text.getChildeCount());
     }
 
     @Override
     public void visit(HTMLParagraphLabel paragraph) {
+
         System.out.println("========== [PARAGRAPH NODE] ==========");
+        System.out.println("-> Child Count <- : " + paragraph.getChildeCount());
         for (ParagraphAttribute attr : paragraph.getAttributes()) {
             attr.accept(this);
         }
@@ -280,7 +323,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(HTMLButtonLabel button) {
+
         System.out.println("========== [HTML BUTTON NODE] ==========");
+        System.out.println("-> Child Count <- : " + button.getChildeCount());
         for (ButtonAttribute attr : button.getAttributes()) {
             attr.accept(this);
         }
@@ -293,6 +338,8 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(HTMLInputLabel input) {
         System.out.println("========== [HTML INPUT NODE] ==========");
+        System.out.println("-> Child Count <- : " + input.getChildeCount());
+
         for (InputAttribute attr : input.getAttributes()) {
             attr.accept(this);
         }
@@ -301,7 +348,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(HTMLImageLabel image) {
+
         System.out.println("========== [HTML IMAGE NODE] ==========");
+        System.out.println("-> Child Count <- : " + image.getChildeCount());
         for (ImgAttribute attr : image.getAttributes()) {
             attr.accept(this);
         }
@@ -310,7 +359,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(HTMLLabel label) {
+
         System.out.println("========== [HTML LABEL NODE] ==========");
+        System.out.println("-> Child Count <- : " + label.getChildeCount());
         for (LabelAttribute attr : label.getAttributes()) {
             attr.accept(this);
         }
@@ -324,13 +375,17 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(HTMLRouterOutletLabel routerOutlet) {
+
         System.out.println("[HTML RouterOutlet Node]");
+        System.out.println("-> Child Count <- : " + routerOutlet.getChildeCount());
     }
 
 
     @Override
     public void visit(HTMLSpanLabel span) {
+
         System.out.println("========== [HTML SPAN NODE] ==========");
+        System.out.println("-> Child Count <- : " + span.getChildeCount());
         for (SpanAttribute attr : span.getAttributes()) {
             attr.accept(this);
         }
@@ -342,7 +397,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(HTMLAnchorLabel anchor) {
+
         System.out.println("========== [HTML ANCHOR NODE] ==========");
+        System.out.println("-> Child Count <- : " + anchor.getChildeCount());
         for (AnchorAttribute attr : anchor.getAttributes()) {
             attr.accept(this);
         }
@@ -354,41 +411,55 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(SpanAttribute attr) {
+
         System.out.println("SPAN ATTR -> " + attr.getValue());
+        System.out.println("-> Child Count <- : " + attr.getChildeCount());
     }
 
     @Override
     public void visit(SpanContent content) {
+
         System.out.println("SPAN CONTENT -> " + content.getValue());
+        System.out.println("-> Child Count <- : " + content.getChildeCount());
     }
 
     @Override
     public void visit(AnchorAttribute attr) {
+
         System.out.println("A ATTR -> " + attr.getValue());
+        System.out.println("-> Child Count <- : " + attr.getChildeCount());
     }
 
     @Override
     public void visit(AnchorContent content) {
+
         System.out.println("A CONTENT -> " + content.getValue());
+        System.out.println("-> Child Count <- : " + content.getChildeCount());
     }
 
     @Override
     public void visit(DivSpanLabel node) {
+
         System.out.println("========== [DIV SPAN CONTENT] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.getSpan() != null) node.getSpan().accept(this);
         System.out.println("========================================");
     }
 
     @Override
     public void visit(DivAnchorLabel node) {
+
         System.out.println("========== [DIV ANCHOR CONTENT] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.getAnchor() != null) node.getAnchor().accept(this);
         System.out.println("==========================================");
     }
 
     @Override
     public void visit(DivLabel node) {
+
         System.out.println("========== [DIV LABEL CONTENT] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.getLabel() != null) node.getLabel().accept(this);
         System.out.println("=========================================");
     }
@@ -396,7 +467,9 @@ public class BaseAstVisitor implements AST_Visitor {
     //------------------------------------{ TS Function }------------------------------------//
     @Override
     public void visit(RootProgram root) {
+
         System.out.println("========== [ROOT PROGRAM] ==========");
+        System.out.println("-> Child Count <- : " + root.getChildeCount());
 
         for (ProgramNode p : root.getPrograms()) {
             p.accept(this);
@@ -405,7 +478,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ProgramNode program) {
+
         System.out.println("========== [PROGRAM NODE] ==========");
+        System.out.println("-> Child Count <- : " + program.getChildeCount());
 
         for (StatementsNode st : program.getStatements()) {
             st.accept(this);
@@ -414,7 +489,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(StatementsNode node) {
+
         System.out.println("========== [STATEMENTS NODE] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Has Semicolon: " + node.isHasSemicolon());
 
         if (node.getStatement() != null) {
@@ -424,14 +501,18 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ImportStatement1 node) {
+
         System.out.println("========== [IMPORT STATEMENT] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Imported Name : " + node.getImportedName());
         System.out.println("From Module   : " + node.getModuleLiteral());
     }
 
     @Override
     public void visit(ClassStatement1 node) {
+
         System.out.println("========== [CLASS STATEMENT] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Name     : " + node.getName());
         System.out.println("Exported : " + node.isExported());
 
@@ -442,7 +523,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ClassBodyNode body) {
+
         System.out.println("========== [CLASS BODY] ==========");
+        System.out.println("-> Child Count <- : " + body.getChildeCount());
         for (Node member : body.getMembers()) {
             member.accept(this);
         }
@@ -450,7 +533,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ClassMemberNode node) {
+
         System.out.println("========== [CLASS MEMBER] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.getMember() != null) {
             node.getMember().accept(this);
         }
@@ -458,8 +543,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ConstructorStatement node) {
-        System.out.println("========== [CONSTRUCTOR] ==========");
 
+        System.out.println("========== [CONSTRUCTOR] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.getParams() != null) {
             System.out.println("-- Params --");
             node.getParams().accept(this);
@@ -473,7 +559,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ConstructorParamListNode node) {
+
         System.out.println("========== [CONSTRUCTOR PARAM LIST] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (ConstructorParamNode p : node.getParams()) {
             p.accept(this);
         }
@@ -481,7 +569,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ConstructorParamNode node) {
+
         System.out.println("========== [CONSTRUCTOR PARAM] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Access Modifier : " + node.getAccessModifier());
         System.out.println("Name            : " + node.getName());
         System.out.println("Type            : " + node.getTypeName());
@@ -489,7 +579,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ComponentStatement1 node) {
+
         System.out.println("========== [@Component DECORATOR] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.getOptions() != null) {
             node.getOptions().accept(this);
         }
@@ -497,7 +589,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ComponentOptionsNode node) {
+
         System.out.println("========== [COMPONENT OPTIONS] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
 
         if (node.getSelector() != null)   node.getSelector().accept(this);
         if (node.getStandalone() != null) node.getStandalone().accept(this);
@@ -507,19 +601,24 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(SelectorPropertyNode node) {
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("========== [SELECTOR PROPERTY] ==========");
         System.out.println("Selector : " + node.getSelectorLiteral());
     }
 
     @Override
     public void visit(StandalonePropertyNode node) {
+
         System.out.println("========== [STANDALONE PROPERTY] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Standalone : " + node.isStandalone());
     }
 
     @Override
     public void visit(ImportsPropertyNode node) {
+
         System.out.println("========== [IMPORTS PROPERTY] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (String imp : node.getImports()) {
             System.out.println(" - " + imp);
         }
@@ -527,7 +626,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(TemplatePropertyNode node) {
+
         System.out.println("========== [TEMPLATE PROPERTY] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (HtmlSectionNode sec : node.getSections()) {
             sec.accept(this);
         }
@@ -535,7 +636,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(FunctionStatement node) {
+
         System.out.println("========== [FUNCTION DECLARATION] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Name: " + node.getName());
 
         if (node.getParamList() != null) {
@@ -551,7 +654,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ParamListNode node) {
+
         System.out.println("========== [PARAM LIST] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (ParamNode p : node.getParams()) {
             p.accept(this);
         }
@@ -559,7 +664,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ParamNode node) {
+
         System.out.println("========== [PARAM] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Access Modifier : " + node.getAccessModifier());
         System.out.println("Name            : " + node.getName());
         System.out.println("Type            : " + node.getTypeName());
@@ -567,7 +674,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(BlockNode node) {
+
         System.out.println("========== [BLOCK] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (Node n : node.getItems()) {
             n.accept(this);
         }
@@ -575,7 +684,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(BlockContentNode node) {
+
         System.out.println("========== [BLOCK CONTENT] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (Node st : node.getStatements()) {
             st.accept(this);
         }
@@ -583,7 +694,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(StatementInBlockNode node) {
+
         System.out.println("========== [STATEMENT IN BLOCK] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.getStatement() != null) {
             node.getStatement().accept(this);
         }
@@ -591,7 +704,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(IfStatementNode node) {
+
         System.out.println("========== [IF STATEMENT] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
 
         System.out.println("-- Condition --");
         if (node.getCondition() != null) node.getCondition().accept(this);
@@ -607,7 +722,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ReturnStatementNode node) {
+
         System.out.println("========== [RETURN STATEMENT] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.getExpr() != null) {
             node.getExpr().accept(this);
         }
@@ -615,7 +732,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(VarDeclareStatement1 node) {
+
         System.out.println("========== [VAR DECLARE STATEMENT] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Exported: " + node.isExported());
         System.out.println("Kind    : " + node.getKind());
 
@@ -626,7 +745,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(VarDeclNode node) {
+
         System.out.println("========== [VAR DECL] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Name   : " + node.getName());
         System.out.println("Kind   : " + node.getVarKind());
 
@@ -645,7 +766,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(GeneralTypeAnnotationNode node) {
+
         System.out.println("========== [TYPE ANNOTATION] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.getTypeRef() != null) {
             node.getTypeRef().accept(this);
         }
@@ -653,7 +776,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(PropertyDeclarationNode node) {
+
         System.out.println("========== [PROPERTY DECLARATION] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.getProperty() != null) {
             node.getProperty().accept(this);
         }
@@ -661,7 +786,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(RoutesPropertyDeclarationNode node) {
+
         System.out.println("========== [ROUTES PROPERTY DECL] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Name : " + node.getName());
         System.out.println("Type : " + node.getTypeName());
 
@@ -673,7 +800,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(NormalPropertyDeclarationNode node) {
+
         System.out.println("========== [NORMAL PROPERTY DECL] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Name : " + node.getName());
         if (node.getType() != null) {
             System.out.println("Type : " + node.getType().getValue());
@@ -687,7 +816,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(TypeAliasStatement1 node) {
+
         System.out.println("========== [TYPE ALIAS] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Name : " + node.getName());
         if (node.getObject() != null) {
             System.out.println("-- Object Type --");
@@ -697,7 +828,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ObjectTypeNode node) {
+
         System.out.println("========== [OBJECT TYPE] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.getMembers() != null) {
             node.getMembers().accept(this);
         }
@@ -705,7 +838,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ObjectTypeMembersNode node) {
+
         System.out.println("========== [OBJECT TYPE MEMBERS] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (Node m : node.getMembers()) {
             m.accept(this);
         }
@@ -713,7 +848,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ObjectTypeMemberNode node) {
+
         System.out.println("========== [OBJECT TYPE MEMBER] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Name     : " + node.getName());
         System.out.println("Optional : " + node.isOptional());
         if (node.getTypeRef() != null) {
@@ -724,13 +861,17 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(TypeRefNode node) {
+
         System.out.println("========== [TYPE REF] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Type: " + node.getValue());
     }
 
     @Override
     public void visit(ExprStatement1 node) {
+
         System.out.println("========== [EXPR STATEMENT] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.getExpr() != null) {
             node.getExpr().accept(this);
         }
@@ -738,7 +879,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(ExprNode node) {
+
         System.out.println("========== [EXPR] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.getAssignment() != null) {
             node.getAssignment().accept(this);
         }
@@ -746,7 +889,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(AssignmentExprNode node) {
+
         System.out.println("========== [ASSIGNMENT EXPR] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.getLeft() != null) {
             System.out.println("-- Left --");
             node.getLeft().accept(this);
@@ -760,13 +905,17 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(AssignableNode node) {
+
         System.out.println("========== [ASSIGNABLE] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println(node.getValue());
     }
 
     @Override
     public void visit(ConditionalExprNode node) {
+
         System.out.println("========== [CONDITIONAL EXPR] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("-- Condition --");
         if (node.getCondition() != null) node.getCondition().accept(this);
 
@@ -780,7 +929,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(NullishExprNode node) {
+
         System.out.println("========== [NULLISH EXPR] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (Node op : node.getOperands()) {
             op.accept(this);
         }
@@ -788,7 +939,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(LogicalOrExprNode node) {
+
         System.out.println("========== [LOGICAL OR EXPR] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (Node op : node.getOperands()) {
             op.accept(this);
         }
@@ -796,7 +949,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(LogicalAndExprNode node) {
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("========== [LOGICAL AND EXPR] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (Node op : node.getOperands()) {
             op.accept(this);
         }
@@ -804,7 +959,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(EqualityExprNode node) {
+
         System.out.println("========== [EQUALITY EXPR] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (Node opnd : node.getOperands()) {
             opnd.accept(this);
         }
@@ -812,7 +969,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(RelationalExprNode node) {
+
         System.out.println("========== [RELATIONAL EXPR] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (Node opnd : node.getOperands()) {
             opnd.accept(this);
         }
@@ -820,7 +979,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(AdditiveExprNode node) {
+
         System.out.println("========== [ADDITIVE EXPR] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (Node opnd : node.getOperands()) {
             opnd.accept(this);
         }
@@ -828,7 +989,9 @@ public class BaseAstVisitor implements AST_Visitor {
 
     @Override
     public void visit(MultiplicativeExprNode node) {
+
         System.out.println("========== [MULTIPLICATIVE EXPR] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (Node opnd : node.getOperands()) {
             opnd.accept(this);
         }
@@ -837,6 +1000,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(UnaryExprNode node) {
         System.out.println("========== [UNARY EXPR] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (!node.getOperators().isEmpty()) {
             System.out.println("Ops: " + String.join(" ", node.getOperators()));
         }
@@ -848,6 +1012,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(AsExpressionNode node) {
         System.out.println("========== [AS EXPRESSION] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.getBase() != null) {
             System.out.println("-- Base --");
             node.getBase().accept(this);
@@ -861,6 +1026,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(PostfixExprNode node) {
         System.out.println("========== [POSTFIX EXPR] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Base:");
         if (node.getBase() != null) node.getBase().accept(this);
 
@@ -895,6 +1061,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(SignalGenericCallPrimaryNode node) {
         System.out.println("========== [SIGNAL GENERIC CALL] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
 
         if (node.getGenericArgs() != null) {
             System.out.println("-- Generic Args --");
@@ -910,6 +1077,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(SignalGenericArgsNode node) {
         System.out.println("========== [SIGNAL GENERIC ARGS] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (SignalGenericArgNode a : node.getArgs()) {
             a.accept(this);
         }
@@ -918,12 +1086,14 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(SignalGenericArgNode node) {
         System.out.println("========== [SIGNAL GENERIC ARG] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Type: " + node.getValue());
     }
 
     @Override
     public void visit(ArgumentListNode node) {
         System.out.println("========== [ARGUMENT LIST] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (Node a : node.getArgs()) {
             a.accept(this);
         }
@@ -932,6 +1102,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(PrimaryNode node) {
         System.out.println("========== [PRIMARY] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
 
         if (node.getArrowFunction() != null)          node.getArrowFunction().accept(this);
         else if (node.getArrayLiteral() != null)      node.getArrayLiteral().accept(this);
@@ -957,6 +1128,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(ImportCallPrimaryNode node) {
         System.out.println("========== [IMPORT CALL PRIMARY] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Module: " + node.getModuleLiteral());
         for (int i = 0; i < node.getCallNames().size(); i++) {
             System.out.println(" . " + node.getCallNames().get(i) + "(...)");
@@ -968,6 +1140,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(ArrowFunctionNode node) {
         System.out.println("========== [ARROW FUNCTION] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Params: " + String.join(", ", node.getParams()));
         if (node.getBody() != null) {
             System.out.println("-- Body --");
@@ -978,6 +1151,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(ParamListSimpleNode node) {
         System.out.println("========== [SIMPLE PARAM LIST] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (String p : node.getParams()) {
             System.out.println("- " + p);
         }
@@ -986,6 +1160,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(ArrayLiteralNode node) {
         System.out.println("========== [ARRAY LITERAL] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (Node el : node.getElements()) {
             el.accept(this);
         }
@@ -994,6 +1169,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(ArrayElementNode node) {
         System.out.println("========== [ARRAY ELEMENT] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Spread : " + node.isSpread());
         if (node.getExpr() != null) {
             node.getExpr().accept(this);
@@ -1003,6 +1179,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(ObjectLiteralNode node) {
         System.out.println("========== [OBJECT LITERAL] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         for (ObjectPropertyNode p : node.getProperties()) {
             p.accept(this);
         }
@@ -1011,6 +1188,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(ObjectPropertyNode node) {
         System.out.println("========== [OBJECT PROPERTY] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         if (node.isSpread()) {
             System.out.println("[Spread]");
             if (node.getExpression() != null) node.getExpression().accept(this);
@@ -1027,6 +1205,7 @@ public class BaseAstVisitor implements AST_Visitor {
     @Override
     public void visit(InterpolationNode node) {
         System.out.println("========== [INTERPOLATION] ==========");
+        System.out.println("-> Child Count <- : " + node.getChildeCount());
         System.out.println("Has $ : " + node.isHasDollar());
         if (node.getExpr() != null) {
             node.getExpr().accept(this);
