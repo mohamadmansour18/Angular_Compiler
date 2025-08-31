@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 import java.util.ArrayList;
@@ -30,5 +31,22 @@ public class ProgramNode extends Node {
         }
 
         return sb.toString().trim();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        // نفتح نطاق منطقي جديد داخل السياق (لأسماء المتغيرات وإعادة التسمية... إلخ)
+        ctx.pushScope();
+
+        String body = this.statements.stream()
+                // اطلب من كل Statement توليد جزئه من الكود
+                .map(st -> st.generate(ctx))
+                // تخلّص من null أو الأسطر الفارغة حتى لا نحصل على فراغات مزعجة
+                .filter(code -> code != null && !code.trim().isEmpty())
+                // اجمع النتائج كسطور متتابعة
+                .collect(java.util.stream.Collectors.joining("\n"));
+
+        ctx.popScope();
+        return body;
     }
 }

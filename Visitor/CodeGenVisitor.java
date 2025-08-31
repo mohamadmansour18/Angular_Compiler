@@ -6,7 +6,7 @@ import Ast_Class.TS_Classes.*;
 public class CodeGenVisitor implements AST_Visitor{
     @Override
     public void visit(HTMLDivLabel div) {
-        return;
+
     }
 
     @Override

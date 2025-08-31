@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class FunctionStatement extends Node implements Stetment{
@@ -29,5 +30,27 @@ public class FunctionStatement extends Node implements Stetment{
         sb.append(") ");
         if (block != null) sb.append(block.getValue()); else sb.append("{}");
         return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+
+        String fnName = (name != null && !name.isBlank()) ? name : "_fn";
+
+        String paramsJs = "";
+        if (paramList != null) {
+            String p = paramList.generate(ctx);
+            if (p != null) paramsJs = p.trim();
+        }
+
+        String bodyJs = (block != null) ? block.generate(ctx) : "{}";
+
+
+        String trimmed = bodyJs.trim();
+        if (!(trimmed.startsWith("{") && trimmed.endsWith("}"))) {
+            bodyJs = "{\n" + ctx.ind() + trimmed + "\n}";
+        }
+
+        return fnName + "(" + paramsJs + ") " + bodyJs;
     }
 }

@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class ParamNode extends Node {
@@ -27,5 +28,10 @@ public class ParamNode extends Node {
         if (name != null) sb.append(name);
         if (typeName != null) sb.append(": ").append(typeName);
         return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+        return (name != null && !name.isBlank()) ? name : "_arg";
     }
 }

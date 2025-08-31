@@ -1,6 +1,7 @@
 package Main;
 
 import Ast_Class.TS_Classes.RootProgram;
+import Code_Generation.CodeGeneration;
 import Parser.*;
 import SymbolTable.Scope;
 import SymbolTable.SymbolTable;
@@ -39,6 +40,8 @@ public class Main {
             System.out.println("<<<<<<<<---------[ AST ]--------->>>>>>>>");
             AngularVisitor visitor = new AngularVisitor();
             RootProgram startProgram = (RootProgram) visitor.visit(tree);
+            CodeGeneration codeGeneration = new CodeGeneration();
+            codeGeneration.startGenerate(startProgram);
             startProgram.accept(new BaseAstVisitor());
 
             System.out.println();

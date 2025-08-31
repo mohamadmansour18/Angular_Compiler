@@ -1,6 +1,7 @@
 package Ast_Class.TS_Classes;
 
 import Ast_Class.Node.Node;
+import Code_Generation.GenContext;
 import Visitor.AST_Visitor;
 
 public class ConstructorParamNode extends Node {
@@ -56,5 +57,11 @@ public class ConstructorParamNode extends Node {
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public String generate(GenContext ctx) {
+
+        return (name != null && !name.isBlank()) ? name : "arg";
     }
 }

@@ -1,10 +1,420 @@
+
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
+import { Routes } from '@angular/router';
+import { AppComponent } from './app/app.component';
+
+const routes: Routes = [
+  { path: '',loadComponent: () => import('./app/welcome.component').then((m) => m.WelcomeComponent) },
+  { path: 'products',loadComponent: () => import('./app/products.component').then((m) => m.ProductsComponent) },
+  { path: 'products/:ids',loadComponent: () => import('./app/product-detail.component').then((m) => m.ProductDetailComponent)},
+  { path: '**', redirectTo: '' },
+];
+
+bootstrapApplication(AppComponent, { providers: [provideRouter(routes)] });
+
+
+
+
+
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet],
+  template: `
+    <div style="min-height:100vh; background:#f8f9fb; color:#222;">
+      <div style="max-width:920px; margin:24px auto; padding:0 16px;">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  `
+})
+export class AppComponent {}
+
+
+
+
+
+
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-welcome',
   standalone: true,
   template: `
     <div style="margin:40px auto; padding:32px; border:1px solid #e3e3e3; border-radius:12px; background:#fff; display:grid; gap:12px; place-items:start;">
-<img [src]="p.image" alt=""
-                   style="width:100%;height:100%;object-fit:cover;"/>
+      <p style="margin:0 0 4px; font-size:22px;">"Welcome"</p>
+      <p style="margin:0 0 8px; opacity:.8;">"This is a minimal Angular test app"</p>
+      <button
+        style="border:1px solid #1f6feb; background:#1f6feb; color:#fff; padding:8px 14px; border-radius:8px; cursor:pointer; font-weight:600;"
+        (click)="go()"
+        type="button">
+        "Start"
+      </button>
     </div>
   `
 })
+export class WelcomeComponent {
+  constructor(private router: Router) {}
+  go() { this.router.navigateByUrl('/products'); }
+}
+
+
+
+
+import { NgFor } from '@angular/common';
+import { Component } from '@angular/core';
+import {  signal } from '@angular/core';
+import {  computed } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
+type Product = {
+  ids: string;
+  names: string;
+  price: number;
+  description: string;
+  image: string;
+  createdAt: number;
+  updatedAt?: number;
+};
+
+export const PRODUCTS_STORE = {
+  products: signal<Product[]>([
+    {
+      ids: Date.now() + "-seed1",
+      names: 'Sample Phone',
+      price: 499,
+      description: 'A minimal sample product.',
+      image: 'assets/img1.png',
+      createdAt: Date.now(),
+    },
+    {
+      ids: Date.now() + "-seed2",
+      names: 'Sample Headset',
+      price: 99,
+      description: 'Comfortable headset for daily use.',
+      image: 'assets/img2.png',
+      createdAt: Date.now(),
+    },
+  ]),
+};
+
+@Component({
+  selector: 'app-products',
+  standalone: true,
+  imports: [RouterLink, FormsModule, NgFor],
+  template: `
+    <div style="display:grid;grid-template-columns:280px 1fr;gap:16px;">
+      <div style="border:1px solid #e5e7eb;border-radius:12px;padding:16px;background:#fff;">
+        <a [routerLink]="['/']"
+           style="display:inline-block;margin-bottom:12px;text-decoration:none;color:#2563eb;">"Back to Welcome"</a>
+
+        <div>
+          <p style="margin:8px 0 12px;font-size:18px;">"Add Product"</p>
+
+          <div style="display:grid;gap:10px;">
+            <label style="display:grid;gap:6px;">
+              <span>"Name"</span>
+              <input [(ngModel)]="form.names" placeholder="Product name"
+                     style="font:400 14px/1.4 system-ui;padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;outline:none;"/>
+            </label>
+
+            <label style="display:grid;gap:6px;">
+              <span>"Price"</span>
+              <input type="number" [(ngModel)]="form.price" placeholder="0"
+                     style="font:400 14px/1.4 system-ui;padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;outline:none;"/>
+            </label>
+
+            <label style="display:grid;gap:6px;">
+              <span>"Description"</span>
+              <input type="text" [(ngModel)]="form.description" placeholder="Short description"
+               style="font:400 14px/1.4 system-ui;padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;outline:none;"/>
+            </label>
+
+            <label style="display:grid;gap:6px;">
+              <span>"Image (assets/...)"</span>
+              <input [(ngModel)]="form.image" placeholder="assets/img1.png"
+                     style="font:400 14px/1.4 system-ui;padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;outline:none;"/>
+            </label>
+
+            <div style="display:flex;gap:8px;">
+              <button (click)="add()"
+                      style="border:1px solid #2563eb;background:#2563eb;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600;">
+                "Save"
+              </button>
+              <button (click)="reset()"
+                      style="border:1px solid #2563eb;background:#fff;color:#2563eb;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600;">
+                "Reset"
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="border:1px solid #e5e7eb;border-radius:12px;padding:16px;background:#fff;">
+        <p style="margin:0 0 12px; font-size:20px;">"Products"</p>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;">
+          <div *ngFor="let p of list()"
+                   style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;display:grid;grid-template-rows:160px auto auto;">
+            <div style="background:#f3f4f6;display:grid;place-items:center;overflow:hidden;">
+              <img [src]="p.image" alt="" 
+                   style="width:100%;height:100%;object-fit:cover;"/>
+            </div>
+
+            <div style="padding:12px;display:grid;gap:6px;">
+              <p style="margin:0;font-size:16px;">{{ p.names }}</p>
+              <div style="font-weight:700;">$ {{ p.price }}</div>
+              <p style="margin:0;color:#4b5563;font-size:13px;">{{ p.description }}</p>
+            </div>
+
+            <div style="display:flex;gap:8px;padding:12px;border-top:1px solid #e5e7eb;">
+              <a [routerLink]="['/products', p.ids]"
+                 style="border:1px solid #2563eb;background:#2563eb;color:#fff;padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:600;text-decoration:none;display:inline-block;">
+                "View"
+              </a>
+              <button (click)="remove(p.ids)"
+                      style="border:1px solid #dc2626;background:#dc2626;color:#fff;padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:600;">
+                "Delete"
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
+})
+export class ProductsComponent {
+  form = {
+    names: '',
+    price: null as number | null,
+    description: '',
+    image: 'assets/img1.png',
+  };
+
+  list = computed(() => PRODUCTS_STORE.products());
+
+  add() {
+    const ids = Date.now() + "-" + Math.random().toString(36).slice(2, 7);
+    const now = Date.now();
+    const priceNum = Number(this.form.price ?? 0);
+
+    const newProduct: Product = {
+      ids,
+      names: this.form.names || 'Untitled',
+      price: isNaN(priceNum) ? 0 : priceNum,
+      description: this.form.description || '',
+      image: this.form.image || 'assets/img1.png',
+      createdAt: now,
+    };
+
+    PRODUCTS_STORE.products.update((arr) => [newProduct, ...arr]);
+    this.reset();
+  }
+
+  remove(ids: string) {
+    PRODUCTS_STORE.products.update((arr) => arr.filter((p) => p.ids !== ids));
+  }
+
+  reset() {
+    this.form = {
+      names: '',
+      price: null,
+      description: '',
+      image: 'assets/img1.png',
+    };
+  }
+
+  onImgError(ev: Event) {
+    (ev.target as HTMLImageElement).src = 'assets/img1.png';
+  }
+}
+
+
+
+
+
+
+
+
+import { Component } from '@angular/core';
+import { signal } from '@angular/core';
+import { computed } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
+import { PRODUCTS_STORE } from './products.component';
+
+@Component({
+  selector: 'app-product-detail',
+  standalone: true,
+  imports: [RouterLink, FormsModule, NgIf],
+  template: `
+    <div
+      *ngIf="product()"
+      style="display:grid;gap:16px;border:1px solid #e5e7eb;border-radius:12px;padding:16px;background:#fff;"
+    >
+      <div style="display:flex;align-items:center;gap:12px;">
+        <a
+          [routerLink]="['/products']"
+          style="text-decoration:none;color:#2563eb;"
+          >"Back to Products"</a>
+        <div style="flex:1;"></div>
+        <button
+          (click)="delete()"
+          style="border:1px solid #dc2626;background:#dc2626;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600;"
+        >
+          "Delete"
+        </button>
+      </div>
+
+      <div
+        *ngIf="!editMode()"
+        style="display:grid;grid-template-columns:320px 1fr;gap:16px;"
+      >
+        <div
+          style="background:#f3f4f6;border-radius:12px;overflow:hidden;display:grid;place-items:center;"
+        >
+          <img
+            [src]="product()!.image"
+            alt=""
+            style="width:100%;height:100%;object-fit:cover;"
+          />
+        </div>
+        <div>
+          <p style="margin:6px 0;">{{ product()!.names }}</p>
+          <div style="font-weight:700;margin-bottom:8px;">
+            $ {{ product()!.price }}
+          </div>
+          <p style="color:#4b5563;">{{ product()!.description }}</p>
+          <button
+            (click)="toggleEdit(true)"
+            style="border:1px solid #2563eb;background:#2563eb;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600;"
+          >
+            "Edit"
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="editMode()">
+        <p>"Edit Product"</p>
+        <div style="display:grid;gap:10px;">
+          <label style="display:grid;gap:6px;">
+            <span>"Name"</span>
+            <input
+              [(ngModel)]="form.names"
+              style="font:400 14px/1.4 system-ui;padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;outline:none;"
+            />
+          </label>
+          <label style="display:grid;gap:6px;">
+            <span>"Price"</span>
+            <input
+              type="number"
+              [(ngModel)]="form.price"
+              style="font:400 14px/1.4 system-ui;padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;outline:none;"
+            />
+          </label>
+          <label style="display:grid;gap:6px;">
+            <span>"Description"</span>
+            <input
+              type="text"
+              [(ngModel)]="form.description"
+              placeholder="Short description"
+              style="font:400 14px/1.4 system-ui;padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;outline:none;"
+            />
+          </label>
+          <label style="display:grid;gap:6px;">
+            <span>"Image (assets/...)"</span>
+            <input
+              [(ngModel)]="form.image"
+              style="font:400 14px/1.4 system-ui;padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;outline:none;"
+            />
+          </label>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button
+            (click)="save()"
+            style="border:1px solid #2563eb;background:#2563eb;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600;"
+          >
+            "Save"
+          </button>
+          <button
+            (click)="toggleEdit(false)"
+            style="border:1px solid #2563eb;background:#fff;color:#2563eb;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600;"
+          >
+            "Cancel"
+          </button>
+        </div>
+      </div>
+    </div>
+  `
+})
+export class ProductDetailComponent {
+  ids = signal<string>('');
+  product = computed(() =>
+    PRODUCTS_STORE.products().find((p) => p.ids === this.ids())
+  );
+  editMode = signal(false);
+
+  form = { names: '', price: 0, description: '', image: 'assets/img1.png' };
+
+  constructor(private ar: ActivatedRoute, private router: Router) {
+    const pid = this.ar.snapshot.paramMap.get('ids') || '';
+    this.ids.set(pid);
+
+    const p = this.product();
+    if (p) {
+      this.form = {
+        names: p.names,
+        price: p.price,
+        description: p.description,
+        image: p.image,
+      };
+    }
+
+    const openEdit = this.ar.snapshot.queryParamMap.get('edit') === '1';
+    if (openEdit) this.editMode.set(true);
+  }
+
+  toggleEdit(v: boolean) {
+    this.editMode.set(v);
+  }
+
+  save() {
+    const ids = this.ids();
+    PRODUCTS_STORE.products.update((arr) =>
+      arr.map((p) => {
+        if (p.ids !== ids) return p;
+        return {
+          ...p,
+          ...this.form,
+          price: Number(this.form.price ?? 0) || 0,
+          updatedAt: Date.now(),
+        };
+      })
+    );
+    this.toggleEdit(false);
+  }
+
+  delete() {
+    const ids = this.ids();
+    PRODUCTS_STORE.products.update((arr) => arr.filter((p) => p.ids !== ids));
+    this.router.navigateByUrl('/products');
+  }
+
+  onImgError(ev: Event) {
+    (ev.target as HTMLImageElement).src = 'assets/img1.png';
+  }
+}
+
+
+
+
+

@@ -811,7 +811,6 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
         programNode.removeScope();
         return programNode;
     }
-
     @Override
     public Node visitStatements(FrameParser.StatementsContext ctx) {
         StatementsNode stmtsNode = new StatementsNode();
@@ -831,6 +830,7 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
 
         return stmtsNode;
     }
+
 
     public Node visitImportStatement1(FrameParser.ImportStatement1Context ctx) {
         ImportStatement1 importNode = new ImportStatement1();
@@ -932,7 +932,6 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
     public Node visitConstructorStatement(FrameParser.ConstructorStatementContext ctx) {
         ConstructorStatement node = new ConstructorStatement();
 
-        // الوصول للقاعدة الفعلية
         FrameParser.ConstructorDeclarationContext cd = ctx.constructorDeclaration();
 
         // خزّن سكوب الكلاس الحالي قبل فتح سكوب الكونستركتور
@@ -966,9 +965,7 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
             }
         }
 
-        // أغلق سكوب الكونستركتور
         node.removeScope();
-
         return node;
     }
 
@@ -1031,19 +1028,14 @@ public class AngularVisitor extends FrameParserBaseVisitor<Node> {
     public Node visitComponentStatement1(FrameParser.ComponentStatement1Context ctx) {
         ComponentStatement1 node = new ComponentStatement1();
 
-        // لا نفتح سكوب
         node.initializeNode(ctx, false, "");
 
-        // القاعدة الداخلية الفعلية: componentDecorator
         FrameParser.ComponentDecoratorContext dec = ctx.componentDecorator();
-
-        // داخل الأقواس: LPAREN LBRACKETS componentOptions RBRACKETS RPAREN
         if (dec != null && dec.componentOptions() != null) {
             ComponentOptionsNode opts = (ComponentOptionsNode) visit(dec.componentOptions());
             node.setOptions(opts);
         }
 
-        // لا createSymbol هنا
         return node;
 
     }
