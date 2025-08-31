@@ -1,7 +1,10 @@
 package Code_Generation;
 
 import Ast_Class.TS_Classes.RootProgram;
-
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -59,7 +62,38 @@ public class CodeGeneration {
 
         currentPage.writeOnFile(htmlCode);
         currentPage.closeFile();
+
+        java.nio.file.Path htmlPath = java.nio.file.Paths.get("output", "welcomePage.html");
+        RunHelpers.openInBrowser(htmlPath);
     }
 
+    public static class RunHelpers {
+        // تفتح ملف HTML في المتصفح الافتراضي
+        public static void openInBrowser(Path htmlFile) {
+            try {
+                if (!Files.exists(htmlFile)) {
+                    System.err.println("HTML file not found: " + htmlFile);
+                    return;
+                }
+
+                if (Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().browse(htmlFile.toUri());
+                    return;
+                }
+
+                String os = System.getProperty("os.name").toLowerCase();
+                if (os.contains("win")) {
+                    new ProcessBuilder("rundll32", "url.dll,FileProtocolHandler", htmlFile.toUri().toString()).start();
+                } else if (os.contains("mac")) {
+                    new ProcessBuilder("open", htmlFile.toString()).start();
+                } else {
+                    new ProcessBuilder("xdg-open", htmlFile.toString()).start();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Open this URL manually: " + htmlFile.toUri());
+            }
+        }
+    }
 
 }
